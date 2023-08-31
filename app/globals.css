@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .layout {
+    @apply mx-auto my-0 px-10 max-w-screen-xl;
+  }
+  .header-wrapper {
+    @apply fixed left-0 right-0 top-0 min-w-1024 z-50;
+  }
+  .header-container {
+    @apply relative bg-black text-white border-b border-gray-600;
+  }
+  .header-contents {
+    @apply h-20 w-[1024px] px-16 m-auto flex items-center justify-center;
+  }
+  .header-link {
+    @apply px-8 py-4 mx-5;
+  }
+  .header-link .icon {
+    @apply h-6 w-6;
+  }
+  .contents-container {
+    @apply relative top-20 block h-screen;
+  }
+  .banner-container {
+    @apply relative h-[500px] min-w-1024 my-10;
+  }
+  .banner-info {
+    @apply absolute left-0 right-0 bottom-0 flex flex-col justify-end h-[160px] w-[800px] px-10 pb-10 z-10;
+  }
+  .banner-title {
+    @apply text-white text-3xl leading-10 font-bold text-ellipsis pb-4;
+  }
+  .banner-description {
+    @apply text-white text-sm leading-5 text-ellipsis break-keep;
+  }
+  .banner-background {
+    @apply absolute bg-black opacity-10 w-full h-full bottom-0 rounded;
+  }
+  .card-list {
+    @apply pb-10 min-w-1024;
+  }
+  .movie-info-description {
+    @apply mr-2 text-gray-300;
+  }
+  .movie-description {
+    @apply p-0 break-words mt-4 m-2 text-base leading-7 text-gray-900;
+  }
+  .tag-list {
+    @apply flex flex-wrap justify-start w-full;
+  }
+  .tag-item {
+    @apply inline-block text-center px-3.5 py-2.5 m-0 text-sm leading-4 rounded-md box-border no-underline 
+    basic-border bg-gray-100 text-gray-600;
+  }
+  .content-detail-section {
+    @apply p-0 mt-10 mb-14 w-1180;
+  }
+  .content-detail-title-p {
+    @apply mb-8 text-lg leading-6 font-bold;
+  }
+  .content-detail-comment-p-span {
+    @apply inline-block pl-2 text-ozip-blue;
+  }
+  .content-detail-comment-user {
+    @apply relative flex flex-wrap items-center w-full;
+  }
+  .content-detail-comment-user-p {
+    @apply w-full text-base leading-6 break-words break-keep whitespace-pre-line my-2;
+  }
+  .content-detail-comment-user-icon {
+    @apply absolute top-0 w-7 h-7 -left-9;
+  }
+  .content-detail-comment-text-span {
+    @apply basic-text-xs border-0 items-center;
+  }
+  /* common */
+  .basic-border {
+    @apply border-gray-200 border-solid border;
+  }
+  .line-hr {
+    @apply m-0 p-0 h-px border-none bg-gray-200;
+  }
+  .divide-span {
+    @apply basic-text-xs not-italic mx-1;
+  }
+  .basic-text-xs {
+    @apply inline-flex text-xs leading-4 font-medium text-gray-400;
+  }
+  .initialize-absolute {
+    @apply absolute top-0 left-0 right-0 bottom-0;
+  }
+}
