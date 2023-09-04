@@ -7,16 +7,25 @@ import useStore from "@/store";
 
 const ProductInfo = ({ item }: { item: LikedProduct }) => {
   const { title, image, link, lprice, brand, checked } = item;
-  const { updateLikedProducts, updateCheckedToTopProducts } = useStore();
+  const {
+    updateLikedProducts,
+    updateCheckedToTopProducts,
+    updateCurrentProduct,
+  } = useStore();
 
-  const handleClickItem = () => {
+  const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
     updateLikedProducts(item);
     updateCheckedToTopProducts(item);
+    e.stopPropagation();
+  };
+
+  const handleClickItemToUpdate = () => {
+    updateCurrentProduct(item);
   };
 
   return (
     <div className="flex flex-col w-full min-w-0">
-      <Link href={link}>
+      <Link href={link} onClick={handleClickItemToUpdate}>
         <Card width="w-52" height="h-52">
           <Image
             src={image}
