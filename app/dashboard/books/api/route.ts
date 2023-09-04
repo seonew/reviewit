@@ -2,6 +2,7 @@ import {
   getTotalItems,
   numberWithCommas,
   replaceCaretWithComma,
+  replaceDateFormat8Digits,
 } from "@/utils/common";
 import { BookProps } from "@/utils/types";
 import { NextResponse } from "next/server";
@@ -39,10 +40,12 @@ export async function GET(request: Request) {
         author: replaceCaretWithComma(book.author),
         discount: numberWithCommas(parseInt(book.discount)),
         image: book.image,
-        link: book.link,
+        link: `/dashboard/books/${book.isbn}`,
         isbn: book.isbn,
         publisher: book.publisher,
         description: book.description,
+        catalogLink: book.link,
+        pubdate: replaceDateFormat8Digits(book.pubdate),
       };
       return result;
     });

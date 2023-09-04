@@ -31,6 +31,18 @@ export const replaceDateFormat = (str: string): string => {
   return resultDate;
 };
 
+export const replaceDateFormat8Digits = (date: string): string => {
+  if (date.length !== 8) {
+    throw new Error("입력은 8자리 숫자여야 합니다.");
+  }
+
+  const year = date.substring(0, 4);
+  const month = date.substring(4, 6);
+  const day = date.substring(6, 8);
+
+  return `${year}.${month}.${day}`;
+};
+
 export const handleClickSignIn = () => {
   const signInParams = {
     clientId: process.env.NEXT_PUBLIC_SERVICE!,

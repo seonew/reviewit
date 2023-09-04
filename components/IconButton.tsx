@@ -3,7 +3,7 @@ import { BookmarkIcon } from "@heroicons/react/24/outline";
 import { BookmarkIcon as BookmarkSolidIcon } from "@heroicons/react/24/solid";
 
 type Props = {
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   checked?: boolean;
 };
 
@@ -12,7 +12,7 @@ const IconButton = ({ onClick, checked }: Props) => {
 
   const handleClickItem = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    onClick?.();
+    onClick?.(event);
     setShow(!show);
   };
 

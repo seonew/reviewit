@@ -4,13 +4,13 @@ import useStore from "@/store";
 import { ReactNode, useLayoutEffect } from "react";
 import Image from "next/image";
 import { handleClickSignIn, numberWithCommas } from "@/utils/common";
-import KeywordSection from "../components/KeywordSection";
-import SimilarSection from "../components/SimilarSection";
-import RecommendationSection from "../components/RecommendationSection";
-import CommentSection from "@/app/movie/components/CommentSection";
+import KeywordSection from "@/components/view/KeywordSection";
+import SimilarSection from "@/components/view/SimilarSection";
+import RecommendationSection from "@/components/view/RecommendationSection";
+import CommentSection from "@/components/view/CommentSection";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/components/DefaultImage";
-import VideoSection from "../components/VideoSection";
+import VideoSection from "@/components/view/VideoSection";
 
 export default function List({ id }: { id: string }) {
   const { currentMovie, fetchMovieDetail, insertMovieReview, user } =

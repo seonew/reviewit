@@ -5,8 +5,10 @@ export type BookProps = {
   image: string;
   link: string;
   isbn: string;
+  pubdate: string;
   publisher?: string;
   description?: string;
+  catalogLink: string;
 };
 
 export type ProductProps = {
@@ -14,8 +16,12 @@ export type ProductProps = {
   image: string;
   link: string;
   lprice: string;
-  brand: string;
+  brand?: string;
   productId: string;
+  mall: string;
+  maker?: string;
+  productType?: string;
+  category: string;
 };
 
 export type LikedBook = BookProps & {
@@ -77,11 +83,15 @@ export type MediaVideoProps = {
   backgroundImage: string;
 };
 
+export type MovieReviewProps = ReviewProps & {
+  movieId: string;
+};
+
 export type ReviewProps = {
   id: string;
-  movieId: string;
   author: string;
   content: string;
+  like?: boolean;
   updateDate: string;
 };
 

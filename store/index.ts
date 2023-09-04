@@ -9,6 +9,7 @@ import {
   CurrentMovieProps,
   ReviewProps,
   User,
+  MovieReviewProps,
 } from "@/utils/types";
 import { replaceDateFormat } from "@/utils/common";
 
@@ -22,6 +23,9 @@ type State = {
   dashboardProducts: ProductProps[];
   dashboardMovies: MovieProps[];
   currentMovie: CurrentMovieProps;
+  currentBook: BookProps;
+  currentProduct: ProductProps;
+
   user: User;
   isSignedIn: boolean;
 };
@@ -31,6 +35,8 @@ type Actions = {
   updateLikedProducts: (item: LikedProduct) => void;
   updateCheckedToTopBooks: (item: LikedBook) => void;
   updateCheckedToTopProducts: (item: LikedProduct) => void;
+  updateCurrentBook: (item: BookProps) => void;
+  updateCurrentProduct: (item: ProductProps) => void;
 
   initTopBooks: (books: BookProps[]) => void;
   initTopProducts: (products: ProductProps[]) => void;
@@ -86,6 +92,25 @@ const initialState: State = {
     similars: [],
     videos: [],
   },
+  currentBook: {
+    title: "",
+    author: "",
+    discount: "",
+    image: "",
+    link: "",
+    isbn: "",
+    catalogLink: "",
+    pubdate: "",
+  },
+  currentProduct: {
+    title: "",
+    image: "",
+    link: "",
+    lprice: "",
+    productId: "",
+    mall: "",
+    category: "",
+  },
   user: {
     id: "",
     name: "",
@@ -101,6 +126,12 @@ const useStore = create<State & Actions>()(
     persist(
       (set) => ({
         ...initialState,
+        updateCurrentBook: (item: BookProps) => {
+          set((state) => ({ currentBook: item }));
+        },
+        updateCurrentProduct: (item: ProductProps) => {
+          set((state) => ({ currentProduct: item }));
+        },
         signOut: () => {
           const storage = localStorage.getItem("item-storage");
           if (storage) {
@@ -117,9 +148,7 @@ const useStore = create<State & Actions>()(
           });
         },
         setIsSignedIn: (item: boolean) =>
-          set((state) => {
-            return { isSignedIn: item };
-          }),
+          set((state) => ({ isSignedIn: item })),
         fetchUserInfo: async (token: string) => {
           try {
             const res = await fetch(`/api/user?token=${token}`);
@@ -132,7 +161,7 @@ const useStore = create<State & Actions>()(
         },
         insertMovieReview: ({ review, movieId }) =>
           set((state) => {
-            const response: ReviewProps = {
+            const response: MovieReviewProps = {
               id: Date.now().toString(),
               movieId: movieId,
               author: state.user.name,
