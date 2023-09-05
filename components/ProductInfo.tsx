@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { LikedProduct } from "@/utils/types";
+import { useBoundStore as useStore } from "@/store";
 import Card from "@/components/Card";
 import IconButton from "./IconButton";
-import useStore from "@/store";
 
 const ProductInfo = ({ item }: { item: LikedProduct }) => {
   const { title, image, link, lprice, brand, checked } = item;

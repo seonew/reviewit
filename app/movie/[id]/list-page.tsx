@@ -1,6 +1,6 @@
 "use client";
 
-import useStore from "@/store";
+import { useBoundStore as useStore } from "@/store";
 import { ReactNode, useLayoutEffect } from "react";
 import Image from "next/image";
 import { handleClickSignIn, numberWithCommas } from "@/utils/common";

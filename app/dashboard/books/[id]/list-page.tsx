@@ -1,6 +1,6 @@
 "use client";
 
-import useStore from "@/store";
+import { useBoundStore as useStore } from "@/store";
 import { ReactNode } from "react";
 import Image from "next/image";
 import { handleClickSignIn } from "@/utils/common";

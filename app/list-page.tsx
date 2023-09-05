@@ -1,12 +1,12 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
+import { AuthInfo, initCallbackPage } from "coco-people-client";
+import { useBoundStore as useStore } from "@/store";
 import { VideoImageBannerProps, MovieProps } from "@/utils/types";
 import CardList from "@/components/CardList";
 import MovieInfo from "@/components/MovieInfo";
 import Banner from "@/components/Banner";
-import { useCallback, useEffect, useState } from "react";
-import useStore from "@/store";
-import { AuthInfo, initCallbackPage } from "coco-people-client";
 
 type Props = {
   movies: MovieProps[] | null;

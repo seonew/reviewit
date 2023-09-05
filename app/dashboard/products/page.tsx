@@ -39,14 +39,32 @@ async function getData(query: string) {
 
     const products = productData.items;
     const productsResult: ProductProps[] = products.map(
-      (product: ProductProps) => {
+      (product: {
+        title: string;
+        image: string;
+        link: string;
+        lprice: string;
+        brand: string;
+        productId: string;
+        mallName: string;
+        maker: string;
+        productType: string;
+        category1: string;
+        category2: string;
+        category3: string;
+        category4: string;
+      }) => {
         const result: ProductProps = {
           title: replaceBTagsWithEmptyString(product.title),
           brand: replaceCaretWithComma(product.brand),
           lprice: numberWithCommas(parseInt(product.lprice)),
           image: product.image,
-          link: product.link,
+          link: `/dashboard/products/${product.productId}`,
+          mall: product.mallName,
+          maker: product.maker,
           productId: product.productId,
+          productType: product.productType,
+          category: `${product.category1} > ${product.category2} > ${product.category3} > ${product.category4}`,
         };
         return result;
       }

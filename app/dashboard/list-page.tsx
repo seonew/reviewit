@@ -2,10 +2,10 @@
 
 import React, { useEffect } from "react";
 import { BookProps, ProductProps } from "@/utils/types";
+import { useBoundStore as useStore } from "@/store";
 import CardList from "@/components/CardList";
 import BookInfo from "@/components/BookInfo";
 import ProductInfo from "@/components/ProductInfo";
-import useStore from "@/store";
 
 type Props = {
   products: ProductProps[];

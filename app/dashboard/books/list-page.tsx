@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { BookProps } from "@/utils/types";
+import { useBoundStore as useStore } from "@/store";
 import CardList from "@/components/CardList";
 import BookInfo from "@/components/BookInfo";
-import useStore from "@/store";
 import Pagination from "@/components/Pagination";
 
 type Props = {

@@ -16,7 +16,7 @@ export type ProductProps = {
   image: string;
   link: string;
   lprice: string;
-  brand?: string;
+  brand: string;
   productId: string;
   mall: string;
   maker?: string;
