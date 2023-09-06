@@ -59,7 +59,8 @@ const createMovieSlice: StateCreator<
       const response: MovieReviewProps = {
         id: Date.now().toString(),
         movieId: movieId,
-        author: state.user.name,
+        userName: state.user.name,
+        userId: state.user.id,
         content: review,
         updateDate: replaceDateFormat(new Date().toString()),
       };

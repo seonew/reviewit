@@ -11,6 +11,11 @@ export type BookProps = {
   catalogLink: string;
 };
 
+export type CurrentBookProps = {
+  book: BookProps;
+  reviewData: { reviews: ReviewProps[]; count: number };
+};
+
 export type ProductProps = {
   title: string;
   image: string;
@@ -87,11 +92,19 @@ export type MovieReviewProps = ReviewProps & {
   movieId: string;
 };
 
+export type BookReviewProps = ReviewProps & {
+  bookId: string;
+  bookLike: boolean;
+};
+
 export type ReviewProps = {
   id: string;
-  author: string;
   content: string;
   like?: boolean;
+  userName: string;
+  userId: string;
+  loginType?: string;
+  avatarUrl?: string;
   updateDate: string;
 };
 

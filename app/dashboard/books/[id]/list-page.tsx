@@ -1,7 +1,7 @@
 "use client";
 
 import { useBoundStore as useStore } from "@/store";
-import { ReactNode } from "react";
+import { ReactNode, useLayoutEffect } from "react";
 import Image from "next/image";
 import { handleClickSignIn } from "@/utils/common";
 import CommentSection from "@/components/view/CommentSection";
@@ -9,19 +9,25 @@ import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/components/DefaultImage";
 
 export default function List({ id }: { id: string }) {
-  const { currentBook: book, user, currentMovie } = useStore();
-  const { reviewData } = currentMovie;
+  const { currentBook, user, insertBookReview, fetchBookReview } = useStore();
+  const { book, reviewData } = currentBook;
 
-  const handleSubmitReview = (review: string) => {
+  const handleSubmitReview = (content: string) => {
     if (!user.id && !user.name) {
       handleClickSignIn();
       return;
     }
+
+    insertBookReview({ content, bookId: id, user });
   };
 
   const handleLikeReview = (reviewId: string) => {
     console.log(reviewId);
   };
+
+  useLayoutEffect(() => {
+    fetchBookReview(id);
+  }, [fetchBookReview, id]);
 
   return (
     <div className="contents-container">

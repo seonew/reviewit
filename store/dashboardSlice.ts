@@ -1,9 +1,11 @@
 import { StateCreator } from "zustand";
 import {
   BookProps,
+  CurrentBookProps,
   LikedBook,
   LikedProduct,
   ProductProps,
+  User,
 } from "@/utils/types";
 import { CommonSlice } from "./commonSlice";
 
@@ -14,7 +16,7 @@ type State = {
   topProducts: ProductProps[];
   dashboardBooks: BookProps[];
   dashboardProducts: ProductProps[];
-  currentBook: BookProps;
+  currentBook: CurrentBookProps;
   currentProduct: ProductProps;
 };
 
@@ -32,6 +34,17 @@ type Actions = {
   fetchDashboardProducts: (products: ProductProps[]) => void;
   updateDashboardBooks: (page: number) => void;
   updateDashboardProducts: (page: number) => void;
+
+  fetchBookReview: (bookId: string) => void;
+  insertBookReview: ({
+    content,
+    bookId,
+    user,
+  }: {
+    content: string;
+    bookId: string;
+    user: User;
+  }) => void;
 };
 
 const initialState: State = {
@@ -42,14 +55,20 @@ const initialState: State = {
   dashboardBooks: [],
   dashboardProducts: [],
   currentBook: {
-    title: "",
-    author: "",
-    discount: "",
-    image: "",
-    link: "",
-    isbn: "",
-    catalogLink: "",
-    pubdate: "",
+    book: {
+      title: "",
+      author: "",
+      discount: "",
+      image: "",
+      link: "",
+      isbn: "",
+      catalogLink: "",
+      pubdate: "",
+    },
+    reviewData: {
+      reviews: [],
+      count: 0,
+    },
   },
   currentProduct: {
     title: "",
@@ -70,8 +89,57 @@ const createDashboardSlice: StateCreator<
   DashboardSlice
 > = (set, get, api) => ({
   ...initialState,
+  fetchBookReview: async (id: string) => {
+    const res = await fetch(`/dashboard/books/${id}/api`);
+    const data = await res.json();
+
+    set((state) => ({
+      currentBook: {
+        ...state.currentBook,
+        reviewData: {
+          ...state.currentBook.reviewData,
+          ...data,
+        },
+      },
+    }));
+  },
+  insertBookReview: async ({ content, bookId, user }) => {
+    const params = { content, user };
+    const response = await fetch(`/dashboard/books/${bookId}/api`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    });
+    const data = await response.json();
+
+    if (data.status === 500) {
+      alert(data.error);
+      return;
+    }
+
+    set((state) => ({
+      currentBook: {
+        ...state.currentBook,
+        reviewData: {
+          ...state.currentBook.reviewData,
+          reviews: [data, ...state.currentBook.reviewData.reviews],
+          count: state.currentBook.reviewData.count + 1,
+        },
+      },
+    }));
+  },
   updateCurrentBook: (item: BookProps) => {
-    set((state) => ({ currentBook: item }));
+    set((state) => ({
+      currentBook: {
+        ...state.currentBook,
+        book: {
+          ...state.currentBook.book,
+          ...item,
+        },
+      },
+    }));
   },
   updateCurrentProduct: (item: ProductProps) => {
     set((state) => ({ currentProduct: item }));
