@@ -46,7 +46,7 @@ export const replaceDateFormat8Digits = (date: string): string => {
 export const handleClickSignIn = () => {
   const signInParams = {
     clientId: process.env.NEXT_PUBLIC_SERVICE!,
-    redirectUri: process.env.NEXT_PUBLIC_REDIRECT_URI!,
+    redirectUri: process.env.NEXT_PUBLIC_REDIRECT_URL!,
     providerUrl: process.env.NEXT_PUBLIC_PROVIDER_URL!,
   };
   signIn(signInParams);

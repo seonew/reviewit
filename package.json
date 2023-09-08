@@ -15,7 +15,7 @@
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "axios": "^1.4.0",
-    "coco-people-client": "file:libs/coco-people-client-1.0.0-alpha.2.tgz",
+    "coco-people-client": "file:libs/coco-people-client-1.0.0-alpha.3.tgz",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.3",
     "mongoose": "^7.5.0",

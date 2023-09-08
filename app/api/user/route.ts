@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const token = searchParams.get("token") ?? "";
+  const SERVICE = process.env.NEXT_PUBLIC_SERVICE!;
+  const SERVICE_URL = process.env.NEXT_PUBLIC_SERVICE_URL;
 
   try {
     if (!token) {
@@ -11,13 +13,11 @@ export async function GET(request: Request) {
 
     const params = {
       token,
-      loginService: process.env.NEXT_PUBLIC_SERVICE!,
+      loginService: SERVICE,
     };
 
     const queryString = new URLSearchParams(params).toString();
-    const response = await fetch(
-      `http://localhost:3000/api/user/info?${queryString}`
-    );
+    const response = await fetch(`${SERVICE_URL}/api/user/info?${queryString}`);
     const data = await response.json();
 
     return NextResponse.json(data);
