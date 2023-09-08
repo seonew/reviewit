@@ -1,21 +1,26 @@
 import dbConnect from "@/utils/db/mongodb";
 import { replaceDateFormat } from "@/utils/common";
-import { BookReviewProps } from "@/utils/types";
+import { BookReviewProps, User } from "@/utils/types";
 import { NextResponse } from "next/server";
-import BookReview from "@/schemas/review/book";
+import BookReviewModel from "@/models/review/book";
+import UserModel from "@/models/user";
+
+const SERVICE = process.env.NEXT_PUBLIC_SERVICE!;
 
 export async function GET(
   reqeust: Request,
   { params }: { params: { id: string } }
 ) {
-  const bookId = params.id;
-  dbConnect();
-
   try {
-    const bookReviews = BookReview;
+    dbConnect();
+
+    const bookId = params.id;
+    const bookReviews = BookReviewModel;
     const reviewData: BookReviewProps[] = await bookReviews
       .find({ bookId })
       .sort({ updateDate: -1 });
+    const users = UserModel;
+    const userData = await users.find({ loginService: SERVICE });
 
     if (!reviewData) {
       return NextResponse.json({ reviews: null, count: 0 });
@@ -23,6 +28,7 @@ export async function GET(
 
     const reviews: BookReviewProps[] = reviewData.map(
       (review: BookReviewProps) => {
+        const user = userData.find((user: User) => user.id === review.userId);
         return {
           id: review.id,
           bookId,
@@ -30,10 +36,10 @@ export async function GET(
           bookLike: false,
           like: false,
           updateDate: replaceDateFormat(review.updateDate),
-          userName: review.userName,
+          userName: user.name,
           userId: review.userId,
-          loginType: review.loginType,
-          avatarUrl: review.avatarUrl,
+          loginType: user.loginType,
+          avatarUrl: user.avatarUrl,
         };
       }
     );
@@ -54,10 +60,10 @@ export async function POST(
   reqeust: Request,
   { params }: { params: { id: string } }
 ) {
-  const bookId = params.id;
-  dbConnect();
-
   try {
+    dbConnect();
+
+    const bookId = params.id;
     const reqeustData = await reqeust.json();
     const { user, content } = reqeustData;
 
@@ -65,17 +71,14 @@ export async function POST(
       return NextResponse.json({ error: "Empty data", status: 500 });
     }
 
-    const newReview = new BookReview({
+    const newReview = new BookReviewModel({
       id: Date.now().toString(),
       bookId,
       content,
       bookLike: false,
       like: false,
       updateDate: new Date(),
-      userName: user.name,
       userId: user.id,
-      loginType: user.loginType,
-      avatarUrl: user.avatarUrl,
     });
 
     const res = await newReview.save();
@@ -86,8 +89,8 @@ export async function POST(
       like: res.like,
       bookLike: res.bookLike,
       updateDate: replaceDateFormat(res.updateDate),
-      userName: res.userName,
-      userId: res.userId,
+      userName: user.name,
+      userId: user.id,
     };
 
     return NextResponse.json(result);

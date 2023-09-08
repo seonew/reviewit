@@ -59,7 +59,7 @@ const CommentSection = ({
                       <span className="divide-span">|</span>
                       <a onClick={handleLikeReview(review.id)}>
                         <span className="content-detail-comment-text-span">
-                          <HeartIcon className="w-3.5 h-3.5 mr-0.5" />
+                          <HeartIcon className="w-3 h-3 mr-0.5" />
                           <span>좋아요</span>
                         </span>
                       </a>

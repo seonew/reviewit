@@ -95,6 +95,7 @@ export type MovieReviewProps = ReviewProps & {
 export type BookReviewProps = ReviewProps & {
   bookId: string;
   bookLike: boolean;
+  userId: string;
 };
 
 export type ReviewProps = {
@@ -102,9 +103,6 @@ export type ReviewProps = {
   content: string;
   like?: boolean;
   userName: string;
-  userId: string;
-  loginType?: string;
-  avatarUrl?: string;
   updateDate: string;
 };
 

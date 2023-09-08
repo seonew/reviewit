@@ -68,7 +68,7 @@ export async function GET(
         return {
           id: review.id,
           movieId: movieId,
-          author: review.author,
+          userName: review.author,
           content: review.content,
           updateDate: replaceDateFormat(review.updated_at),
         };

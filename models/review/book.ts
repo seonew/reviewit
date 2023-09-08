@@ -21,7 +21,6 @@ export const BookSchema = new Schema({
   },
   userName: {
     type: String,
-    required: true,
   },
   userId: {
     type: String,
