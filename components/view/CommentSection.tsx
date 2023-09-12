@@ -10,7 +10,7 @@ type Props = {
     count: number;
   };
   onSubmit: (item: string) => void;
-  onClickLike: (reviewId: string) => void;
+  onClickLike: (reviewId: string, like: boolean | undefined) => void;
 };
 const CommentSection = ({
   reviewData = { reviews: undefined, count: 0 },
@@ -23,8 +23,8 @@ const CommentSection = ({
     onSubmit(item);
   };
 
-  const handleLikeReview = (id: string) => () => {
-    onClickLike(id);
+  const handleLikeReview = (id: string, isLike: boolean | undefined) => () => {
+    onClickLike(id, isLike);
   };
 
   return (
@@ -57,8 +57,15 @@ const CommentSection = ({
                         {review.updateDate}
                       </span>
                       <span className="divide-span">|</span>
-                      <a onClick={handleLikeReview(review.id)}>
-                        <span className="content-detail-comment-text-span">
+                      <a
+                        onClick={handleLikeReview(review.id, review.like)}
+                        className="cursor-pointer"
+                      >
+                        <span
+                          className={`content-detail-comment-text-span ${
+                            review.like && "text-ozip-blue"
+                          }`}
+                        >
                           <HeartIcon className="w-3 h-3 mr-0.5" />
                           <span>좋아요</span>
                         </span>

@@ -18,6 +18,7 @@
     "coco-people-client": "file:libs/coco-people-client-1.0.0-alpha.3.tgz",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.3",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.0",
     "next": "13.4.3",
     "react": "18.2.0",
@@ -26,6 +27,7 @@
     "zustand": "^4.3.8"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.2",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.23",
     "tailwindcss": "^3.3.2"

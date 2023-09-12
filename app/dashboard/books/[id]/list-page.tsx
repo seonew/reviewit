@@ -9,7 +9,14 @@ import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/components/DefaultImage";
 
 export default function List({ id }: { id: string }) {
-  const { currentBook, user, insertBookReview, fetchBookReview } = useStore();
+  const {
+    currentBook,
+    user,
+    insertBookReview,
+    fetchBookReview,
+    insertReviewLike,
+    deleteReviewLike,
+  } = useStore();
   const { book, reviewData } = currentBook;
 
   const handleSubmitReview = (content: string) => {
@@ -21,8 +28,17 @@ export default function List({ id }: { id: string }) {
     insertBookReview({ content, bookId: id, user });
   };
 
-  const handleLikeReview = (reviewId: string) => {
-    console.log(reviewId);
+  const handleLikeReview = (reviewId: string, isLike: boolean | undefined) => {
+    if (!user.id && !user.name) {
+      handleClickSignIn();
+      return;
+    }
+
+    if (!isLike) {
+      insertReviewLike({ reviewId, contentId: id, user });
+    } else {
+      deleteReviewLike({ reviewId });
+    }
   };
 
   useLayoutEffect(() => {

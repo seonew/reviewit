@@ -1,4 +1,5 @@
 import { signIn } from "coco-people-client";
+import jwt from "jsonwebtoken";
 
 export const numberWithCommas = (number: number): string => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -50,4 +51,10 @@ export const handleClickSignIn = () => {
     providerUrl: process.env.NEXT_PUBLIC_PROVIDER_URL!,
   };
   signIn(signInParams);
+};
+
+export const verifyData = (token: string) => {
+  const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY!;
+
+  return jwt.verify(token, secretKey);
 };

@@ -60,7 +60,7 @@ const createMovieSlice: StateCreator<
         id: Date.now().toString(),
         movieId: movieId,
         userName: state.user.name,
-        userId: state.user.id,
+        // userId: state.user.id,
         content: review,
         updateDate: replaceDateFormat(new Date().toString()),
       };

@@ -45,6 +45,7 @@ type Actions = {
     bookId: string;
     user: User;
   }) => void;
+  updateBookReview: (item: { reviews: []; count: number }) => void;
 };
 
 const initialState: State = {
@@ -126,6 +127,17 @@ const createDashboardSlice: StateCreator<
           ...state.currentBook.reviewData,
           reviews: [data, ...state.currentBook.reviewData.reviews],
           count: state.currentBook.reviewData.count + 1,
+        },
+      },
+    }));
+  },
+  updateBookReview: (item: { reviews: []; count: number }) => {
+    set((state) => ({
+      currentBook: {
+        ...state.currentBook,
+        reviewData: {
+          ...state.currentBook.reviewData,
+          ...item,
         },
       },
     }));

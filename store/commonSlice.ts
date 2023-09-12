@@ -1,5 +1,6 @@
 import { StateCreator } from "zustand";
 import { User } from "@/utils/types";
+import createDashboardSlice, { DashboardSlice } from "@/store/dashboardSlice";
 
 type State = {
   user: User;
@@ -12,6 +13,16 @@ type Actions = {
   setIsOpen: (item: boolean) => void;
   setIsSignedIn: (item: boolean) => void;
   signOut: () => void;
+
+  insertReviewLike: ({
+    reviewId,
+    user,
+  }: {
+    reviewId: string;
+    contentId: string;
+    user: User;
+  }) => void;
+  deleteReviewLike: ({ reviewId }: { reviewId: string }) => void;
 };
 
 const initialState: State = {
@@ -25,10 +36,55 @@ const initialState: State = {
   isOpen: false,
 };
 
-const createCommonSlice: StateCreator<CommonSlice, [], [], CommonSlice> = (
-  set
-) => ({
+const createCommonSlice: StateCreator<
+  CommonSlice & DashboardSlice,
+  [],
+  [],
+  CommonSlice
+> = (set, get, api) => ({
   ...initialState,
+  insertReviewLike: async ({ reviewId, contentId, user }) => {
+    try {
+      const params = { reviewId, contentId, user };
+      const response = await fetch(`/api/review/like`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+      const data = await response.json();
+
+      if (data.status === 500) {
+        alert(data.error);
+        return;
+      }
+
+      createDashboardSlice(set, get, api).updateBookReview(data);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  deleteReviewLike: async ({ reviewId }) => {
+    try {
+      const response = await fetch(`/api/review/like/${reviewId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+
+      if (data.status === 500) {
+        alert(data.error);
+        return;
+      }
+
+      createDashboardSlice(set, get, api).updateBookReview(data);
+    } catch (error) {
+      console.log(error);
+    }
+  },
   fetchUserInfo: async (token: string) => {
     try {
       const res = await fetch(`/api/user?token=${token}`);

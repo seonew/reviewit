@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const token = searchParams.get("token") ?? "";
   const SERVICE = process.env.NEXT_PUBLIC_SERVICE!;
-  const SERVICE_URL = process.env.NEXT_PUBLIC_SERVICE_URL;
+  const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL;
 
   try {
     if (!token) {
@@ -17,8 +18,10 @@ export async function GET(request: Request) {
     };
 
     const queryString = new URLSearchParams(params).toString();
-    const response = await fetch(`${SERVICE_URL}/api/user/info?${queryString}`);
+    const response = await fetch(`${LOGIN_URL}/api/user/info?${queryString}`);
     const data = await response.json();
+
+    cookies().set("token", token);
 
     return NextResponse.json(data);
   } catch (error) {
