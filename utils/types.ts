@@ -55,7 +55,7 @@ export type DetailMovieProps = MovieProps & {
   tagline: string;
   budget: number;
   revenue: number;
-  runtime: string;
+  runtime: number;
 };
 
 export type VideoImageBannerProps = {
