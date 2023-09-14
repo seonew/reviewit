@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { AuthInfo, initCallbackPage } from "coco-people-client";
+import { useEffect } from "react";
 import { useBoundStore as useStore } from "@/store";
 import { VideoImageBannerProps, MovieProps } from "@/utils/types";
 import CardList from "@/components/CardList";
@@ -14,30 +13,7 @@ type Props = {
 };
 
 const List = ({ movies, imageBannerInfo }: Props) => {
-  const { fetchDashboardMovies, fetchUserInfo, setIsSignedIn } = useStore();
-  const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
-
-  const initialize = useCallback(async () => {
-    try {
-      const authInfo = await initCallbackPage();
-      setAuthInfo(authInfo);
-      setIsSignedIn(true);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      } else {
-        console.log(error);
-      }
-      setIsSignedIn(false);
-    }
-  }, [setIsSignedIn]);
-
-  useEffect(() => {
-    initialize();
-    if (authInfo?.accessToken) {
-      fetchUserInfo(authInfo?.accessToken);
-    }
-  }, [authInfo?.accessToken, fetchUserInfo, initialize]);
+  const { fetchDashboardMovies } = useStore();
 
   useEffect(() => {
     if (movies) {
