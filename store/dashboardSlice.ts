@@ -5,7 +5,6 @@ import {
   LikedBook,
   LikedProduct,
   ProductProps,
-  User,
 } from "@/utils/types";
 import { CommonSlice } from "./commonSlice";
 
@@ -35,15 +34,15 @@ type Actions = {
   updateDashboardBooks: (page: number) => void;
   updateDashboardProducts: (page: number) => void;
 
-  fetchBookReview: (bookId: string) => void;
+  fetchBookReview: (contentId: string) => void;
   insertBookReview: ({
     content,
-    bookId,
-    user,
+    contentId,
+    like,
   }: {
     content: string;
-    bookId: string;
-    user: User;
+    contentId: string;
+    like: boolean;
   }) => void;
   updateBookReview: (item: { reviews: []; count: number }) => void;
 };
@@ -69,6 +68,7 @@ const initialState: State = {
     reviewData: {
       reviews: [],
       count: 0,
+      stats: [],
     },
   },
   currentProduct: {
@@ -104,9 +104,9 @@ const createDashboardSlice: StateCreator<
       },
     }));
   },
-  insertBookReview: async ({ content, bookId, user }) => {
-    const params = { content, user };
-    const response = await fetch(`/dashboard/books/${bookId}/api`, {
+  insertBookReview: async ({ content, contentId, like }) => {
+    const params = { content, like };
+    const response = await fetch(`/dashboard/books/${contentId}/api`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -125,8 +125,7 @@ const createDashboardSlice: StateCreator<
         ...state.currentBook,
         reviewData: {
           ...state.currentBook.reviewData,
-          reviews: [data, ...state.currentBook.reviewData.reviews],
-          count: state.currentBook.reviewData.count + 1,
+          ...data,
         },
       },
     }));

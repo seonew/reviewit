@@ -19,11 +19,11 @@ export async function DELETE(
 
     const likes = LikeModel;
     const like = await likes.findOne({ reviewId, userId });
-    const bookId = like.contentId;
+    const contentId = like.contentId;
 
     await likes.deleteOne({ reviewId, userId });
 
-    const result = await getBookReviews(bookId, userId);
+    const result = await getBookReviews(contentId, userId);
     return NextResponse.json(result);
   } catch (e) {
     console.error(e);

@@ -8,11 +8,11 @@ export const BookSchema = new Schema({
     type: String,
     required: true,
   },
-  bookId: {
+  contentId: {
     type: String,
     required: true,
   },
-  bookLike: {
+  contentLike: {
     type: Boolean,
     required: true,
   },
@@ -25,12 +25,6 @@ export const BookSchema = new Schema({
   userId: {
     type: String,
     required: true,
-  },
-  loginType: {
-    type: String,
-  },
-  avatarUrl: {
-    type: String,
   },
   registDate: {
     type: Date,

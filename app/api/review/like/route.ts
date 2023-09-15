@@ -27,8 +27,7 @@ export async function POST(
 
     await newLike.save();
 
-    const bookId = contentId;
-    const result = await getBookReviews(bookId, userId);
+    const result = await getBookReviews(contentId, userId);
 
     return NextResponse.json(result);
   } catch (e) {

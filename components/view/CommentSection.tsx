@@ -1,39 +1,50 @@
 "use client";
 
+import { useState } from "react";
 import { HeartIcon, UserCircleIcon } from "@heroicons/react/24/outline";
-import CommentTextEditor from "./CommentTextEditor";
 import { ReviewProps } from "@/utils/types";
+import CommentTextEditor from "./CommentTextEditor";
+import PreferenceSection from "./PreferenceSection";
+import PreferenceStatSection from "./PreferenceStatSection";
 
 type Props = {
   reviewData: {
     reviews: ReviewProps[] | undefined;
     count: number;
+    stats?: [];
   };
-  onSubmit: (item: string) => void;
+  onSubmit: (item: string, like: boolean) => void;
   onClickLike: (reviewId: string, like: boolean | undefined) => void;
 };
 const CommentSection = ({
-  reviewData = { reviews: undefined, count: 0 },
+  reviewData = { reviews: undefined, count: 0, stats: [] },
   onSubmit,
   onClickLike,
 }: Props) => {
-  const { reviews, count } = reviewData;
+  const { reviews, count, stats } = reviewData;
+  const [like, setLike] = useState(true);
 
   const handleSubmitReview = (item: string) => {
-    onSubmit(item);
+    onSubmit(item, like);
   };
 
   const handleLikeReview = (id: string, isLike: boolean | undefined) => () => {
     onClickLike(id, isLike);
   };
 
+  const handleSubmitContentLike = (item: boolean) => {
+    setLike(item);
+  };
+
   return (
     <div className="content-detail-section">
+      <PreferenceStatSection stats={stats} />
       <section>
         <p className="content-detail-title-p">
           댓글
           <span className="content-detail-comment-p-span">{count ?? 0}</span>
         </p>
+        <PreferenceSection onClick={handleSubmitContentLike} />
         <CommentTextEditor onClick={handleSubmitReview} />
         {reviews && (
           <ul className="list-none my-10 mr-8">
@@ -43,9 +54,14 @@ const CommentSection = ({
                   <div className="pl-9">
                     <div className="content-detail-comment-user">
                       <UserCircleIcon className="content-detail-comment-user-icon" />
-                      <span className="text-base leading-5 font-bold">
+                      <span className="text-base leading-5 font-bold mr-1.5">
                         {review.userName}
                       </span>
+                      {review.contentLike ? (
+                        <span className="rounded-full bg-blue-400 p-1 w-1 h-1"></span>
+                      ) : (
+                        <span className="rounded-full bg-red-400 p-1 w-1 h-1"></span>
+                      )}
                     </div>
                     <div className="content-detail-comment-user w-1100">
                       <p className="content-detail-comment-user-p">

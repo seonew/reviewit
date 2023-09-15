@@ -19,13 +19,13 @@ export default function List({ id }: { id: string }) {
   } = useStore();
   const { book, reviewData } = currentBook;
 
-  const handleSubmitReview = (content: string) => {
+  const handleSubmitReview = (content: string, like: boolean) => {
     if (!user.id && !user.name) {
       handleClickSignIn();
       return;
     }
 
-    insertBookReview({ content, bookId: id, user });
+    insertBookReview({ content, contentId: id, like });
   };
 
   const handleLikeReview = (reviewId: string, isLike: boolean | undefined) => {

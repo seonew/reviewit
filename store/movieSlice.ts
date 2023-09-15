@@ -1,5 +1,5 @@
 import { StateCreator } from "zustand";
-import { MovieProps, CurrentMovieProps, MovieReviewProps } from "@/utils/types";
+import { MovieProps, CurrentMovieProps, ReviewProps } from "@/utils/types";
 import { replaceDateFormat } from "@/utils/common";
 import { CommonSlice } from "./commonSlice";
 
@@ -59,9 +59,9 @@ const createMovieSlice: StateCreator<
   ...initialState,
   insertMovieReview: ({ review, movieId }) =>
     set((state) => {
-      const response: MovieReviewProps = {
+      const response: ReviewProps = {
         id: Date.now().toString(),
-        movieId: movieId,
+        contentId: movieId,
         userName: state.user.name,
         content: review,
         updateDate: replaceDateFormat(new Date().toString()),

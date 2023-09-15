@@ -11,13 +11,13 @@ export async function GET(
   try {
     dbConnect();
 
-    const bookId = params.id;
-    if (!bookId) {
+    const contentId = params.id;
+    if (!contentId) {
       return NextResponse.json({ error: "Empty data", status: 500 });
     }
 
     const userId = getUserId();
-    const result = await getBookReviews(bookId, userId);
+    const result = await getBookReviews(contentId, userId);
 
     return NextResponse.json(result);
   } catch (e) {
@@ -33,38 +33,28 @@ export async function POST(
   try {
     dbConnect();
 
-    const bookId = params.id;
+    const contentId = params.id;
     const reqeustData = await reqeust.json();
-    const { content } = reqeustData;
+    const { content, like } = reqeustData;
 
-    if (!content) {
-      return NextResponse.json({ error: "Empty data", status: 500 });
+    if (!contentId || !content) {
+      throw new Error();
     }
 
     const userId = getUserId();
-    const userName = getUserName();
 
     const newReview = new BookReviewModel({
       id: Date.now().toString(),
-      bookId,
+      contentId,
       content,
-      bookLike: false,
+      contentLike: like,
       like: false,
       updateDate: new Date(),
       userId,
     });
 
-    const res = await newReview.save();
-    const result = {
-      id: res.id,
-      bookId: res.bookId,
-      content: res.content,
-      like: res.like,
-      bookLike: res.bookLike,
-      updateDate: replaceDateFormat(res.updateDate),
-      userName: userName,
-      userId: userId,
-    };
+    await newReview.save();
+    const result = await getBookReviews(contentId, userId);
 
     return NextResponse.json(result);
   } catch (e) {
