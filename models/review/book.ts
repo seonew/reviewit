@@ -12,6 +12,10 @@ export const BookSchema = new Schema({
     type: String,
     required: true,
   },
+  contentImgUrl: {
+    type: String,
+    required: true,
+  },
   contentLike: {
     type: Boolean,
     required: true,

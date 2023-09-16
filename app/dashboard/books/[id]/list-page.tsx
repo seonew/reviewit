@@ -16,6 +16,7 @@ export default function List({ id }: { id: string }) {
     fetchBookReview,
     insertReviewLike,
     deleteReviewLike,
+    fetchBookDetail,
   } = useStore();
   const { book, reviewData } = currentBook;
 
@@ -25,7 +26,12 @@ export default function List({ id }: { id: string }) {
       return;
     }
 
-    insertBookReview({ content, contentId: id, like });
+    insertBookReview({
+      content,
+      contentId: id,
+      like,
+      contentImgUrl: book.image,
+    });
   };
 
   const handleLikeReview = (reviewId: string, isLike: boolean | undefined) => {
@@ -42,6 +48,7 @@ export default function List({ id }: { id: string }) {
   };
 
   useLayoutEffect(() => {
+    fetchBookDetail(id);
     fetchBookReview(id);
   }, [fetchBookReview, id]);
 
@@ -73,10 +80,10 @@ export default function List({ id }: { id: string }) {
                   </h3>
                 </div>
                 <div className="pt-8 pb-10">
-                  <Info name="저자" content={book.author} />
-                  <Info name="출판" content={book.publisher} />
-                  <Info name="발행일" content={book.pubdate} />
-                  <Info name="가격" content={`${book.discount}원`} />
+                  <GridRow name="저자" content={book.author} />
+                  <GridRow name="출판" content={book.publisher} />
+                  <GridRow name="발행일" content={book.pubdate} />
+                  <GridRow name="가격" content={`${book.discount}원`} />
                 </div>
               </div>
             </div>
@@ -101,7 +108,7 @@ export default function List({ id }: { id: string }) {
   );
 }
 
-const Info = ({
+const GridRow = ({
   name,
   content,
   children,
@@ -111,9 +118,9 @@ const Info = ({
   children?: ReactNode;
 }) => {
   return (
-    <p>
-      <span className="movie-info-description">{name}</span>
-      {children ?? <span>{content}</span>}
-    </p>
+    <div className="flex">
+      <div className="grow-0 w-20 movie-info-description">{name}</div>
+      <div className="grow">{children ?? <div>{content}</div>}</div>
+    </div>
   );
 };

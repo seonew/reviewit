@@ -7,8 +7,7 @@ import IconButton from "./IconButton";
 
 const BookInfo = ({ item }: { item: LikedBook }) => {
   const { title, author, discount, image, link, checked } = item;
-  const { updateLikedBooks, updateCheckedToTopBooks, updateCurrentBook } =
-    useStore();
+  const { updateLikedBooks, updateCheckedToTopBooks } = useStore();
 
   const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
     updateLikedBooks(item);
@@ -16,13 +15,9 @@ const BookInfo = ({ item }: { item: LikedBook }) => {
     e.stopPropagation();
   };
 
-  const handleClickItemToUpdate = () => {
-    updateCurrentBook(item);
-  };
-
   return (
     <div className="flex flex-col w-full min-w-0">
-      <Link href={link} onClick={handleClickItemToUpdate}>
+      <Link href={link}>
         <Card width="w-52" height="h-52">
           <Image
             src={image}

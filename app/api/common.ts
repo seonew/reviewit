@@ -45,15 +45,19 @@ export const getBookReviews = async (contentId: string, userId: string) => {
     });
 
     const total = reviews.length;
-    const likeResult = (likeCount / total) * 100;
-    const disLikeResult = (disLikeCount / total) * 100;
-    const textResult = getStatsText(likeResult);
+    let stats = null;
 
-    const stats = [
-      { id: 1, name: "", value: textResult },
-      { id: 2, name: "좋아요", value: `${likeResult.toFixed(2)}%` },
-      { id: 3, name: "싫어요", value: `${disLikeResult.toFixed(2)}%` },
-    ];
+    if (total > 0) {
+      const likeResult = (likeCount / total) * 100;
+      const disLikeResult = (disLikeCount / total) * 100;
+      const textResult = getStatsText(likeResult);
+
+      stats = [
+        { id: 1, name: "", value: textResult },
+        { id: 2, name: "좋아요", value: `${likeResult.toFixed(2)}%` },
+        { id: 3, name: "싫어요", value: `${disLikeResult.toFixed(2)}%` },
+      ];
+    }
 
     const result = {
       reviews,

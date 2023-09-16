@@ -33,16 +33,19 @@ type Actions = {
   fetchDashboardProducts: (products: ProductProps[]) => void;
   updateDashboardBooks: (page: number) => void;
   updateDashboardProducts: (page: number) => void;
+  fetchBookDetail: (id: string) => void;
 
   fetchBookReview: (contentId: string) => void;
   insertBookReview: ({
     content,
     contentId,
     like,
+    contentImgUrl,
   }: {
     content: string;
     contentId: string;
     like: boolean;
+    contentImgUrl: string;
   }) => void;
   updateBookReview: (item: { reviews: []; count: number }) => void;
 };
@@ -90,8 +93,22 @@ const createDashboardSlice: StateCreator<
   DashboardSlice
 > = (set, get, api) => ({
   ...initialState,
-  fetchBookReview: async (id: string) => {
+  fetchBookDetail: async (id: string) => {
     const res = await fetch(`/dashboard/books/${id}/api`);
+    const data = await res.json();
+
+    set((state) => ({
+      currentBook: {
+        ...state.currentBook,
+        book: {
+          ...state.currentBook.book,
+          ...data,
+        },
+      },
+    }));
+  },
+  fetchBookReview: async (id: string) => {
+    const res = await fetch(`/dashboard/books/${id}/reviews/api`);
     const data = await res.json();
 
     set((state) => ({
@@ -104,9 +121,9 @@ const createDashboardSlice: StateCreator<
       },
     }));
   },
-  insertBookReview: async ({ content, contentId, like }) => {
-    const params = { content, like };
-    const response = await fetch(`/dashboard/books/${contentId}/api`, {
+  insertBookReview: async ({ content, contentId, like, contentImgUrl }) => {
+    const params = { content, like, contentImgUrl };
+    const response = await fetch(`/dashboard/books/${contentId}/reviews/api`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

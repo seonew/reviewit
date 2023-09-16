@@ -1,60 +1,44 @@
-import dbConnect from "@/utils/db/mongodb";
-import { replaceDateFormat } from "@/utils/common";
 import { NextResponse } from "next/server";
-import BookReviewModel from "@/models/review/book";
-import { getBookReviews, getUserId, getUserName } from "@/app/api/common";
+import { BookProps } from "@/utils/types";
+import {
+  numberWithCommas,
+  replaceCaretWithComma,
+  replaceDateFormat8Digits,
+} from "@/utils/common";
 
 export async function GET(
   reqeust: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    dbConnect();
+    const d_isbn = params.id;
+    const client_id = process.env.CLIENT_ID || "";
+    const client_secret = process.env.CLIENT_SECRET || "";
+    const bookRequestUrl =
+      "https://openapi.naver.com/v1/search/book_adv?d_isbn=";
+    const headers = {
+      "X-Naver-Client-Id": client_id,
+      "X-Naver-Client-Secret": client_secret,
+    };
 
-    const contentId = params.id;
-    if (!contentId) {
-      return NextResponse.json({ error: "Empty data", status: 500 });
-    }
-
-    const userId = getUserId();
-    const result = await getBookReviews(contentId, userId);
-
-    return NextResponse.json(result);
-  } catch (e) {
-    console.error(e);
-  }
-  return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-}
-
-export async function POST(
-  reqeust: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    dbConnect();
-
-    const contentId = params.id;
-    const reqeustData = await reqeust.json();
-    const { content, like } = reqeustData;
-
-    if (!contentId || !content) {
-      throw new Error();
-    }
-
-    const userId = getUserId();
-
-    const newReview = new BookReviewModel({
-      id: Date.now().toString(),
-      contentId,
-      content,
-      contentLike: like,
-      like: false,
-      updateDate: new Date(),
-      userId,
+    const bookResponse = await fetch(`${bookRequestUrl}${d_isbn}`, {
+      headers,
     });
+    const bookData = await bookResponse.json();
+    const book = bookData.items[0];
 
-    await newReview.save();
-    const result = await getBookReviews(contentId, userId);
+    const result: BookProps = {
+      title: book.title,
+      author: replaceCaretWithComma(book.author),
+      discount: numberWithCommas(parseInt(book.discount)),
+      image: book.image,
+      link: `/dashboard/books/${book.isbn}`,
+      isbn: book.isbn,
+      publisher: book.publisher,
+      description: book.description,
+      catalogLink: book.link,
+      pubdate: replaceDateFormat8Digits(book.pubdate),
+    };
 
     return NextResponse.json(result);
   } catch (e) {
