@@ -7,6 +7,7 @@ import { handleClickSignIn } from "@/utils/common";
 import CommentSection from "@/components/view/CommentSection";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/components/DefaultImage";
+import InitializeBanner from "@/components/InitializeBanner";
 
 export default function List({ id }: { id: string }) {
   const {
@@ -16,9 +17,11 @@ export default function List({ id }: { id: string }) {
     fetchBookReview,
     insertReviewLike,
     deleteReviewLike,
-    fetchBookDetail,
+    fetchCurrentBook,
+    initializeBook,
   } = useStore();
   const { book, reviewData } = currentBook;
+  const loaded = book.isbn === "" ? false : true;
 
   const handleSubmitReview = (content: string, like: boolean) => {
     if (!user.id && !user.name) {
@@ -49,13 +52,22 @@ export default function List({ id }: { id: string }) {
   };
 
   useEffect(() => {
-    fetchBookDetail(id);
+    initializeBook();
+    fetchCurrentBook(id);
+  }, [fetchCurrentBook, id, initializeBook]);
+
+  useEffect(() => {
+    if (!loaded) {
+      return;
+    }
     fetchBookReview(id);
-  }, [fetchBookDetail, fetchBookReview, id]);
+  }, [fetchBookReview, id, loaded]);
 
   return (
     <div className="contents-container">
-      {book && (
+      {!loaded ? (
+        <InitializeBanner />
+      ) : (
         <>
           <div className="banner-container">
             <div className="relative pt-24 ml-16 z-10 text-white">

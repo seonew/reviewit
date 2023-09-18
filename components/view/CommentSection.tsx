@@ -6,6 +6,7 @@ import { ReviewProps } from "@/utils/types";
 import CommentTextEditor from "./CommentTextEditor";
 import PreferenceSection from "./PreferenceSection";
 import PreferenceStatSection from "./PreferenceStatSection";
+import { HandThumbUpIcon, HandThumbDownIcon } from "@heroicons/react/24/solid";
 
 type Props = {
   reviewData: {
@@ -38,7 +39,7 @@ const CommentSection = ({
 
   return (
     <div className="content-detail-section">
-      <PreferenceStatSection stats={stats} />
+      {stats && <PreferenceStatSection stats={stats} />}
       <section>
         <p className="content-detail-title-p">
           댓글
@@ -58,9 +59,13 @@ const CommentSection = ({
                         {review.userName}
                       </span>
                       {review.contentLike ? (
-                        <span className="rounded-full bg-blue-400 p-1 w-1 h-1"></span>
+                        <span className="rounded-full bg-blue-400 p-1 w-5 h-5">
+                          <HandThumbUpIcon className="w-3 h-3 text-white" />
+                        </span>
                       ) : (
-                        <span className="rounded-full bg-red-400 p-1 w-1 h-1"></span>
+                        <span className="rounded-full bg-red-400 p-1 w-5 h-5">
+                          <HandThumbDownIcon className="w-3 h-3 text-white" />
+                        </span>
                       )}
                     </div>
                     <div className="content-detail-comment-user w-1100">

@@ -11,6 +11,7 @@ import CommentSection from "@/components/view/CommentSection";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/components/DefaultImage";
 import VideoSection from "@/components/view/VideoSection";
+import InitializeBanner from "@/components/InitializeBanner";
 
 export default function List({ id }: { id: string }) {
   const {
@@ -173,19 +174,6 @@ const GridRow = ({
     <div className="flex">
       <div className="grow-0 w-20 movie-info-description">{name}</div>
       <div className="grow">{children ?? <div>{content}</div>}</div>
-    </div>
-  );
-};
-
-const InitializeBanner = () => {
-  return (
-    <div className="banner-container">
-      <div className="relative pt-24 ml-16 z-10 text-white">
-        <div className="float-left mr-10 w-52 h-80">
-          <DefaultImage size="w-52 h-80" />
-        </div>
-      </div>
-      <div className="banner-background opacity-50"></div>
     </div>
   );
 };

@@ -76,6 +76,9 @@
   .content-detail-comment-text-span {
     @apply basic-text-xs border-0 items-center;
   }
+  .tab-active {
+    @apply text-ozip-blue border-b-2 border-ozip-blue;
+  }
   /* common */
   .basic-border {
     @apply border-gray-200 border-solid border;

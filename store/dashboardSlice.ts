@@ -33,7 +33,7 @@ type Actions = {
   fetchDashboardProducts: (products: ProductProps[]) => void;
   updateDashboardBooks: (page: number) => void;
   updateDashboardProducts: (page: number) => void;
-  fetchBookDetail: (id: string) => void;
+  fetchCurrentBook: (id: string) => void;
 
   fetchBookReview: (contentId: string) => void;
   insertBookReview: (
@@ -46,6 +46,7 @@ type Actions = {
     like: boolean
   ) => void;
   updateBookReview: (item: { reviews: []; count: number }) => void;
+  initializeBook: () => void;
 };
 
 const initialState: State = {
@@ -91,7 +92,7 @@ const createDashboardSlice: StateCreator<
   DashboardSlice
 > = (set, get, api) => ({
   ...initialState,
-  fetchBookDetail: async (id: string) => {
+  fetchCurrentBook: async (id: string) => {
     const res = await fetch(`/dashboard/books/${id}/api`);
     const data = await res.json();
 
@@ -302,6 +303,11 @@ const createDashboardSlice: StateCreator<
         topProducts: modifiedProducts,
       };
     }),
+  initializeBook: () => {
+    set(() => ({
+      currentBook: initialState.currentBook,
+    }));
+  },
   reset: () => {
     set(initialState);
   },
