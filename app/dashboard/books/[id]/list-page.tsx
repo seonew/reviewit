@@ -1,7 +1,7 @@
 "use client";
 
 import { useBoundStore as useStore } from "@/store";
-import { ReactNode, useLayoutEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import Image from "next/image";
 import { handleClickSignIn } from "@/utils/common";
 import CommentSection from "@/components/view/CommentSection";
@@ -48,7 +48,7 @@ export default function List({ id }: { id: string }) {
     }
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     fetchBookDetail(id);
     fetchBookReview(id);
   }, [fetchBookDetail, fetchBookReview, id]);
