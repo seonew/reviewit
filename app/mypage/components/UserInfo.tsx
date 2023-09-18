@@ -1,10 +1,11 @@
 import DefaultImage from "@/components/DefaultImage";
 import { User } from "@/utils/types";
-import { HeartIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import githubIcon from "@/public/assets/github-icon.svg";
 import kakaoTalkIcon from "@/public/assets/kakaotalk-icon.png";
 import googleIcon from "@/public/assets/google-icon.png";
+import Link from "next/link";
 
 type Props = {
   user: User;
@@ -64,12 +65,11 @@ const UserInfo = ({ user, onClickSignOut }: Props) => {
                   />
                 </div>
               </div>
-              <div className="py-5">
+              <Link href={"/mypage/reviews"} className="py-5">
                 <span className="inline-flex items-center leading-4 font-medium text-sm">
-                  <HeartIcon className="w-4 h-4 mr-0.5" />
-                  <span>좋아요</span>
+                  <span>내가 작성한 리뷰</span>
                 </span>
-              </div>
+              </Link>
             </div>
           </div>
         </div>

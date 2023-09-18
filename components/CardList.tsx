@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ReactNode } from "react";
+import Empty from "./Empty";
 
 type Props = {
   title: string;
@@ -9,18 +10,14 @@ type Props = {
 };
 
 const CardList = ({ title, color, children, targetUrl }: Props) => {
-  const titleElement = (
-    <h2 className={`text-xl font-bold ${color ?? "text-naver-green"}`}>
-      {title}
-    </h2>
-  );
-
   return (
     <div className="card-list">
       {(children as Array<ReactNode>).length > 0 ? (
         <>
           <div className="py-5 flex items-center justify-between">
-            {titleElement}
+            <h2 className={`text-xl font-bold ${color ?? "text-naver-green"}`}>
+              {title}
+            </h2>
             {targetUrl && (
               <div className="flex items-center ml-3">
                 <Link href={targetUrl}>
@@ -34,16 +31,7 @@ const CardList = ({ title, color, children, targetUrl }: Props) => {
           </div>
         </>
       ) : (
-        <>
-          <div className="py-5 flex items-center justify-between">
-            {titleElement}
-          </div>
-          <div className="h-44">
-            <div className="flex justify-center items-center h-full bg-gray-100 rounded-lg">
-              추가된 아이템이 없어요 ㅜ.ㅜ
-            </div>
-          </div>
-        </>
+        <Empty title={title} message={"추가된 아이템이 없어요 ㅜ.ㅜ"} />
       )}
     </div>
   );

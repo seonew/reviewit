@@ -99,7 +99,8 @@ export type ReviewProps = {
   contentId: string;
   contentLike?: boolean;
   contentImgUrl?: string;
-  userName: string;
+  contentTitle?: string;
+  userName?: string;
   updateDate: string;
 };
 

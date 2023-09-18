@@ -16,6 +16,10 @@ export const BookSchema = new Schema({
     type: String,
     required: true,
   },
+  contentTitle: {
+    type: String,
+    required: true,
+  },
   contentLike: {
     type: Boolean,
     required: true,

@@ -26,12 +26,13 @@ export default function List({ id }: { id: string }) {
       return;
     }
 
-    insertBookReview({
+    const contentInfo = {
       content,
       contentId: id,
-      like,
       contentImgUrl: book.image,
-    });
+      contentTitle: book.title,
+    };
+    insertBookReview(contentInfo, like);
   };
 
   const handleLikeReview = (reviewId: string, isLike: boolean | undefined) => {
@@ -41,16 +42,16 @@ export default function List({ id }: { id: string }) {
     }
 
     if (!isLike) {
-      insertReviewLike({ reviewId, contentId: id, user });
+      insertReviewLike(reviewId, id);
     } else {
-      deleteReviewLike({ reviewId });
+      deleteReviewLike(reviewId);
     }
   };
 
   useLayoutEffect(() => {
     fetchBookDetail(id);
     fetchBookReview(id);
-  }, [fetchBookReview, id]);
+  }, [fetchBookDetail, fetchBookReview, id]);
 
   return (
     <div className="contents-container">

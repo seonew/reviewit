@@ -3,10 +3,10 @@ import { devtools, persist } from "zustand/middleware";
 import createCommonSlice, { CommonSlice } from "./commonSlice";
 import createDashboardSlice, { DashboardSlice } from "./dashboardSlice";
 import createMovieSlice, { MovieSlice } from "./movieSlice";
-import createMypageSlice, { MypageSlice } from "./mypageSlice";
+import createReviewSlice, { ReviewSlice } from "./reviewSlice";
 
 export const useBoundStore = create<
-  CommonSlice & DashboardSlice & MovieSlice & MypageSlice
+  CommonSlice & DashboardSlice & MovieSlice & ReviewSlice
 >()(
   devtools(
     persist(
@@ -14,7 +14,7 @@ export const useBoundStore = create<
         ...createCommonSlice(...items),
         ...createDashboardSlice(...items),
         ...createMovieSlice(...items),
-        ...createMypageSlice(...items),
+        ...createReviewSlice(...items),
       }),
       {
         name: "item-storage",

@@ -12,7 +12,7 @@ export async function GET(
 
     const contentId = params.id;
     if (!contentId) {
-      return NextResponse.json({ error: "Empty data", status: 500 });
+      throw new Error();
     }
 
     const userId = getUserId();
@@ -34,7 +34,9 @@ export async function POST(
 
     const contentId = params.id;
     const reqeustData = await reqeust.json();
-    const { content, like, contentImgUrl } = reqeustData;
+
+    const { contentInfo, like } = reqeustData;
+    const { content, contentImgUrl, contentTitle } = contentInfo;
 
     if (!contentId || !content) {
       throw new Error();
@@ -46,6 +48,7 @@ export async function POST(
       id: Date.now().toString(),
       contentId,
       content,
+      contentTitle,
       contentImgUrl,
       contentLike: like,
       like: false,

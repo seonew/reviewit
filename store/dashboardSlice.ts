@@ -36,17 +36,15 @@ type Actions = {
   fetchBookDetail: (id: string) => void;
 
   fetchBookReview: (contentId: string) => void;
-  insertBookReview: ({
-    content,
-    contentId,
-    like,
-    contentImgUrl,
-  }: {
-    content: string;
-    contentId: string;
-    like: boolean;
-    contentImgUrl: string;
-  }) => void;
+  insertBookReview: (
+    contentInfo: {
+      contentId: string;
+      contentImgUrl: string;
+      contentTitle: string;
+      content: string;
+    },
+    like: boolean
+  ) => void;
   updateBookReview: (item: { reviews: []; count: number }) => void;
 };
 
@@ -121,8 +119,9 @@ const createDashboardSlice: StateCreator<
       },
     }));
   },
-  insertBookReview: async ({ content, contentId, like, contentImgUrl }) => {
-    const params = { content, like, contentImgUrl };
+  insertBookReview: async (contentInfo, like) => {
+    const { content, contentId, contentImgUrl, contentTitle } = contentInfo;
+    const params = { contentInfo, like };
     const response = await fetch(`/dashboard/books/${contentId}/reviews/api`, {
       method: "POST",
       headers: {
