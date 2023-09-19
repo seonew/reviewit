@@ -7,7 +7,7 @@ import {
 } from "@/utils/common";
 
 export async function GET(
-  reqeust: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {

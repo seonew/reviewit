@@ -4,7 +4,7 @@ import { MediaVideoProps, MovieProps, ReviewProps } from "@/utils/types";
 import { NextResponse } from "next/server";
 
 export async function GET(
-  reqeust: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   const movieId = params.id;

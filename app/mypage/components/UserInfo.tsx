@@ -65,8 +65,8 @@ const UserInfo = ({ user, onClickSignOut }: Props) => {
                   />
                 </div>
               </div>
-              <Link href={"/mypage/reviews"} className="py-5">
-                <span className="inline-flex items-center leading-4 font-medium text-sm">
+              <Link href={"/mypage/reviews"}>
+                <span className="inline-flex items-center leading-4 font-medium text-sm py-5">
                   <span>내가 작성한 리뷰</span>
                 </span>
               </Link>

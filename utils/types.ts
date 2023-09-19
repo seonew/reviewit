@@ -13,7 +13,13 @@ export type BookProps = {
 
 export type CurrentBookProps = {
   book: BookProps;
-  reviewData: { reviews: ReviewProps[]; count: number; stats: [] };
+  reviewData: ReviewDataProps;
+};
+
+export type ReviewDataProps = {
+  reviews: ReviewProps[];
+  count: number;
+  stats: [];
 };
 
 export type ProductProps = {
