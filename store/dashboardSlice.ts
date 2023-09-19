@@ -5,6 +5,7 @@ import {
   LikedBook,
   LikedProduct,
   ProductProps,
+  ReviewDataProps,
 } from "@/utils/types";
 import { CommonSlice } from "./commonSlice";
 
@@ -35,7 +36,7 @@ type Actions = {
   updateDashboardProducts: (page: number) => void;
   fetchCurrentBook: (id: string) => void;
 
-  fetchBookReview: (contentId: string) => void;
+  fetchBookReview: (contentId: string, page: number) => void;
   insertBookReview: (
     contentInfo: {
       contentId: string;
@@ -45,7 +46,7 @@ type Actions = {
     },
     like: boolean
   ) => void;
-  updateBookReview: (item: { reviews: []; count: number }) => void;
+  updateBookReview: (item: ReviewDataProps) => void;
   initializeBook: () => void;
 };
 
@@ -106,8 +107,8 @@ const createDashboardSlice: StateCreator<
       },
     }));
   },
-  fetchBookReview: async (id: string) => {
-    const res = await fetch(`/dashboard/books/${id}/reviews/api`);
+  fetchBookReview: async (id: string, page: number) => {
+    const res = await fetch(`/dashboard/books/${id}/reviews/api?page=${page}`);
     const data = await res.json();
 
     set((state) => ({
@@ -121,7 +122,7 @@ const createDashboardSlice: StateCreator<
     }));
   },
   insertBookReview: async (contentInfo, like) => {
-    const { content, contentId, contentImgUrl, contentTitle } = contentInfo;
+    const { contentId } = contentInfo;
     const params = { contentInfo, like };
     const response = await fetch(`/dashboard/books/${contentId}/reviews/api`, {
       method: "POST",
@@ -147,7 +148,7 @@ const createDashboardSlice: StateCreator<
       },
     }));
   },
-  updateBookReview: (item: { reviews: []; count: number }) => {
+  updateBookReview: (item: ReviewDataProps) => {
     set((state) => ({
       currentBook: {
         ...state.currentBook,

@@ -2,40 +2,40 @@
 
 import React, { useEffect, useState } from "react";
 import { useBoundStore as useStore } from "@/store";
-import LikeList from "../components/LikeList";
 import Empty from "@/components/Empty";
 import Pagination from "@/components/Pagination";
+import LikeList from "../../components/LikeList";
 
 const List = () => {
-  const { fetchMyReviews, myReviews } = useStore();
+  const { fetchContetLikes, contentLikes } = useStore();
   const [page, setPage] = useState<number>(1);
 
   const handleClickPage = (current: number) => {
     setPage(current);
-    fetchMyReviews(current);
+    fetchContetLikes(current);
   };
 
   const handleClickPrevButton = () => {
     setPage(page - 1);
-    fetchMyReviews(page - 1);
+    fetchContetLikes(page - 1);
   };
 
   const handleClickNextButton = () => {
     setPage(page + 1);
-    fetchMyReviews(page + 1);
+    fetchContetLikes(page + 1);
   };
 
   useEffect(() => {
-    fetchMyReviews(1);
-  }, [fetchMyReviews]);
+    fetchContetLikes(1);
+  }, [fetchContetLikes]);
 
   return (
     <div>
-      {myReviews.count > 0 ? (
+      {contentLikes.count > 0 ? (
         <>
-          <LikeList title={"My Reviews"} items={myReviews.reviews} />
+          <LikeList title={"Likes"} items={contentLikes.reviews} />
           <Pagination
-            total={myReviews.count}
+            total={contentLikes.count}
             limit={5}
             currentPage={page}
             onClickPage={handleClickPage}
@@ -45,9 +45,9 @@ const List = () => {
         </>
       ) : (
         <Empty
-          title={"My Reviews"}
+          title={"Likes"}
           color={"text-black"}
-          message={"작성한 리뷰가 없어요 ㅜ.ㅜ"}
+          message={"좋아요 리뷰가 없어요 ㅜ.ㅜ"}
         />
       )}
     </div>

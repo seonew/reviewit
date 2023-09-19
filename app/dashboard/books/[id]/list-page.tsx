@@ -1,13 +1,15 @@
 "use client";
 
 import { useBoundStore as useStore } from "@/store";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import { handleClickSignIn } from "@/utils/common";
 import CommentSection from "@/components/view/CommentSection";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/components/DefaultImage";
 import InitializeBanner from "@/components/InitializeBanner";
+import Pagination from "@/components/Pagination";
+import { limit } from "@/utils/constants";
 
 export default function List({ id }: { id: string }) {
   const {
@@ -22,6 +24,22 @@ export default function List({ id }: { id: string }) {
   } = useStore();
   const { book, reviewData } = currentBook;
   const loaded = book.isbn === "" ? false : true;
+  const [page, setPage] = useState<number>(1);
+
+  const handleClickPage = (current: number) => {
+    setPage(current);
+    fetchBookReview(id, current);
+  };
+
+  const handleClickPrevButton = () => {
+    setPage(page - 1);
+    fetchBookReview(id, page - 1);
+  };
+
+  const handleClickNextButton = () => {
+    setPage(page + 1);
+    fetchBookReview(id, page + 1);
+  };
 
   const handleSubmitReview = (content: string, like: boolean) => {
     if (!user.id && !user.name) {
@@ -45,9 +63,9 @@ export default function List({ id }: { id: string }) {
     }
 
     if (!isLike) {
-      insertReviewLike(reviewId, id);
+      insertReviewLike(reviewId, id, page);
     } else {
-      deleteReviewLike(reviewId);
+      deleteReviewLike(reviewId, page);
     }
   };
 
@@ -57,11 +75,8 @@ export default function List({ id }: { id: string }) {
   }, [fetchCurrentBook, id, initializeBook]);
 
   useEffect(() => {
-    if (!loaded) {
-      return;
-    }
-    fetchBookReview(id);
-  }, [fetchBookReview, id, loaded]);
+    fetchBookReview(id, 1);
+  }, [fetchBookReview, id]);
 
   return (
     <div className="contents-container">
@@ -113,6 +128,14 @@ export default function List({ id }: { id: string }) {
               reviewData={reviewData}
               onSubmit={handleSubmitReview}
               onClickLike={handleLikeReview}
+            />
+            <Pagination
+              total={reviewData.count}
+              limit={limit}
+              currentPage={page}
+              onClickPage={handleClickPage}
+              onClickPrev={handleClickPrevButton}
+              onClickNext={handleClickNextButton}
             />
           </div>
         </>

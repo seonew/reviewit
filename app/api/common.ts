@@ -4,70 +4,90 @@ import BookReviewModel from "@/models/review/book";
 import UserModel from "@/models/user";
 import LikeModel from "@/models/review/like";
 import { BookReviewProps } from "@/utils/types";
+import { limit } from "@/utils/constants";
 
-export const getBookReviews = async (contentId: string, userId: string) => {
-  try {
-    const SERVICE = process.env.NEXT_PUBLIC_SERVICE!;
-    const bookReviews = BookReviewModel;
-    const bookReviewData: BookReviewProps[] = await bookReviews
-      .find({ contentId })
-      .sort({ updateDate: -1 });
+const SERVICE = process.env.NEXT_PUBLIC_SERVICE!;
 
-    const users = UserModel;
-    const userData = await users.find({ loginService: SERVICE });
-    const likes = LikeModel;
-    const likeData = await likes.find({ userId, contentId });
-    let likeCount = 0;
-    let disLikeCount = 0;
+export const getBookReviews = async (contentId: string, offset: number) => {
+  const bookReviews = BookReviewModel;
+  const users = UserModel;
+  const likes = LikeModel;
 
-    const reviews = bookReviewData.map((review) => {
-      const author = userData.find((user) => user.id === review.userId);
-      const like = likeData.find((like) => like.reviewId === review.id);
-      const contentLike =
-        review.contentLike === undefined ? false : review.contentLike;
+  const userId = getUserId();
+  const userData = await users.find({ loginService: SERVICE });
+  const likeData = await likes.find({ userId, contentId });
 
-      if (contentLike) {
-        likeCount++;
-      } else {
-        disLikeCount++;
-      }
+  const rowData = await bookReviews.aggregate([
+    { $match: { contentId } },
+    { $sort: { updateDate: -1 } },
+    {
+      $facet: {
+        metadata: [{ $count: "total" }],
+        data: [{ $skip: offset }, { $limit: limit }],
+      },
+    },
+  ]);
 
-      return {
-        id: review.id,
-        contentId,
-        content: review.content,
-        contentLike,
-        like: like ? true : false,
-        updateDate: replaceDateFormat(review.updateDate),
-        userName: author.name,
-        userId: review.userId,
-      };
-    });
+  const bookReviewData = rowData[0].data;
+  const reviews = bookReviewData.map((review: BookReviewProps) => {
+    const author = userData.find((user) => user.id === review.userId);
+    const like = likeData.find((like) => like.reviewId === review.id);
+    const contentLike =
+      review.contentLike === undefined ? false : review.contentLike;
 
-    const total = reviews.length;
-    let stats = null;
-
-    if (total > 0) {
-      const likeResult = (likeCount / total) * 100;
-      const disLikeResult = (disLikeCount / total) * 100;
-      const textResult = getStatsText(likeResult);
-
-      stats = [
-        { id: 1, name: "", value: textResult },
-        { id: 2, name: "좋아요", value: `${likeResult.toFixed(2)}%` },
-        { id: 3, name: "싫어요", value: `${disLikeResult.toFixed(2)}%` },
-      ];
-    }
-
-    const result = {
-      reviews,
-      count: total,
-      stats,
+    return {
+      id: review.id,
+      contentId,
+      content: review.content,
+      contentLike,
+      like: like ? true : false,
+      updateDate: replaceDateFormat(review.updateDate),
+      userName: author.name,
+      userId: review.userId,
     };
+  });
+  const total: number = rowData[0].metadata[0].total;
+  const stats = await getStatsForReview(contentId);
 
-    return result;
-  } catch (error) {
-    console.log(error);
+  return { reviews, count: total, stats };
+};
+
+const getStatsForReview = async (contentId: string) => {
+  const bookReviews = BookReviewModel;
+  const rowData = await bookReviews.aggregate([
+    { $match: { contentId } },
+    {
+      $group: {
+        _id: "$contentLike",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  let likeCount = 0;
+  let disLikeCount = 0;
+
+  rowData.map((like) => {
+    if (like._id === true) {
+      likeCount = like.count;
+    } else {
+      disLikeCount += like.count;
+    }
+  });
+
+  const total = await bookReviews.countDocuments({ contentId });
+  if (total > 0) {
+    const likeResult = (likeCount / total) * 100;
+    const disLikeResult = (disLikeCount / total) * 100;
+    const textResult = getStatsText(likeResult);
+
+    const stats: any = [
+      { id: 1, name: "", value: textResult },
+      { id: 2, name: "좋아요", value: `${likeResult.toFixed(2)}%` },
+      { id: 3, name: "싫어요", value: `${disLikeResult.toFixed(2)}%` },
+    ];
+
+    return stats;
   }
 };
 

@@ -1,22 +1,27 @@
 import { StateCreator } from "zustand";
 import { CommonSlice } from "./commonSlice";
 import createDashboardSlice, { DashboardSlice } from "@/store/dashboardSlice";
+import { BookReviewProps } from "@/utils/types";
 
 type State = {
-  contentLikes: [];
-  myReviews: [];
+  contentLikes: { reviews: BookReviewProps[]; count: number };
+  myReviews: { reviews: BookReviewProps[]; count: number };
 };
 
 type Actions = {
-  fetchMyReview: () => void;
+  fetchMyReviews: (page: number) => void;
+  fetchContetLikes: (page: number) => void;
 
-  insertReviewLike: (reviewId: string, contentId: string) => void;
-  deleteReviewLike: (reviewId: string) => void;
+  insertReviewLike: (reviewId: string, contentId: string, page: number) => void;
+  deleteReviewLike: (reviewId: string, page: number) => void;
 };
 
 const initialState: State = {
-  contentLikes: [],
-  myReviews: [],
+  contentLikes: {
+    reviews: [],
+    count: 0,
+  },
+  myReviews: { reviews: [], count: 0 },
 };
 
 const createReviewSlice: StateCreator<
@@ -26,19 +31,26 @@ const createReviewSlice: StateCreator<
   ReviewSlice
 > = (set, get, api) => ({
   ...initialState,
-  fetchMyReview: async () => {
-    const res = await fetch(`/mypage/reviews/api`);
+  fetchMyReviews: async (page: number) => {
+    const res = await fetch(`/mypage/reviews/api?page=${page}`);
+    const data = await res.json();
+
+    set((state) => ({
+      myReviews: data.myReviews,
+    }));
+  },
+  fetchContetLikes: async (page: number) => {
+    const res = await fetch(`/mypage/reviews/likes/api?page=${page}`);
     const data = await res.json();
 
     set((state) => ({
       contentLikes: data.contentLikes,
-      myReviews: data.myReviews,
     }));
   },
-  insertReviewLike: async (reviewId, contentId) => {
+  insertReviewLike: async (reviewId, contentId, page) => {
     try {
       const params = { reviewId, contentId };
-      const response = await fetch(`/api/review/like`, {
+      const response = await fetch(`/api/review/like?page=${page}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,14 +69,17 @@ const createReviewSlice: StateCreator<
       console.log(error);
     }
   },
-  deleteReviewLike: async (reviewId) => {
+  deleteReviewLike: async (reviewId, page) => {
     try {
-      const response = await fetch(`/api/review/like/${reviewId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `/api/review/like/${reviewId}?page=${page}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = await response.json();
 
       if (data.status === 500) {
