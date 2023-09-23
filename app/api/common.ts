@@ -6,32 +6,28 @@ import LikeModel from "@/models/review/like";
 import { BookReviewProps } from "@/utils/types";
 import { limit } from "@/utils/constants";
 
-const SERVICE = process.env.NEXT_PUBLIC_SERVICE!;
-
 export const getBookReviews = async (contentId: string, offset: number) => {
-  const bookReviews = BookReviewModel;
-  const users = UserModel;
-  const likes = LikeModel;
-
   const userId = getUserId();
-  const userData = await users.find({ loginService: SERVICE });
-  const likeData = await likes.find({ userId, contentId });
+  const isLogin = !userId ? false : true;
 
-  const rowData = await bookReviews.aggregate([
-    { $match: { contentId } },
-    { $sort: { updateDate: -1 } },
-    {
-      $facet: {
-        metadata: [{ $count: "total" }],
-        data: [{ $skip: offset }, { $limit: limit }],
-      },
-    },
-  ]);
+  const likes = LikeModel;
+  let likeData: any[] | null = null;
+  if (isLogin) {
+    likeData = await likes.find({ userId, contentId });
+  }
 
-  const bookReviewData = rowData[0].data;
+  const { data: bookReviewData, total } = await loadBookReviews(
+    contentId,
+    offset
+  );
+
+  const userData = await loadUsersForService();
   const reviews = bookReviewData.map((review: BookReviewProps) => {
     const author = userData.find((user) => user.id === review.userId);
-    const like = likeData.find((like) => like.reviewId === review.id);
+    const like =
+      likeData === null
+        ? undefined
+        : likeData.find((like) => like.reviewId === review.id);
     const contentLike =
       review.contentLike === undefined ? false : review.contentLike;
 
@@ -46,9 +42,8 @@ export const getBookReviews = async (contentId: string, offset: number) => {
       userId: review.userId,
     };
   });
-  const total: number = rowData[0].metadata[0].total;
-  const stats = await getStatsForReview(contentId);
 
+  const stats = await getStatsForReview(contentId);
   return { reviews, count: total, stats };
 };
 
@@ -89,6 +84,8 @@ const getStatsForReview = async (contentId: string) => {
 
     return stats;
   }
+
+  return null;
 };
 
 const getStatsText = (like: number) => {
@@ -111,30 +108,128 @@ const getStatsText = (like: number) => {
   return result;
 };
 
+export const loadBookReviews = async (contentId: string, offset: number) => {
+  const bookReviews = BookReviewModel;
+  const rowData = await bookReviews.aggregate([
+    { $match: { contentId } },
+    { $sort: { updateDate: -1 } },
+    {
+      $facet: {
+        metadata: [{ $count: "total" }],
+        data: [{ $skip: offset }, { $limit: limit }],
+      },
+    },
+  ]);
+
+  const result = {
+    data: rowData[0].data,
+    total: rowData[0].metadata[0] ? rowData[0].metadata[0].total : 0,
+  };
+
+  return result;
+};
+
+export const loadBookInfo = async (id: string) => {
+  const d_isbn = id;
+  const client_id = process.env.CLIENT_ID || "";
+  const client_secret = process.env.CLIENT_SECRET || "";
+  const bookRequestUrl = "https://openapi.naver.com/v1/search/book_adv?d_isbn=";
+  const headers = {
+    "X-Naver-Client-Id": client_id,
+    "X-Naver-Client-Secret": client_secret,
+  };
+
+  const bookResponse = await fetch(`${bookRequestUrl}${d_isbn}`, {
+    headers,
+  });
+  const bookData = await bookResponse.json();
+  return bookData;
+};
+
+export const loadMyReviews = async (userId: string, offset: number) => {
+  const bookReviews = BookReviewModel;
+  const rowData = await bookReviews.aggregate([
+    { $match: { userId } },
+    { $sort: { updateDate: -1 } },
+    {
+      $facet: {
+        metadata: [{ $count: "total" }],
+        data: [{ $skip: offset }, { $limit: limit }],
+      },
+    },
+  ]);
+
+  const result = {
+    data: rowData[0].data,
+    total: rowData[0].metadata[0] ? rowData[0].metadata[0].total : 0,
+  };
+
+  return result;
+};
+
+export const loadLikesForReview = async (userId: string, offset: number) => {
+  const likes = LikeModel;
+  const rowData = await likes.aggregate([
+    { $match: { userId } },
+    { $sort: { registDate: -1 } },
+    {
+      $facet: {
+        metadata: [{ $count: "total" }],
+        data: [{ $skip: offset }, { $limit: limit }],
+      },
+    },
+  ]);
+
+  const result = {
+    data: rowData[0].data,
+    total: rowData[0].metadata[0] ? rowData[0].metadata[0].total : 0,
+  };
+
+  return result;
+};
+
+export const loadUsersForService = async () => {
+  const SERVICE = process.env.NEXT_PUBLIC_SERVICE!;
+  const users = UserModel;
+  const userData = await users.find({ loginService: SERVICE });
+  return userData;
+};
+
+export const loadUserInfo = () => {
+  try {
+    return getUser();
+  } catch (error) {
+    if (error instanceof NotFoundUserError) {
+      return null;
+    } else {
+      console.log(error);
+    }
+  }
+
+  return null;
+};
+
 export const getUserId = () => {
-  const data = getUser();
+  const data = loadUserInfo();
+
+  if (!data) {
+    return null;
+  }
 
   const userId = data.id;
   return userId;
-};
-
-export const getUserName = () => {
-  const user = getUser();
-
-  const userName = user.name;
-  return userName;
 };
 
 export const getUser = () => {
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
   if (!token) {
-    throw new Error();
+    throw new NotFoundUserError();
   }
 
   const verifyResult = verifyData(token);
   if (typeof verifyResult === "string") {
-    throw new Error();
+    throw new NotFoundUserError();
   }
 
   const user = {
