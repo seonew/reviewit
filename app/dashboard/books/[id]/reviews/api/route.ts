@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import BookReviewModel from "@/models/review/book";
 import { getBookReviews, getUserId } from "@/app/api/common";
 import { limit } from "@/utils/constants";
+import { NotFoundContentError } from "@/utils/error";
 
 export async function GET(
   request: Request,
@@ -13,7 +14,7 @@ export async function GET(
 
     const contentId = params.id;
     if (!contentId) {
-      throw new Error();
+      throw new NotFoundContentError();
     }
 
     const { searchParams } = new URL(request.url);
@@ -41,7 +42,7 @@ export async function POST(
     const { contentInfo, like } = requestData;
     const { content, contentImgUrl, contentTitle } = contentInfo;
     if (!contentId || !content) {
-      throw new Error();
+      throw new NotFoundContentError();
     }
 
     const userId = getUserId();
@@ -58,12 +59,7 @@ export async function POST(
     });
     await newReview.save();
 
-    const { searchParams } = new URL(request.url);
-    const page = searchParams.get("page") ?? "1";
-    const offset = (parseInt(page) - 1) * limit;
-    const result = await getBookReviews(contentId, offset);
-
-    return NextResponse.json(result);
+    return NextResponse.json({});
   } catch (e) {
     console.error(e);
   }
