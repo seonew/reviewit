@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {user.id === "" ? (
+      {!user.id && !user.name ? (
         <>{children}</>
       ) : (
         <div className="contents-container">
