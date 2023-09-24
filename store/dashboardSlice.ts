@@ -1,7 +1,6 @@
 import { StateCreator } from "zustand";
 import {
   BookProps,
-  CurrentBookProps,
   LikedBook,
   LikedProduct,
   ProductProps,
@@ -16,7 +15,7 @@ type State = {
   topProducts: ProductProps[];
   dashboardBooks: BookProps[];
   dashboardProducts: ProductProps[];
-  currentBook: CurrentBookProps;
+  currentBookReview: ReviewDataProps;
   currentProduct: ProductProps;
 };
 
@@ -25,7 +24,6 @@ type Actions = {
   updateLikedProducts: (item: LikedProduct) => void;
   updateCheckedToTopBooks: (item: LikedBook) => void;
   updateCheckedToTopProducts: (item: LikedProduct) => void;
-  updateCurrentBook: (item: BookProps) => void;
   updateCurrentProduct: (item: ProductProps) => void;
 
   initTopBooks: (books: BookProps[]) => void;
@@ -34,7 +32,6 @@ type Actions = {
   fetchDashboardProducts: (products: ProductProps[]) => void;
   updateDashboardBooks: (page: number) => void;
   updateDashboardProducts: (page: number) => void;
-  fetchCurrentBook: (id: string) => void;
 
   fetchBookReview: (contentId: string, page: number) => void;
   insertBookReview: (
@@ -47,7 +44,7 @@ type Actions = {
     like: boolean
   ) => void;
   updateBookReview: (item: ReviewDataProps) => void;
-  initializeBook: () => void;
+  initializeBookReview: () => void;
 };
 
 const initialState: State = {
@@ -57,22 +54,10 @@ const initialState: State = {
   topProducts: [],
   dashboardBooks: [],
   dashboardProducts: [],
-  currentBook: {
-    book: {
-      title: "",
-      author: "",
-      discount: "",
-      image: "",
-      link: "",
-      isbn: "",
-      catalogLink: "",
-      pubdate: "",
-    },
-    reviewData: {
-      reviews: [],
-      count: 0,
-      stats: [],
-    },
+  currentBookReview: {
+    reviews: [],
+    count: 0,
+    stats: [],
   },
   currentProduct: {
     title: "",
@@ -91,34 +76,14 @@ const createDashboardSlice: StateCreator<
   [],
   [],
   DashboardSlice
-> = (set, get, api) => ({
+> = (set, get) => ({
   ...initialState,
-  fetchCurrentBook: async (id: string) => {
-    const res = await fetch(`/dashboard/books/${id}/api`);
-    const data = await res.json();
-
-    set((state) => ({
-      currentBook: {
-        ...state.currentBook,
-        book: {
-          ...state.currentBook.book,
-          ...data,
-        },
-      },
-    }));
-  },
   fetchBookReview: async (id: string, page: number) => {
     const res = await fetch(`/dashboard/books/${id}/reviews/api?page=${page}`);
     const data = await res.json();
 
     set((state) => ({
-      currentBook: {
-        ...state.currentBook,
-        reviewData: {
-          ...state.currentBook.reviewData,
-          ...data,
-        },
-      },
+      currentBookReview: data,
     }));
   },
   insertBookReview: async (contentInfo, like) => {
@@ -138,36 +103,11 @@ const createDashboardSlice: StateCreator<
       return;
     }
 
-    set((state) => ({
-      currentBook: {
-        ...state.currentBook,
-        reviewData: {
-          ...state.currentBook.reviewData,
-          ...data,
-        },
-      },
-    }));
+    get().fetchBookReview(contentId, 1);
   },
   updateBookReview: (item: ReviewDataProps) => {
     set((state) => ({
-      currentBook: {
-        ...state.currentBook,
-        reviewData: {
-          ...state.currentBook.reviewData,
-          ...item,
-        },
-      },
-    }));
-  },
-  updateCurrentBook: (item: BookProps) => {
-    set((state) => ({
-      currentBook: {
-        ...state.currentBook,
-        book: {
-          ...state.currentBook.book,
-          ...item,
-        },
-      },
+      currentBookReview: { ...state.currentBookReview, ...item },
     }));
   },
   updateCurrentProduct: (item: ProductProps) => {
@@ -178,7 +118,7 @@ const createDashboardSlice: StateCreator<
       const res = await fetch(`/dashboard/books/api?page=${page}`);
       const data = await res.json();
 
-      createDashboardSlice(set, get, api).fetchDashboardBooks(data.books);
+      get().fetchDashboardBooks(data.books);
     } catch (e) {
       console.error(e);
     }
@@ -218,7 +158,7 @@ const createDashboardSlice: StateCreator<
       const res = await fetch(`/dashboard/products/api?page=${page}`);
       const data = await res.json();
 
-      createDashboardSlice(set, get, api).fetchDashboardProducts(data.products);
+      get().fetchDashboardProducts(data.products);
     } catch (e) {
       console.error(e);
     }
@@ -304,9 +244,9 @@ const createDashboardSlice: StateCreator<
         topProducts: modifiedProducts,
       };
     }),
-  initializeBook: () => {
+  initializeBookReview: () => {
     set(() => ({
-      currentBook: initialState.currentBook,
+      currentBookReview: initialState.currentBookReview,
     }));
   },
   reset: () => {

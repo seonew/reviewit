@@ -5,6 +5,7 @@ import UserModel from "@/models/user";
 import LikeModel from "@/models/review/like";
 import { BookReviewProps } from "@/utils/types";
 import { limit } from "@/utils/constants";
+import { NotFoundUserError } from "@/utils/error";
 
 export const getBookReviews = async (contentId: string, offset: number) => {
   const userId = getUserId();

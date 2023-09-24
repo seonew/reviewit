@@ -1,6 +1,6 @@
 import { StateCreator } from "zustand";
 import { CommonSlice } from "./commonSlice";
-import createDashboardSlice, { DashboardSlice } from "@/store/dashboardSlice";
+import { DashboardSlice } from "@/store/dashboardSlice";
 import { BookReviewProps } from "@/utils/types";
 
 type State = {
@@ -14,6 +14,7 @@ type Actions = {
 
   insertReviewLike: (reviewId: string, contentId: string, page: number) => void;
   deleteReviewLike: (reviewId: string, page: number) => void;
+  resetReviewData: () => void;
 };
 
 const initialState: State = {
@@ -29,14 +30,14 @@ const createReviewSlice: StateCreator<
   [],
   [],
   ReviewSlice
-> = (set, get, api) => ({
+> = (set, get) => ({
   ...initialState,
   fetchMyReviews: async (page: number) => {
     const res = await fetch(`/mypage/reviews/api?page=${page}`);
     const data = await res.json();
 
     set((state) => ({
-      myReviews: data.myReviews,
+      myReviews: data,
     }));
   },
   fetchContetLikes: async (page: number) => {
@@ -44,7 +45,7 @@ const createReviewSlice: StateCreator<
     const data = await res.json();
 
     set((state) => ({
-      contentLikes: data.contentLikes,
+      contentLikes: data,
     }));
   },
   insertReviewLike: async (reviewId, contentId, page) => {
@@ -63,8 +64,7 @@ const createReviewSlice: StateCreator<
         alert(data.error);
         return;
       }
-
-      createDashboardSlice(set, get, api).updateBookReview(data);
+      get().updateBookReview(data);
     } catch (error) {
       console.log(error);
     }
@@ -86,13 +86,12 @@ const createReviewSlice: StateCreator<
         alert(data.error);
         return;
       }
-
-      createDashboardSlice(set, get, api).updateBookReview(data);
+      get().updateBookReview(data);
     } catch (error) {
       console.log(error);
     }
   },
-  reset: () => {
+  resetReviewData: () => {
     set(initialState);
   },
 });

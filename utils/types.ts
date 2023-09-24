@@ -11,11 +11,6 @@ export type BookProps = {
   catalogLink: string;
 };
 
-export type CurrentBookProps = {
-  book: BookProps;
-  reviewData: ReviewDataProps;
-};
-
 export type ReviewDataProps = {
   reviews: ReviewProps[];
   count: number;

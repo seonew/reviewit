@@ -9,7 +9,7 @@ export async function GET(request: Request) {
 
   try {
     if (!token) {
-      return NextResponse.json({ error: "Empty token" }, { status: 401 });
+      return NextResponse.json({ error: "Empty token", status: 401 });
     }
 
     const params = {
@@ -28,5 +28,5 @@ export async function GET(request: Request) {
     console.log(error);
   }
 
-  return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  return NextResponse.json({ error: "Internal Server Error", status: 500 });
 }
