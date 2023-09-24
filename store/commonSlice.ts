@@ -1,5 +1,8 @@
 import { StateCreator } from "zustand";
 import { User } from "@/utils/types";
+import { DashboardSlice } from "./dashboardSlice";
+import { ReviewSlice } from "./reviewSlice";
+import { MovieSlice } from "./movieSlice";
 
 type State = {
   user: User;
@@ -12,6 +15,7 @@ type Actions = {
   setIsOpen: (item: boolean) => void;
   setIsSignedIn: (item: boolean) => void;
   signOut: () => void;
+  resetCommonData: () => void;
 };
 
 const initialState: State = {
@@ -25,9 +29,12 @@ const initialState: State = {
   isOpen: false,
 };
 
-const createCommonSlice: StateCreator<CommonSlice, [], [], CommonSlice> = (
-  set
-) => ({
+const createCommonSlice: StateCreator<
+  CommonSlice & DashboardSlice & ReviewSlice & MovieSlice,
+  [],
+  [],
+  CommonSlice
+> = (set, get, api) => ({
   ...initialState,
   fetchUserInfo: async (token: string) => {
     try {
@@ -39,22 +46,16 @@ const createCommonSlice: StateCreator<CommonSlice, [], [], CommonSlice> = (
       console.log(error);
     }
   },
-  signOut: () => {
-    const storage = localStorage.getItem("item-storage");
-    if (storage) {
-      try {
-        const object = JSON.parse(storage);
-        delete object.user;
-
-        localStorage.setItem("item-storage", JSON.stringify(object));
-      } catch (error) {}
-    }
+  signOut: async () => {
+    document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+    get().resetReviewData();
+    get().resetCommonData();
 
     set((state) => {
       return { isSignedIn: false, user: initialState.user };
     });
   },
-  reset: () => {
+  resetCommonData: () => {
     set(initialState);
   },
   setIsOpen: (item) => set({ isOpen: item }),
