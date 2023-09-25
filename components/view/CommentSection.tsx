@@ -68,7 +68,7 @@ const CommentSection = ({
                         </span>
                       )}
                     </div>
-                    <div className="content-detail-comment-user w-1100">
+                    <div className="content-detail-comment-user">
                       <p className="content-detail-comment-user-p">
                         {review.content}
                       </p>

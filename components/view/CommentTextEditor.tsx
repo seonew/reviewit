@@ -74,29 +74,29 @@ const CommentTextEditor = ({ onClick }: Props) => {
   };
 
   return (
-    <div className="mt-2 mb-10 pl-9 items-center flex">
-      <div className="relative flex items-center">
+    <div className="comment-editor-container">
+      <div className="comment-editor-container-div">
         <UserCircleIcon className="content-detail-comment-user-icon text-gray-300 top-2" />
         <div
-          className={`basic-border block rounded py-1.5 box-border ${
-            isFocused && "border-ozip-blue"
+          className={`comment-editor-contents-border ${
+            isFocused ? "border-ozip-blue" : ""
           }`}
         >
-          <div className="inline-flex rounded border-0 items-start w-full px-3.5 text-sm">
+          <div className="comment-editor-contents">
             <div
               ref={editableDiv}
               contentEditable="true"
-              className="inline-block p-0 text-black w-1100 grow shrink-0 basis-0 outline-none break-words"
+              className="comment-editor-contents-editable"
               onPaste={handlePaste}
               onInput={handleChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
             />
-            <div className="ml-2 flex items-center py-2 px-0 font-semibold">
+            <div className="comment-editor-contents-button-container">
               <button
                 type="submit"
                 onClick={handleSubmit}
-                className="disabled:text-gray-300 disabled:font-normal text-ozip-blue"
+                className="comment-editor-contents-button"
                 disabled={isInput ? false : true}
               >
                 입력

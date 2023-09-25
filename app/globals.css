@@ -56,7 +56,7 @@
     basic-border bg-gray-100 text-gray-600;
   }
   .content-detail-section {
-    @apply p-0 mt-10 mb-14 w-1180;
+    @apply p-0 mt-10 mb-14 min-w-1024;
   }
   .content-detail-title-p {
     @apply mb-8 text-lg leading-6 font-bold;
@@ -75,6 +75,27 @@
   }
   .content-detail-comment-text-span {
     @apply basic-text-xs border-0 items-center;
+  }
+  .comment-editor-container {
+    @apply mt-2 mb-10 pl-9 items-center flex w-full;
+  }
+  .comment-editor-container-div {
+    @apply relative flex items-center w-full;
+  }
+  .comment-editor-contents-border {
+    @apply basic-border block rounded py-1.5 w-full box-border;
+  }
+  .comment-editor-contents {
+    @apply inline-flex rounded border-0 items-start px-3.5 text-sm w-full;
+  }
+  .comment-editor-contents-editable {
+    @apply inline-block p-0 text-black grow shrink-0 basis-0 outline-none break-words box-border min-w-925;
+  }
+  .comment-editor-contents-button-container {
+    @apply ml-2 flex items-center py-2 px-0 font-semibold;
+  }
+  .comment-editor-contents-button {
+    @apply disabled:text-gray-300 disabled:font-normal text-ozip-blue;
   }
   .tab-active {
     @apply text-ozip-blue border-b-2 border-ozip-blue;
