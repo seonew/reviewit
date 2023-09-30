@@ -4,10 +4,10 @@ import { useBoundStore as useStore } from "@/store";
 import { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import { handleClickSignIn } from "@/utils/common";
-import CommentSection from "@/components/view/CommentSection";
+import CommentSection from "@/app/components/view/CommentSection";
 import { PhotoIcon } from "@heroicons/react/24/outline";
-import DefaultImage from "@/components/DefaultImage";
-import Pagination from "@/components/Pagination";
+import DefaultImage from "@/app/components/DefaultImage";
+import Pagination from "@/app/components/Pagination";
 import { limit } from "@/utils/constants";
 import { BookProps } from "@/utils/types";
 

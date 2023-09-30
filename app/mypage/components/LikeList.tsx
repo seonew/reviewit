@@ -1,7 +1,7 @@
 import { BookReviewProps } from "@/utils/types";
 import Image from "next/image";
 import Link from "next/link";
-import DefaultImage from "@/components/DefaultImage";
+import DefaultImage from "@/app/components/DefaultImage";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 
 type Props = {

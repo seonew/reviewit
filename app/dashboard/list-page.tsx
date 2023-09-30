@@ -3,9 +3,9 @@
 import React, { useEffect } from "react";
 import { BookProps, ProductProps } from "@/utils/types";
 import { useBoundStore as useStore } from "@/store";
-import CardList from "@/components/CardList";
-import BookInfo from "@/components/BookInfo";
-import ProductInfo from "@/components/ProductInfo";
+import CardList from "@/app/components/CardList";
+import BookInfo from "@/app/components/BookInfo";
+import ProductInfo from "@/app/components/ProductInfo";
 
 type Props = {
   products: ProductProps[];

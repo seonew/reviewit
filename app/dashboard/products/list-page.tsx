@@ -3,9 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { ProductProps } from "@/utils/types";
 import { useBoundStore as useStore } from "@/store";
-import CardList from "@/components/CardList";
-import ProductInfo from "@/components/ProductInfo";
-import Pagination from "@/components/Pagination";
+import CardList from "@/app/components/CardList";
+import ProductInfo from "@/app/components/ProductInfo";
+import Pagination from "@/app/components/Pagination";
 
 type Props = {
   products: ProductProps[] | null;

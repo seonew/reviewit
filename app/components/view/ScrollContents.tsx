@@ -1,6 +1,6 @@
 import { MovieProps } from "@/utils/types";
 import Image from "next/image";
-import DefaultImage from "@/components/DefaultImage";
+import DefaultImage from "@/app/components/DefaultImage";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { useRef } from "react";
 import HorizontalScrollButton from "./HorizontalScrollButton";

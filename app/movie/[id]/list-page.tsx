@@ -4,14 +4,14 @@ import { useBoundStore as useStore } from "@/store";
 import { ReactNode, useEffect } from "react";
 import Image from "next/image";
 import { handleClickSignIn, numberWithCommas } from "@/utils/common";
-import KeywordSection from "@/components/view/KeywordSection";
-import SimilarSection from "@/components/view/SimilarSection";
-import RecommendationSection from "@/components/view/RecommendationSection";
-import CommentSection from "@/components/view/CommentSection";
+import KeywordSection from "@/app/components/view/KeywordSection";
+import SimilarSection from "@/app/components/view/SimilarSection";
+import RecommendationSection from "@/app/components/view/RecommendationSection";
+import CommentSection from "@/app/components/view/CommentSection";
 import { PhotoIcon } from "@heroicons/react/24/outline";
-import DefaultImage from "@/components/DefaultImage";
-import VideoSection from "@/components/view/VideoSection";
-import InitializeBanner from "@/components/InitializeBanner";
+import DefaultImage from "@/app/components/DefaultImage";
+import VideoSection from "@/app/components/view/VideoSection";
+import InitializeBanner from "@/app/components/InitializeBanner";
 
 export default function List({ id }: { id: string }) {
   const {

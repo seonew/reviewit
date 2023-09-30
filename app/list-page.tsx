@@ -3,9 +3,9 @@
 import { useEffect } from "react";
 import { useBoundStore as useStore } from "@/store";
 import { VideoImageBannerProps, MovieProps } from "@/utils/types";
-import CardList from "@/components/CardList";
-import MovieInfo from "@/components/MovieInfo";
-import Banner from "@/components/Banner";
+import CardList from "@/app/components/CardList";
+import MovieInfo from "@/app/components/MovieInfo";
+import Banner from "@/app/components/Banner";
 
 type Props = {
   movies: MovieProps[] | null;

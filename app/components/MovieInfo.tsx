@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Card from "@/components/Card";
+import Card from "@/app/components/Card";
 import { MovieProps } from "@/utils/types";
 
 const MovieInfo = ({

@@ -4,9 +4,9 @@ import { useBoundStore as useStore } from "@/store";
 import { ReactNode } from "react";
 import Image from "next/image";
 import { handleClickSignIn } from "@/utils/common";
-import CommentSection from "@/components/view/CommentSection";
+import CommentSection from "@/app/components/view/CommentSection";
 import { PhotoIcon } from "@heroicons/react/24/outline";
-import DefaultImage from "@/components/DefaultImage";
+import DefaultImage from "@/app/components/DefaultImage";
 
 export default function List({ id }: { id: string }) {
   const { currentProduct: product, user, currentMovie } = useStore();

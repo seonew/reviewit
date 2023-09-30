@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LikedBook } from "@/utils/types";
 import { useBoundStore as useStore } from "@/store";
-import Card from "@/components/Card";
+import Card from "@/app/components/Card";
 import IconButton from "./IconButton";
 
 const BookInfo = ({ item }: { item: LikedBook }) => {

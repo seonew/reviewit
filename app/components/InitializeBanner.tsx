@@ -1,4 +1,4 @@
-import DefaultImage from "@/components/DefaultImage";
+import DefaultImage from "@/app/components/DefaultImage";
 
 const InitializeBanner = () => {
   return (

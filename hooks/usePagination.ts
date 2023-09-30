@@ -1,4 +1,4 @@
-import { dotts } from "@/components/Pagination";
+import { dotts } from "@/app/components/Pagination";
 
 const getPages = (length: number, inc: number = 1) =>
   Array.from({ length }, (_, i) => i + inc);

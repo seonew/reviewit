@@ -1,4 +1,4 @@
-import DefaultImage from "@/components/DefaultImage";
+import DefaultImage from "@/app/components/DefaultImage";
 import { User } from "@/utils/types";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
