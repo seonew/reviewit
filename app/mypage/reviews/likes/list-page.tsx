@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { useBoundStore as useStore } from "@/store";
-import Empty from "@/components/Empty";
-import Pagination from "@/components/Pagination";
+import Empty from "@/app/components/Empty";
+import Pagination from "@/app/components/Pagination";
 import LikeList from "../../components/LikeList";
+import Tab from "../../components/Tab";
 
 const List = () => {
   const { fetchContetLikes, contentLikes } = useStore();
@@ -30,7 +31,8 @@ const List = () => {
   }, [fetchContetLikes]);
 
   return (
-    <div>
+    <div className="contents-container">
+      <Tab />
       {contentLikes.count > 0 ? (
         <>
           <LikeList title={"Likes"} items={contentLikes.reviews} />
