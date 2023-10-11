@@ -22,7 +22,7 @@
     @apply h-6 w-6;
   }
   .contents-container {
-    @apply relative top-20 block h-screen;
+    @apply relative top-20 block h-screen min-w-1024;
   }
   .banner-container {
     @apply relative h-[500px] min-w-1024 my-10;
