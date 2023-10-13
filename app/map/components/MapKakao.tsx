@@ -18,35 +18,22 @@ const Map = ({
   onLoad,
 }: Props) => {
   const initializeMap = () => {
-    console.log("initializeMap====1");
     if (!kakao) return;
 
-    console.log("initializeMap====2");
     window.kakao.maps.load(() => {
       const mapContainer = document.getElementById("map")!;
       const location = new window.kakao.maps.LatLng(...initialCenter);
-      // console.log(location);
       const mapOptions = {
         center: location,
         level: initialLevel,
       };
-      //새로운 맵 인스턴스 생성
       const map = new window.kakao.maps.Map(mapContainer, mapOptions);
-      // mapRef.current = map;
-      // console.log(mapRef.current);
 
       if (onLoad) {
         onLoad(map);
       }
     });
   };
-
-  // 맵이 unmount되었을 때 맵 인스턴스 destory하기
-  // useEffect(() => {
-  // return () => {
-  // mapRef.current?.destroy();
-  // };
-  // }, []);
 
   return (
     <>

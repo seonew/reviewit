@@ -21,7 +21,10 @@ export async function POST(
     const headers = {
       Authorization: `KakaoAK ${client_id}`,
     };
-    const paramsQuery = `?y=${lat}&x=${lng}&radius=20000&size=10&category_group_code=FD6,CE7&query=`;
+    const SIZE = 5;
+    const CATEGORY_CODE = "FD6,CE7";
+    const RADIUS = 20000;
+    const paramsQuery = `?y=${lat}&x=${lng}&size=${SIZE}&category_group_code=${CATEGORY_CODE}&query=`;
 
     const response = await fetch(
       `${requestUrl}${paramsQuery}${encodeURI(query)}`,
