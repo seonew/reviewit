@@ -3,7 +3,7 @@ import {
   Coordinates,
   LocalCompany,
   LocalPlace,
-  ReviewDataProps,
+  PlaceReviewDataProps,
 } from "@/utils/types";
 import { CommonSlice } from "./commonSlice";
 
@@ -12,7 +12,7 @@ type State = {
   localPlaces: LocalPlace[] | null;
   currentLocation: Coordinates | null;
   currentPlace: LocalPlace | null;
-  placeReviews: ReviewDataProps;
+  placeReviews: PlaceReviewDataProps;
   selectedMarkerId: string;
 
   openModal: boolean;
@@ -22,7 +22,8 @@ type Actions = {
   fetchLocalPlaces: (keyword: string, { lat, lng }: any) => void;
   fetchLocalCompanys: (keyword: string) => void;
   insertPlaceReview: (review: string, like: boolean) => void;
-  fetchPlaceReview: (id: string) => void;
+  fetchPlaceReview: () => void;
+  fetchPlaceReviewByName: (name: string) => void;
 
   setCurrentPlace: (item: LocalPlace) => void;
   setCurrentLocation: ([]: Coordinates) => void;
@@ -42,6 +43,7 @@ const initialState: State = {
     reviews: [],
     count: 0,
     stats: [],
+    locals: [],
   },
   openModal: false,
 };
@@ -51,9 +53,24 @@ const createMapSlice: StateCreator<CommonSlice & MapSlice, [], [], MapSlice> = (
   get
 ) => ({
   ...initialState,
-  fetchPlaceReview: async (id) => {
+  fetchPlaceReviewByName: async (name) => {
     try {
-      const res = await fetch(`/map/api/review/${id}`);
+      const res = await fetch(`/map/api/review`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(name),
+      });
+      const data = await res.json();
+      set({ placeReviews: data });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  fetchPlaceReview: async () => {
+    try {
+      const res = await fetch(`/map/api/review`);
       const data = await res.json();
       set({ placeReviews: data });
     } catch (error) {

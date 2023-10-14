@@ -4,10 +4,9 @@ import LocalListItem from "./LocalListItem";
 
 type Props = {
   items: LocalPlace[] | null;
-  onClick?: () => void;
 };
 
-const LocalList = ({ items, onClick }: Props) => {
+const LocalList = ({ items }: Props) => {
   const { selectedMarkerId } = useStore();
 
   return (

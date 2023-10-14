@@ -141,3 +141,15 @@ export type LocalPlace = {
   telephone?: string;
   link?: string;
 };
+
+export type PlaceReviewDataProps = {
+  reviews: PlaceReviewProps[];
+  count: number;
+  stats: [];
+  locals: LocalPlace[];
+};
+
+export type PlaceReviewProps = ReviewProps & {
+  localName: string;
+  localLink?: string;
+};
