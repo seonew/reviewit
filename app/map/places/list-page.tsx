@@ -28,7 +28,7 @@ const List = () => {
       ? [coordinates?.lat, coordinates?.lng]
       : INITIAL_CENTER;
 
-  const { reviews, locals } = placeReviews;
+  const { data, locals } = placeReviews;
 
   const handleSubmit = (keyword: string) => {
     fetchPlaceReviewByName(keyword);
@@ -53,7 +53,7 @@ const List = () => {
             <MapSection currentCenter={currentCenter} />
             {locals && <Markers items={locals} />}
           </div>
-          <PlaceReviewList reviews={reviews} />
+          <PlaceReviewList data={data} />
         </>
       )}
     </div>

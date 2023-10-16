@@ -143,13 +143,11 @@ export type LocalPlace = {
 };
 
 export type PlaceReviewDataProps = {
-  reviews: PlaceReviewProps[];
-  count: number;
-  stats: [];
+  data: PlaceReviewProps[];
   locals: LocalPlace[];
 };
 
-export type PlaceReviewProps = ReviewProps & {
-  localName: string;
-  localLink?: string;
+export type PlaceReviewProps = {
+  place: { id: string; name: string; link?: string };
+  items: ReviewDataProps;
 };

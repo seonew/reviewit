@@ -40,9 +40,7 @@ const initialState: State = {
   currentPlace: null,
 
   placeReviews: {
-    reviews: [],
-    count: 0,
-    stats: [],
+    data: [],
     locals: [],
   },
   openModal: false,
