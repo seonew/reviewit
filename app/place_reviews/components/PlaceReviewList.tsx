@@ -7,7 +7,7 @@ type Props = {
   data: PlaceReviewProps[];
 };
 
-const PlaceReviewSearchList = ({ data }: Props) => {
+const PlaceReviewList = ({ data }: Props) => {
   return (
     <div className="pb-10">
       <ul className="list-none my-10 mr-8">
@@ -17,7 +17,10 @@ const PlaceReviewSearchList = ({ data }: Props) => {
             const { stats } = items;
 
             return (
-              <li key={`${place.id}_${index}`} className="mt-7">
+              <li
+                key={`${place.id}_${index}`}
+                className={`${stats && "mt-14 first:mt-6"} mt-7`}
+              >
                 <div className="content-detail-comment-user">
                   <Link href={`${place.link}`}>
                     <span className="text-base leading-5 font-bold mr-1.5">
@@ -25,7 +28,11 @@ const PlaceReviewSearchList = ({ data }: Props) => {
                     </span>
                   </Link>
                 </div>
-                {stats && <PreferenceStatSection stats={stats} />}
+                {stats && (
+                  <div className="-my-4">
+                    <PreferenceStatSection stats={stats} />
+                  </div>
+                )}
                 <ul className="">
                   <PlaceReviewListItem items={items} />
                 </ul>
@@ -37,4 +44,4 @@ const PlaceReviewSearchList = ({ data }: Props) => {
   );
 };
 
-export default PlaceReviewSearchList;
+export default PlaceReviewList;

@@ -1,25 +1,26 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
+import { useBoundStore as useStore } from "@/store";
 
 type Props = {
   onClick?: (keyword: string) => void;
 };
 
 const SearchSection = ({ onClick }: Props) => {
-  const [inputValue, setInputValue] = useState("");
+  const { setSearchKeyword, searchKeyword } = useStore();
 
   const handleChangeItem = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    setInputValue(newValue);
+    setSearchKeyword(newValue);
   };
 
   const handleSubmit = () => {
-    const value = inputValue.trim();
+    const value = searchKeyword.trim();
     if (value.length === 0) {
       return;
     }
 
-    onClick?.(inputValue);
+    onClick?.(searchKeyword);
   };
 
   return (
@@ -30,6 +31,7 @@ const SearchSection = ({ onClick }: Props) => {
             type="text"
             className="relative w-full h-9 outline-none"
             onChange={handleChangeItem}
+            value={searchKeyword}
           />
         </div>
         <div className="flex items-center bg-ozip-blue text-white">

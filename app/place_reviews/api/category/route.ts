@@ -3,35 +3,27 @@ import { NotFoundContentError } from "@/utils/error";
 import { LocalPlace } from "@/utils/types";
 import { NextResponse } from "next/server";
 
-export async function POST(
-  request: Request,
-  { params }: { params: { keyword: string } }
-) {
+export async function POST(request: Request) {
   try {
-    const query = params.keyword;
     const requestData = await request.json();
-    const { lat, lng } = requestData;
+    const { code, lat, lng } = requestData;
 
-    if (!query) {
+    if (!code) {
       throw new NotFoundContentError();
     }
 
     const client_id = process.env.NEXT_PUBLIC_KAKAO_API_CLIENT_ID || "";
-    const requestUrl = "https://dapi.kakao.com/v2/local/search/keyword.json";
+    const requestUrl = "https://dapi.kakao.com/v2/local/search/category.json";
     const headers = {
       Authorization: `KakaoAK ${client_id}`,
     };
-    const SIZE = 5;
-    const CATEGORY_CODE = "FD6,CE7";
+    const SIZE = 10;
     const RADIUS = 20000;
-    const paramsQuery = `?y=${lat}&x=${lng}&size=${SIZE}&category_group_code=${CATEGORY_CODE}&query=`;
+    const paramsQuery = `?category_group_code=${code}&y=${lat}&x=${lng}&radius=${RADIUS}&size=${SIZE}&`;
 
-    const response = await fetch(
-      `${requestUrl}${paramsQuery}${encodeURI(query)}`,
-      {
-        headers,
-      }
-    );
+    const response = await fetch(`${requestUrl}${paramsQuery}}`, {
+      headers,
+    });
     const data = await response.json();
     const items = data.documents;
 

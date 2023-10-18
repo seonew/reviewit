@@ -79,7 +79,7 @@ export async function POST(request: Request) {
         },
       },
     ]);
-    if (!localResult) {
+    if (!localResult || localResult.length === 0) {
       return NextResponse.json({ data: null, locals: null });
     }
     const result: any = await getReviewsByPlace(user, localResult);

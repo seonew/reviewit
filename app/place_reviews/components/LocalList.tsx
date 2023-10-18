@@ -10,7 +10,7 @@ const LocalList = ({ items }: Props) => {
   const { selectedMarkerId } = useStore();
 
   return (
-    <div className="py-6">
+    <div className="pb-4">
       <ul>
         {items?.map((item) => {
           return (

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import type { Coordinates, KakaoMap, LocalPlace } from "@/utils/types";
 
 type Props = {
-  item: LocalPlace;
+  item?: LocalPlace;
   map: KakaoMap;
   coordinates: Coordinates;
   onClick?: () => void;
@@ -18,6 +18,10 @@ const Marker = ({ map, coordinates, onClick, item }: Props): null => {
         map: map,
       });
     }
+
+    kakao.maps.event.addListener(marker, "click", () => {
+      onClick?.();
+    });
 
     return () => {
       marker?.setMap(null);
