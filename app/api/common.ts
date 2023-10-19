@@ -89,7 +89,7 @@ const getStatsForReview = async (contentId: string) => {
   return null;
 };
 
-const getStatsText = (like: number) => {
+export const getStatsText = (like: number) => {
   let result = "대체로 긍정적";
 
   if (like > 90) {

@@ -111,3 +111,43 @@ export type User = {
   avatarUrl: string;
   loginType: string;
 };
+
+export type LocalCompany = {
+  title: string;
+  address: string;
+  category: string;
+  mapx: number;
+  mapy: number;
+  roadAddress: string;
+  telephone?: string;
+  link?: string;
+  description?: string;
+};
+
+type Lat = number;
+type Lng = number;
+export type Coordinates = [Lat, Lng];
+export type NaverMap = naver.maps.Map;
+export type KakaoMap = kakao.maps.Map;
+
+export type LocalPlace = {
+  id: string;
+  name: string;
+  address: string;
+  category: string;
+  mapx: number;
+  mapy: number;
+  roadAddress: string;
+  telephone?: string;
+  link?: string;
+};
+
+export type PlaceReviewDataProps = {
+  data: PlaceReviewProps[];
+  locals: LocalPlace[];
+};
+
+export type PlaceReviewProps = {
+  place: { id: string; name: string; link?: string };
+  items: ReviewDataProps;
+};

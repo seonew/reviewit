@@ -6,6 +6,7 @@ import githubIcon from "@/public/assets/github-icon.svg";
 import kakaoTalkIcon from "@/public/assets/kakaotalk-icon.png";
 import googleIcon from "@/public/assets/google-icon.png";
 import Link from "next/link";
+import { MapIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
 
 type Props = {
   user: User;
@@ -65,11 +66,28 @@ const UserInfo = ({ user, onClickSignOut }: Props) => {
                   />
                 </div>
               </div>
-              <Link href={"/mypage/reviews"}>
-                <span className="inline-flex items-center leading-4 font-medium text-sm py-5">
-                  <span>내가 작성한 리뷰</span>
-                </span>
-              </Link>
+              <div className="flex items-center pt-5 pb-2">
+                <Link href={"/mypage/reviews"} className="mr-2">
+                  <div className="button-xs-blue flex items-center">
+                    <PencilSquareIcon className="w-3.5 h-3.5 mr-1" />
+                    <span>내가 작성한 리뷰</span>
+                  </div>
+                </Link>
+              </div>
+              <div className="flex items-center pb-3">
+                <Link href={"/place_reviews"} className="mr-2">
+                  <div className="button-xs-blue flex items-center">
+                    <MapIcon className="w-3.5 h-3.5 mr-1" />
+                    <span>장소 리뷰 보러가기</span>
+                  </div>
+                </Link>
+                <Link href={"/place_reviews/write"}>
+                  <div className="button-xs-blue flex items-center">
+                    <PencilSquareIcon className="w-3.5 h-3.5 mr-1" />
+                    <span>장소 리뷰 작성하기</span>
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
