@@ -116,4 +116,7 @@
   .initialize-absolute {
     @apply absolute top-0 left-0 right-0 bottom-0;
   }
+  .button-xs-blue {
+    @apply rounded px-2.5 py-1.5 text-xs font-bold bg-ozip-blue text-white;
+  }
 }

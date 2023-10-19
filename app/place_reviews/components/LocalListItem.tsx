@@ -22,10 +22,7 @@ const LocalListItem = ({ item }: Props) => {
           <span className="text-sm leading-6 block">{item.roadAddress}</span>
         </div>
 
-        <button
-          onClick={handleClickModal}
-          className="rounded px-2.5 py-1.5 text-xs bg-ozip-blue text-white font-bold"
-        >
+        <button onClick={handleClickModal} className="button-xs-blue">
           리뷰 작성
         </button>
       </div>

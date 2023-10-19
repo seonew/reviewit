@@ -42,7 +42,9 @@ const List = () => {
   }, [initializeMap]);
 
   useEffect(() => {
-    fetchPlaceReview();
+    if (searchKeyword === "") {
+      fetchPlaceReview();
+    }
   }, [searchKeyword]);
 
   return (

@@ -28,13 +28,14 @@ const List = () => {
 
   const loaded = location.loaded;
 
-  const handleSubmit = (keyword: string) => {
-    fetchLocalPlaces(`${keyword}`);
+  const handleSubmitSearch = (keyword: string) => {
+    setSelectedCategory("");
+    fetchLocalPlaces(keyword);
   };
 
   const handleSubmitCode = (code: string) => {
     setSelectedCategory(code);
-    fetchLocalPlacesByCode(`${code}`);
+    fetchLocalPlacesByCode(code);
   };
 
   const handleSubmitReview = (review: string, like: boolean) => {
@@ -54,7 +55,9 @@ const List = () => {
   }, [initializeMap]);
 
   useEffect(() => {
-    setLocalPlaces(null);
+    if (searchKeyword === "" && selectedCategory === "") {
+      setLocalPlaces(null);
+    }
   }, [searchKeyword, selectedCategory]);
 
   return (
@@ -64,7 +67,7 @@ const List = () => {
       ) : (
         <>
           <div className="relative pt-8">
-            <SearchSection onClick={handleSubmit} />
+            <SearchSection onClick={handleSubmitSearch} />
             <CategoryButtonGroup
               onClick={handleSubmitCode}
               selectedCode={selectedCategory}
