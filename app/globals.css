@@ -7,7 +7,7 @@
     @apply mx-auto my-0 px-10 max-w-screen-xl;
   }
   .header-wrapper {
-    @apply fixed left-0 right-0 top-0 min-w-1024 z-50;
+    @apply fixed left-0 right-0 top-0 min-w-1024 z-[101];
   }
   .header-container {
     @apply relative bg-black text-white border-b border-gray-600;

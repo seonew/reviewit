@@ -24,6 +24,9 @@ module.exports = {
       height: {
         180: "180px",
       },
+      zIndex: {
+        101: "101",
+      },
     },
     minWidth: {
       "1/2": "50%",
