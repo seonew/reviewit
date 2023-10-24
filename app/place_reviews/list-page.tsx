@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useBoundStore as useStore } from "@/store";
 import useGeolocation from "@/hooks/useGeolocation";
 import { Coordinates } from "@/utils/types";
@@ -9,6 +9,8 @@ import SearchSection from "./components/SearchSection";
 import MapSection from "./components/MapSection";
 import Markers from "./components/Markers";
 import PlaceReviewList from "./components/PlaceReviewList";
+import PlaceReviewsWithKeyword from "./components/PlaceReviewsWithKeyword";
+import Pagination from "../components/Pagination";
 import Empty from "@/app/components/Empty";
 import LoadingMap from "./components/LoadingMap";
 import ResetButton from "./components/ResetButton";
@@ -18,9 +20,10 @@ const List = () => {
   const {
     initializeMap,
     fetchPlaceReview,
-    fetchPlaceReviewByName,
+    fetchPlaceReviewsWithKeyword,
     searchKeyword,
     placeReviews,
+    keywordReviews,
   } = useStore();
 
   const loaded = naverLocation.loaded;
@@ -31,10 +34,40 @@ const List = () => {
       ? [coordinates?.lat, coordinates?.lng]
       : INITIAL_CENTER;
 
-  const { data, locals } = placeReviews;
+  const getData = () => {
+    const { data, locals: localsResult, count } = placeReviews;
+    let locals = localsResult;
+
+    if (searchKeyword !== "") {
+      const { data, locals: localsWithKeyword } = keywordReviews;
+      locals = localsWithKeyword;
+    }
+    return { data, locals, count };
+  };
+
+  const { data, locals, count } = getData();
+  const [page, setPage] = useState<number>(1);
+
+  const handleClickPage = (current: number) => {
+    setPage(current);
+    fetchPlaceReview(current);
+  };
+
+  const handleClickPrevButton = () => {
+    setPage(page - 1);
+    fetchPlaceReview(page - 1);
+  };
+
+  const handleClickNextButton = () => {
+    setPage(page + 1);
+    fetchPlaceReview(page + 1);
+  };
 
   const handleSubmit = (keyword: string) => {
-    fetchPlaceReviewByName(keyword);
+    if (keyword === "") {
+      return;
+    }
+    fetchPlaceReviewsWithKeyword(keyword);
   };
 
   useEffect(() => {
@@ -43,9 +76,9 @@ const List = () => {
 
   useEffect(() => {
     if (searchKeyword === "") {
-      fetchPlaceReview();
+      fetchPlaceReview(1);
     }
-  }, [searchKeyword]);
+  }, [searchKeyword, fetchPlaceReview]);
 
   return (
     <div className="contents-container">
@@ -66,7 +99,23 @@ const List = () => {
           {!data ? (
             <Empty title={""} message={"작성된 리뷰가 없어요 ㅜ.ㅜ"} />
           ) : (
-            <PlaceReviewList data={data} />
+            <>
+              {searchKeyword ? (
+                <PlaceReviewsWithKeyword data={keywordReviews} />
+              ) : (
+                <>
+                  <PlaceReviewList data={placeReviews} />
+                  <Pagination
+                    total={count}
+                    limit={5}
+                    currentPage={page}
+                    onClickPage={handleClickPage}
+                    onClickPrev={handleClickPrevButton}
+                    onClickNext={handleClickNextButton}
+                  />
+                </>
+              )}
+            </>
           )}
         </>
       )}

@@ -58,7 +58,7 @@ const List = () => {
     if (searchKeyword === "" && selectedCategory === "") {
       setLocalPlaces(null);
     }
-  }, [searchKeyword, selectedCategory]);
+  }, [searchKeyword, selectedCategory, setLocalPlaces]);
 
   return (
     <div className="contents-container">

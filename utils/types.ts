@@ -112,18 +112,6 @@ export type User = {
   loginType: string;
 };
 
-export type LocalCompany = {
-  title: string;
-  address: string;
-  category: string;
-  mapx: number;
-  mapy: number;
-  roadAddress: string;
-  telephone?: string;
-  link?: string;
-  description?: string;
-};
-
 type Lat = number;
 type Lng = number;
 export type Coordinates = [Lat, Lng];
@@ -140,14 +128,26 @@ export type LocalPlace = {
   roadAddress: string;
   telephone?: string;
   link?: string;
+  count?: string;
+};
+
+export type PlaceReviewsWithKeywordDataProps = {
+  data: PlaceReviewWithKeywordProps[];
+  locals: LocalPlace[];
+};
+
+export type PlaceReviewWithKeywordProps = {
+  place: { id: string; name: string; link?: string };
+  items: ReviewDataProps;
 };
 
 export type PlaceReviewDataProps = {
   data: PlaceReviewProps[];
   locals: LocalPlace[];
+  count: number;
 };
 
 export type PlaceReviewProps = {
   place: { id: string; name: string; link?: string };
-  items: ReviewDataProps;
+  review: ReviewProps;
 };

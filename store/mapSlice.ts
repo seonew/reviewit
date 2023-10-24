@@ -1,5 +1,10 @@
 import { StateCreator } from "zustand";
-import { Coordinates, LocalPlace, PlaceReviewDataProps } from "@/utils/types";
+import {
+  Coordinates,
+  LocalPlace,
+  PlaceReviewsWithKeywordDataProps,
+  PlaceReviewDataProps,
+} from "@/utils/types";
 import { CommonSlice } from "./commonSlice";
 import { INITIAL_CENTER } from "@/hooks/useMap";
 
@@ -8,6 +13,7 @@ type State = {
   currentLocation: Coordinates | null;
   currentPlace: LocalPlace | null;
   placeReviews: PlaceReviewDataProps;
+  keywordReviews: PlaceReviewsWithKeywordDataProps;
   selectedMarkerId: string;
   selectedCategory: string;
   searchKeyword: string;
@@ -18,8 +24,8 @@ type State = {
 type Actions = {
   fetchLocalPlaces: (keyword: string) => void;
   insertPlaceReview: (review: string, like: boolean) => void;
-  fetchPlaceReview: () => void;
-  fetchPlaceReviewByName: (name: string) => void;
+  fetchPlaceReview: (page: number) => void;
+  fetchPlaceReviewsWithKeyword: (name: string) => void;
   fetchLocalPlacesByCode: (code: string) => void;
 
   setCurrentPlace: (item: LocalPlace) => void;
@@ -42,6 +48,11 @@ const initialState: State = {
   currentPlace: null,
 
   placeReviews: {
+    data: [],
+    locals: [],
+    count: 0,
+  },
+  keywordReviews: {
     data: [],
     locals: [],
   },
@@ -74,7 +85,7 @@ const createMapSlice: StateCreator<CommonSlice & MapSlice, [], [], MapSlice> = (
       console.log(error);
     }
   },
-  fetchPlaceReviewByName: async (name) => {
+  fetchPlaceReviewsWithKeyword: async (name) => {
     try {
       const res = await fetch(`/place_reviews/api/review`, {
         method: "POST",
@@ -84,15 +95,28 @@ const createMapSlice: StateCreator<CommonSlice & MapSlice, [], [], MapSlice> = (
         body: JSON.stringify(name),
       });
       const data = await res.json();
-      set({ placeReviews: data });
+      set({
+        placeReviews: {
+          data: [],
+          locals: [],
+          count: 0,
+        },
+      });
+      set({ keywordReviews: data });
     } catch (error) {
       console.log(error);
     }
   },
-  fetchPlaceReview: async () => {
+  fetchPlaceReview: async (page: number) => {
     try {
-      const res = await fetch(`/place_reviews/api/review`);
+      const res = await fetch(`/place_reviews/api/review?page=${page}`);
       const data = await res.json();
+      set({
+        keywordReviews: {
+          data: [],
+          locals: [],
+        },
+      });
       set({ placeReviews: data });
     } catch (error) {
       console.log(error);
