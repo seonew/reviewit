@@ -51,20 +51,22 @@ const createReviewSlice: StateCreator<
   insertReviewLike: async (reviewId, contentId, page) => {
     try {
       const params = { reviewId, contentId };
-      const response = await fetch(`/api/review/like?page=${page}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(params),
-      });
+      const response = await fetch(
+        `/api/review/like/${reviewId}?page=${page}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(params),
+        }
+      );
       const data = await response.json();
 
       if (data.status === 500) {
         alert(data.error);
         return;
       }
-      get().updateBookReview(data);
     } catch (error) {
       console.log(error);
     }
@@ -86,7 +88,6 @@ const createReviewSlice: StateCreator<
         alert(data.error);
         return;
       }
-      get().updateBookReview(data);
     } catch (error) {
       console.log(error);
     }

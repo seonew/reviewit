@@ -54,17 +54,21 @@ export default function List({ id, book }: { id: string; book: BookProps }) {
     setPage(1);
   };
 
-  const handleLikeReview = (reviewId: string, isLike: boolean | undefined) => {
+  const handleLikeReview = async (
+    reviewId: string,
+    isLike: boolean | undefined
+  ) => {
     if (!user.id && !user.name) {
       handleClickSignIn();
       return;
     }
 
     if (!isLike) {
-      insertReviewLike(reviewId, id, page);
+      await insertReviewLike(reviewId, id, page);
     } else {
-      deleteReviewLike(reviewId, page);
+      await deleteReviewLike(reviewId, page);
     }
+    await fetchBookReview(id, page);
   };
 
   useEffect(() => {

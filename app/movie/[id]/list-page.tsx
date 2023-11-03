@@ -1,7 +1,7 @@
 "use client";
 
 import { useBoundStore as useStore } from "@/store";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import { handleClickSignIn, numberWithCommas } from "@/utils/common";
 import KeywordSection from "@/app/components/view/KeywordSection";
@@ -12,30 +12,72 @@ import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/app/components/DefaultImage";
 import VideoSection from "@/app/components/view/VideoSection";
 import InitializeBanner from "@/app/components/InitializeBanner";
+import Pagination from "@/app/components/Pagination";
+import { limit } from "@/utils/constants";
 
 export default function List({ id }: { id: string }) {
   const {
     currentMovie,
     fetchMovieDetail,
-    insertMovieReview,
     fetchCurrentMovie,
     initializeMovie,
+    fetchMovieReviews,
+    insertMovieReview,
+    insertReviewLike,
+    deleteReviewLike,
+    movieReviews,
     user,
   } = useStore();
-  const { movie, keywords, reviewData, recommendations, similars, videos } =
-    currentMovie;
+  const { movie, keywords, recommendations, similars, videos } = currentMovie;
   const loaded = movie.id === "" ? false : true;
+  const [page, setPage] = useState<number>(1);
 
-  const handleSubmitReview = (review: string) => {
+  const handleClickPage = (current: number) => {
+    setPage(current);
+    fetchMovieReviews(id, current);
+  };
+
+  const handleClickPrevButton = () => {
+    setPage(page - 1);
+    fetchMovieReviews(id, page - 1);
+  };
+
+  const handleClickNextButton = () => {
+    setPage(page + 1);
+    fetchMovieReviews(id, page + 1);
+  };
+
+  const handleSubmitReview = (review: string, like: boolean) => {
     if (!user.id && !user.name) {
       handleClickSignIn();
       return;
     }
-    insertMovieReview({ review, movieId: id });
+
+    const contentInfo = {
+      content: review,
+      contentId: id,
+      contentImgUrl: movie.posterImage ?? "",
+      contentTitle: movie.title,
+      like,
+    };
+    insertMovieReview(contentInfo);
   };
 
-  const handleLikeReview = (reviewId: string) => {
-    console.log(reviewId);
+  const handleLikeReview = async (
+    reviewId: string,
+    isLike: boolean | undefined
+  ) => {
+    if (!user.id && !user.name) {
+      handleClickSignIn();
+      return;
+    }
+
+    if (!isLike) {
+      await insertReviewLike(reviewId, id, page);
+    } else {
+      await deleteReviewLike(reviewId, page);
+    }
+    await fetchMovieReviews(id, page);
   };
 
   useEffect(() => {
@@ -48,7 +90,8 @@ export default function List({ id }: { id: string }) {
       return;
     }
     fetchMovieDetail(id);
-  }, [fetchMovieDetail, id, loaded]);
+    fetchMovieReviews(id, 1);
+  }, [fetchMovieDetail, fetchMovieReviews, id, loaded]);
 
   return (
     <div className="contents-container">
@@ -152,9 +195,17 @@ export default function List({ id }: { id: string }) {
 
         <hr className="line-hr" />
         <CommentSection
-          reviewData={reviewData}
+          reviewData={movieReviews}
           onSubmit={handleSubmitReview}
           onClickLike={handleLikeReview}
+        />
+        <Pagination
+          total={movieReviews.count}
+          limit={limit}
+          currentPage={page}
+          onClickPage={handleClickPage}
+          onClickPrev={handleClickPrevButton}
+          onClickNext={handleClickNextButton}
         />
       </div>
     </div>

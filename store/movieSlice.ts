@@ -1,23 +1,30 @@
 import { StateCreator } from "zustand";
-import { MovieProps, CurrentMovieProps, ReviewProps } from "@/utils/types";
-import { replaceDateFormat } from "@/utils/common";
+import { MovieProps, CurrentMovieProps, ReviewDataProps } from "@/utils/types";
 import { CommonSlice } from "./commonSlice";
 
 type State = {
   dashboardMovies: MovieProps[];
   currentMovie: CurrentMovieProps;
+  movieReviews: ReviewDataProps;
 };
 
 type Actions = {
   fetchDashboardMovies: (movies: MovieProps[]) => void;
   fetchMovieDetail: (id: string) => void;
   fetchCurrentMovie: (id: string) => void;
+  fetchMovieReviews: (id: string, page: number) => void;
   insertMovieReview: ({
-    review,
-    movieId,
+    content,
+    contentId,
+    contentImgUrl,
+    contentTitle,
+    like,
   }: {
-    review: string;
-    movieId: string;
+    content: string;
+    contentId: string;
+    contentImgUrl: string;
+    contentTitle: string;
+    like: boolean;
   }) => void;
 
   initializeMovie: () => void;
@@ -48,6 +55,11 @@ const initialState: State = {
     similars: [],
     videos: [],
   },
+  movieReviews: {
+    reviews: [],
+    count: 0,
+    stats: [],
+  },
 };
 
 const createMovieSlice: StateCreator<
@@ -55,29 +67,40 @@ const createMovieSlice: StateCreator<
   [],
   [],
   MovieSlice
-> = (set) => ({
+> = (set, get) => ({
   ...initialState,
-  insertMovieReview: ({ review, movieId }) =>
-    set((state) => {
-      const response: ReviewProps = {
-        id: Date.now().toString(),
-        contentId: movieId,
-        userName: state.user.name,
-        content: review,
-        updateDate: replaceDateFormat(new Date().toString()),
-      };
-
-      return {
-        currentMovie: {
-          ...state.currentMovie,
-          reviewData: {
-            ...state.currentMovie.reviewData,
-            reviews: [response, ...state.currentMovie.reviewData.reviews],
-            count: state.currentMovie.reviewData.count + 1,
-          },
+  fetchMovieReviews: async (contentId, page) => {
+    try {
+      const response = await fetch(
+        `/movie/${contentId}/reviews/api?page=${page}`
+      );
+      const data = await response.json();
+      set({ movieReviews: data });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  insertMovieReview: async (contentInfo) => {
+    try {
+      const { contentId } = contentInfo;
+      const response = await fetch(`/movie/${contentId}/reviews/api`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      };
-    }),
+        body: JSON.stringify(contentInfo),
+      });
+      const data = await response.json();
+      if (data.status === 500) {
+        alert(data.error);
+        return;
+      }
+
+      get().fetchMovieReviews(contentId, 1);
+    } catch (error) {
+      console.log(error);
+    }
+  },
   fetchCurrentMovie: async (id) => {
     try {
       const res = await fetch(`/movie/${id}/api`);
