@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import BookReviewModel from "@/models/review/book";
 import UserModel from "@/models/user";
 import LikeModel from "@/models/review/like";
-import { BookReviewProps } from "@/utils/types";
+import { ReviewProps } from "@/utils/types";
 import { limit } from "@/utils/constants";
 import { NotFoundUserError } from "@/utils/error";
 
@@ -23,7 +23,7 @@ export const getBookReviews = async (contentId: string, offset: number) => {
   );
 
   const userData = await loadUsersForService();
-  const reviews = bookReviewData.map((review: BookReviewProps) => {
+  const reviews = bookReviewData.map((review: ReviewProps) => {
     const author = userData.find((user) => user.id === review.userId);
     const like =
       likeData === null

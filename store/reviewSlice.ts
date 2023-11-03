@@ -1,11 +1,11 @@
 import { StateCreator } from "zustand";
 import { CommonSlice } from "./commonSlice";
 import { DashboardSlice } from "@/store/dashboardSlice";
-import { BookReviewProps } from "@/utils/types";
+import { ReviewProps } from "@/utils/types";
 
 type State = {
-  contentLikes: { reviews: BookReviewProps[]; count: number };
-  myReviews: { reviews: BookReviewProps[]; count: number };
+  contentLikes: { reviews: ReviewProps[]; count: number };
+  myReviews: { reviews: ReviewProps[]; count: number };
 };
 
 type Actions = {

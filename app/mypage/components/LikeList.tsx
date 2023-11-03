@@ -1,4 +1,4 @@
-import { BookReviewProps } from "@/utils/types";
+import { ReviewProps } from "@/utils/types";
 import Image from "next/image";
 import Link from "next/link";
 import DefaultImage from "@/app/components/DefaultImage";
@@ -6,7 +6,7 @@ import { PhotoIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   title: string;
-  items: BookReviewProps[];
+  items: ReviewProps[];
 };
 
 const LikeList = ({ title, items }: Props) => {
@@ -16,7 +16,7 @@ const LikeList = ({ title, items }: Props) => {
         <h2 className="text-xl font-bold text-black">{title}</h2>
       </div>
       <ul role="list" className="divide-y divide-gray-100 break-words">
-        {items.map((like: BookReviewProps) => {
+        {items.map((like: ReviewProps) => {
           return (
             <li key={like.id} className="flex justify-between py-4">
               <div className="flex gap-x-6">

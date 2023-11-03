@@ -2,7 +2,7 @@ import dbConnect from "@/utils/db/mongodb";
 import { replaceDateFormat } from "@/utils/common";
 import { NextResponse } from "next/server";
 import { getUserId, loadMyReviews } from "@/app/api/common";
-import { BookReviewProps } from "@/utils/types";
+import { ReviewProps } from "@/utils/types";
 import { limit } from "@/utils/constants";
 
 export async function GET(request: Request) {
@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     const { data: reviewData, total } = await loadMyReviews(userId, offset);
 
     try {
-      const reviews = reviewData.map((review: BookReviewProps) => {
+      const reviews = reviewData.map((review: ReviewProps) => {
         return {
           id: review.id,
           content: review.content,

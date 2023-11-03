@@ -89,10 +89,6 @@ export type MediaVideoProps = {
   backgroundImage: string;
 };
 
-export type BookReviewProps = ReviewProps & {
-  userId: string;
-};
-
 export type ReviewProps = {
   id: string;
   content: string;
@@ -102,6 +98,7 @@ export type ReviewProps = {
   contentImgUrl?: string;
   contentTitle?: string;
   userName?: string;
+  userId: string;
   updateDate: string;
 };
 

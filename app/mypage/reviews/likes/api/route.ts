@@ -6,7 +6,7 @@ import {
   loadLikesForReview,
   loadUsersForService,
 } from "@/app/api/common";
-import { BookReviewProps } from "@/utils/types";
+import { ReviewProps } from "@/utils/types";
 import BookReviewModel from "@/models/review/book";
 import { limit } from "@/utils/constants";
 
@@ -25,7 +25,7 @@ export async function GET(request: Request) {
     const bookReviews = BookReviewModel;
     const reviews = await Promise.all(
       likeData.map(async (like: { reviewId: string }) => {
-        const bookReview: BookReviewProps | null = await bookReviews.findOne({
+        const bookReview: ReviewProps | null = await bookReviews.findOne({
           id: like.reviewId,
         });
 
