@@ -24,7 +24,7 @@ type State = {
 type Actions = {
   fetchLocalPlaces: (keyword: string) => void;
   insertPlaceReview: (review: string, like: boolean) => void;
-  fetchPlaceReview: (page: number) => void;
+  fetchPlaceReviews: (page: number) => void;
   fetchPlaceReviewsWithKeyword: (name: string) => void;
   fetchLocalPlacesByCode: (code: string) => void;
 
@@ -34,6 +34,7 @@ type Actions = {
   setSelectedCategory: (code: string) => void;
   setSearchKeyword: (keyword: string) => void;
   setLocalPlaces: (item: LocalPlace[] | null) => void;
+  setPlaceReviews: (item: PlaceReviewDataProps) => void;
 
   setOpenModal: (open: boolean) => void;
   initializeMap: () => void;
@@ -71,7 +72,7 @@ const createMapSlice: StateCreator<CommonSlice & MapSlice, [], [], MapSlice> = (
     const params = { lat, lng, code };
 
     try {
-      const res = await fetch(`/place_reviews/api/category`, {
+      const res = await fetch(`/place-reviews/api/search/category`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +88,9 @@ const createMapSlice: StateCreator<CommonSlice & MapSlice, [], [], MapSlice> = (
   },
   fetchPlaceReviewsWithKeyword: async (name) => {
     try {
-      const res = await fetch(`/place_reviews/api/review`, {
+      get().setSearchKeyword(name);
+
+      const res = await fetch(`/place-reviews/api/search/review`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,21 +98,19 @@ const createMapSlice: StateCreator<CommonSlice & MapSlice, [], [], MapSlice> = (
         body: JSON.stringify(name),
       });
       const data = await res.json();
-      set({
-        placeReviews: {
-          data: [],
-          locals: [],
-          count: 0,
-        },
+      get().setPlaceReviews({
+        data: [],
+        locals: [],
+        count: 0,
       });
       set({ keywordReviews: data });
     } catch (error) {
       console.log(error);
     }
   },
-  fetchPlaceReview: async (page: number) => {
+  fetchPlaceReviews: async (page: number) => {
     try {
-      const res = await fetch(`/place_reviews/api/review?page=${page}`);
+      const res = await fetch(`/place-reviews/api/search/review?page=${page}`);
       const data = await res.json();
       set({
         keywordReviews: {
@@ -128,7 +129,7 @@ const createMapSlice: StateCreator<CommonSlice & MapSlice, [], [], MapSlice> = (
     const params = { review, like, item };
 
     try {
-      const res = await fetch(`/place_reviews/api/review/${id}`, {
+      const res = await fetch(`/place-reviews/api/search/review/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -147,7 +148,7 @@ const createMapSlice: StateCreator<CommonSlice & MapSlice, [], [], MapSlice> = (
     const params = { lat, lng, keyword };
 
     try {
-      const res = await fetch(`/place_reviews/api/${keyword}`, {
+      const res = await fetch(`/place-reviews/api/search/${keyword}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -159,6 +160,9 @@ const createMapSlice: StateCreator<CommonSlice & MapSlice, [], [], MapSlice> = (
     } catch (error) {
       console.log(error);
     }
+  },
+  setPlaceReviews: (item) => {
+    set({ placeReviews: item });
   },
   setLocalPlaces: (item) => {
     set({ localPlaces: item });

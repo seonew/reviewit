@@ -40,7 +40,7 @@ const Map = ({
     <>
       <Script
         src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_CLIENT_ID}&autoload=false&libraries=services`}
-        onLoad={initializeMap}
+        onReady={initializeMap}
       />
       <div id={mapId} style={{ width: "100%", height: 500 }}></div>
     </>

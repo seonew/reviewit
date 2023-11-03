@@ -103,7 +103,7 @@ export async function POST(request: Request) {
   return NextResponse.json({ error: "Internal Server Error", status: 500 });
 }
 
-const getLocals = async (localData: any, userId: string) => {
+export const getLocals = async (localData: any, userId: string) => {
   const localsCount = await loadMyReviewCountByPlace(userId);
   const localResult: any[] = localData.map((local: LocalPlace) => {
     const localCount = localsCount.find((item) => item._id === local.id).count;
@@ -212,7 +212,7 @@ const getStatsForReview = async (contentId: string) => {
   return null;
 };
 
-const loadMyReviews = async (userId: string, offset: number) => {
+export const loadMyReviews = async (userId: string, offset: number) => {
   const placeReviews = PlaceReviewModel;
   const rowData = await placeReviews.aggregate([
     { $match: { userId } },

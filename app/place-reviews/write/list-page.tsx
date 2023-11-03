@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useBoundStore as useStore } from "@/store";
 import useGeolocation from "@/hooks/useGeolocation";
 import LocalList from "../components/LocalList";
@@ -10,6 +10,7 @@ import CommentModal from "../components/CommentModal";
 import { handleClickSignIn } from "@/utils/common";
 import CategoryButtonGroup from "../components/CategoryButtonGroup";
 import ResetButton from "../components/ResetButton";
+import SearchBox from "../components/SearchBox";
 
 const List = () => {
   const location = useGeolocation();
@@ -25,8 +26,13 @@ const List = () => {
     selectedCategory,
     user,
   } = useStore();
+  const [inputValue, setInputValue] = useState("");
 
   const loaded = location.loaded;
+
+  const handleChangeItem = (keyword: string) => {
+    setInputValue(keyword);
+  };
 
   const handleSubmitSearch = (keyword: string) => {
     setSelectedCategory("");
@@ -67,7 +73,11 @@ const List = () => {
       ) : (
         <>
           <div className="relative pt-8">
-            <SearchSection onClick={handleSubmitSearch} />
+            <SearchBox
+              onChange={handleChangeItem}
+              onClick={handleSubmitSearch}
+              searchKeyword={inputValue}
+            />
             <CategoryButtonGroup
               onClick={handleSubmitCode}
               selectedCode={selectedCategory}

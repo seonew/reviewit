@@ -6,10 +6,7 @@ type Props = {
 };
 
 const ResetButton = ({ onClick }: Props) => {
-  const { setSearchKeyword } = useStore();
-
   const handleClickReset = () => {
-    setSearchKeyword("");
     onClick?.();
   };
 

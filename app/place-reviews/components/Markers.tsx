@@ -24,7 +24,6 @@ const Markers = ({ items }: Props) => {
             key={item.id}
             map={map}
             coordinates={[item.mapy, item.mapx]}
-            item={item}
             onClick={() => setSelectedMarkerId(item.id)}
           />
         );

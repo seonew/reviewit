@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useBoundStore as useStore } from "@/store";
 import useGeolocation from "@/hooks/useGeolocation";
-import { Coordinates } from "@/utils/types";
+import { Coordinates, PlaceReviewDataProps } from "@/utils/types";
 import { INITIAL_CENTER } from "@/hooks/useMap";
 import SearchSection from "./components/SearchSection";
 import MapSection from "./components/MapSection";
@@ -15,12 +15,17 @@ import Empty from "@/app/components/Empty";
 import LoadingMap from "./components/LoadingMap";
 import ResetButton from "./components/ResetButton";
 
-const List = () => {
+type Props = {
+  reviews: PlaceReviewDataProps | null;
+};
+
+const List = ({ reviews }: Props) => {
   const naverLocation = useGeolocation();
   const {
     initializeMap,
-    fetchPlaceReview,
+    fetchPlaceReviews,
     fetchPlaceReviewsWithKeyword,
+    setPlaceReviews,
     searchKeyword,
     placeReviews,
     keywordReviews,
@@ -50,44 +55,44 @@ const List = () => {
 
   const handleClickPage = (current: number) => {
     setPage(current);
-    fetchPlaceReview(current);
+    fetchPlaceReviews(current);
   };
 
   const handleClickPrevButton = () => {
     setPage(page - 1);
-    fetchPlaceReview(page - 1);
+    fetchPlaceReviews(page - 1);
   };
 
   const handleClickNextButton = () => {
     setPage(page + 1);
-    fetchPlaceReview(page + 1);
+    fetchPlaceReviews(page + 1);
   };
 
-  const handleSubmit = (keyword: string) => {
-    if (keyword === "") {
-      return;
-    }
-    fetchPlaceReviewsWithKeyword(keyword);
-  };
+  // const handleSubmit = (keyword: string) => {
+  //   if (keyword === "") {
+  //     return;
+  //   }
+  //   fetchPlaceReviewsWithKeyword(keyword);
+  // };
 
   useEffect(() => {
     initializeMap();
   }, [initializeMap]);
 
   useEffect(() => {
-    if (searchKeyword === "") {
-      fetchPlaceReview(1);
+    if (reviews) {
+      setPlaceReviews(reviews);
     }
-  }, [searchKeyword, fetchPlaceReview]);
+  }, [reviews, setPlaceReviews]);
 
   return (
     <div className="contents-container">
-      {!loaded ? (
+      {/* {!loaded ? (
         <LoadingMap />
       ) : (
         <>
           <div className="relative pt-8">
-            <SearchSection onClick={handleSubmit} />
+            <SearchSection />
             <MapSection currentCenter={currentCenter} />
             {locals && <Markers items={locals} />}
           </div>
@@ -102,23 +107,26 @@ const List = () => {
             <>
               {searchKeyword ? (
                 <PlaceReviewsWithKeyword data={keywordReviews} />
-              ) : (
-                <>
-                  <PlaceReviewList data={placeReviews} />
-                  <Pagination
-                    total={count}
-                    limit={5}
-                    currentPage={page}
-                    onClickPage={handleClickPage}
-                    onClickPrev={handleClickPrevButton}
-                    onClickNext={handleClickNextButton}
-                  />
-                </>
-              )}
+              ) : ( */}
+      <>
+        <div className="relative pt-8">
+          <SearchSection />
+        </div>
+        <PlaceReviewList data={placeReviews} />
+        <Pagination
+          total={count}
+          limit={5}
+          currentPage={page}
+          onClickPage={handleClickPage}
+          onClickPrev={handleClickPrevButton}
+          onClickNext={handleClickNextButton}
+        />
+      </>
+      {/* )}
             </>
           )}
         </>
-      )}
+      )} */}
     </div>
   );
 };
