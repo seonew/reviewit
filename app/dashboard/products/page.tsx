@@ -4,7 +4,7 @@ import {
   replaceBTagsWithEmptyString,
   replaceCaretWithComma,
 } from "@/utils/common";
-import { ProductProps } from "@/utils/types";
+import { ProductProps } from "@/types";
 import dynamic from "next/dynamic";
 
 export default async function Page() {

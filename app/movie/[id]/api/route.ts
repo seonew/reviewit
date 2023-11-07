@@ -1,5 +1,9 @@
-import { movieApiUrl, movieBaseUrl, movieImageUrl } from "@/utils/constants";
-import { DetailMovieProps } from "@/utils/types";
+import {
+  MOVIE_API_URL,
+  MOVIE_BASE_URL,
+  MOVIE_IMAGE_URL,
+} from "@/utils/constants";
+import { DetailMovieProps } from "@/types";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -9,13 +13,13 @@ export async function GET(
   const movieId = params.id;
 
   try {
-    const movie_api_key = process.env.MOVIE_READONLY_API_KEY;
-    const url = `${movieApiUrl}/movie/${movieId}?language=ko-KR`;
+    const movieApiKey = process.env.MOVIE_READONLY_API_KEY;
+    const url = `${MOVIE_API_URL}/movie/${movieId}?language=ko-KR`;
     const options = {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: `Bearer ${movie_api_key}`,
+        Authorization: `Bearer ${movieApiKey}`,
       },
     };
     const response = await fetch(url, options);
@@ -34,11 +38,11 @@ export async function GET(
       average: data.vote_average === 0 ? undefined : data.vote_average,
       posterImage:
         data.poster_path !== null
-          ? `${movieBaseUrl}/t/p/w440_and_h660_face${data.poster_path}`
+          ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${data.poster_path}`
           : undefined,
       backdropImage:
         data.backdrop_path !== null
-          ? `${movieImageUrl}/t/p/original${data.backdrop_path}`
+          ? `${MOVIE_IMAGE_URL}/t/p/original${data.backdrop_path}`
           : undefined,
       adult: data.adult,
     };

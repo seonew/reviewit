@@ -1,6 +1,6 @@
 import { replaceDateFormat } from "@/utils/common";
-import { movieApiUrl, movieBaseUrl } from "@/utils/constants";
-import { MediaVideoProps, MovieProps, ReviewProps } from "@/utils/types";
+import { MOVIE_API_URL, MOVIE_BASE_URL } from "@/utils/constants";
+import { MediaVideoProps, MovieProps, ReviewProps } from "@/types";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -10,21 +10,21 @@ export async function GET(
   const movieId = params.id;
 
   try {
-    const movie_api_key = process.env.MOVIE_READONLY_API_KEY;
+    const movieApiKey = process.env.MOVIE_READONLY_API_KEY;
     const options = {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: `Bearer ${movie_api_key}`,
+        Authorization: `Bearer ${movieApiKey}`,
       },
     };
 
-    const keywordsUrl = `${movieApiUrl}/movie/${movieId}/keywords`;
+    const keywordsUrl = `${MOVIE_API_URL}/movie/${movieId}/keywords`;
     const keywordsResponse = await fetch(keywordsUrl, options);
     const keywordsData = await keywordsResponse.json();
     const { keywords } = keywordsData;
 
-    const reviewsUrl = `${movieApiUrl}/movie/${movieId}/reviews?language=ko-KR`;
+    const reviewsUrl = `${MOVIE_API_URL}/movie/${movieId}/reviews?language=ko-KR`;
     const reviewsResponse = await fetch(reviewsUrl, options);
     const reviewsData = await reviewsResponse.json();
     const reviewsResult = reviewsData.results;
@@ -45,7 +45,7 @@ export async function GET(
       }
     );
 
-    const recommendationsUrl = `${movieApiUrl}/movie/${movieId}/recommendations?language=ko-KR`;
+    const recommendationsUrl = `${MOVIE_API_URL}/movie/${movieId}/recommendations?language=ko-KR`;
     const recommendationsResponse = await fetch(recommendationsUrl, options);
     const recommendationsData = await recommendationsResponse.json();
     const recommendationsResult = recommendationsData.results;
@@ -67,7 +67,7 @@ export async function GET(
             releaseDate: recommendation.release_date,
             posterImage:
               recommendation.poster_path !== null
-                ? `${movieBaseUrl}/t/p/w440_and_h660_face${recommendation.poster_path}`
+                ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${recommendation.poster_path}`
                 : undefined,
             link: `/movie/${recommendation.id}`,
             average: recommendation.vote_average,
@@ -76,7 +76,7 @@ export async function GET(
       }
     );
 
-    const similarUrl = `${movieApiUrl}/movie/${movieId}/similar?language=ko-KR`;
+    const similarUrl = `${MOVIE_API_URL}/movie/${movieId}/similar?language=ko-KR`;
     const similarResponse = await fetch(similarUrl, options);
     const similarData = await similarResponse.json();
     const similarResult = similarData.results;
@@ -98,7 +98,7 @@ export async function GET(
             releaseDate: similar.release_date,
             posterImage:
               similar.poster_path !== null
-                ? `${movieBaseUrl}/t/p/w440_and_h660_face${similar.poster_path}`
+                ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${similar.poster_path}`
                 : undefined,
             link: `/movie/${similar.id}`,
             average: similar.vote_average,
@@ -107,7 +107,7 @@ export async function GET(
       }
     );
 
-    const videoUrl = `${movieApiUrl}/movie/${movieId}/videos?language=ko-KR`;
+    const videoUrl = `${MOVIE_API_URL}/movie/${movieId}/videos?language=ko-KR`;
     const videoResponse = await fetch(videoUrl, options);
     const videoData = await videoResponse.json();
     const videoResult = videoData.results;
@@ -131,7 +131,7 @@ export async function GET(
           link:
             video.site === "YouTube"
               ? `https://youtu.be/${video.key}`
-              : `${movieBaseUrl}/video/play?key=${video.key}`,
+              : `${MOVIE_BASE_URL}/video/play?key=${video.key}`,
           backgroundImage: `https://i.ytimg.com/vi/${video.key}/hqdefault.jpg`,
         };
       }

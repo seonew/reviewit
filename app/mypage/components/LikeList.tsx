@@ -1,4 +1,4 @@
-import { ReviewProps } from "@/utils/types";
+import { ReviewProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import DefaultImage from "@/app/components/DefaultImage";

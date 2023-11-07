@@ -5,7 +5,7 @@ import {
   LikedProduct,
   ProductProps,
   ReviewDataProps,
-} from "@/utils/types";
+} from "@/types";
 import { CommonSlice } from "./commonSlice";
 
 type State = {

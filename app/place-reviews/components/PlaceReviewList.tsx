@@ -1,4 +1,4 @@
-import { PlaceReviewDataProps, PlaceReviewProps } from "@/utils/types";
+import { PlaceReviewDataProps, PlaceReviewProps } from "@/types";
 import Link from "next/link";
 import PlaceReviewListItem from "./PlaceReviewListItem";
 

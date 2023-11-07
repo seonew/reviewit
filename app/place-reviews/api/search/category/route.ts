@@ -1,6 +1,6 @@
 import { replaceBTagsWithEmptyString } from "@/utils/common";
 import { NotFoundContentError } from "@/utils/error";
-import { LocalPlace } from "@/utils/types";
+import { LocalPlace } from "@/types";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

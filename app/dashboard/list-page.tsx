@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { BookProps, ProductProps } from "@/utils/types";
+import { BookProps, ProductProps } from "@/types";
 import { useBoundStore as useStore } from "@/store";
 import CardList from "@/app/components/CardList";
 import BookInfo from "@/app/components/BookInfo";

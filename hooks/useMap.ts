@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import useSWR, { mutate } from "swr";
-import { Coordinates, KakaoMap } from "@/utils/types";
+import { Coordinates, KakaoMap } from "@/types";
 
 export const INITIAL_CENTER: Coordinates = [37.5656, 126.9769];
 export const INITIAL_LEVEL = 5;

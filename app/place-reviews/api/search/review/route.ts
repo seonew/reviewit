@@ -5,16 +5,16 @@ import { NextResponse } from "next/server";
 import PlaceReviewModel from "@/models/review/place";
 import LocalModel from "@/models/local";
 import { getStatsText, loadUserInfo } from "@/app/api/common";
-import { LocalPlace } from "@/utils/types";
-import { limit } from "@/utils/constants";
+import { LocalPlace } from "@/types";
+import { LIMIT } from "@/utils/constants";
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page") ?? "1";
-    const offset = (parseInt(page) - 1) * limit;
+    const offset = (parseInt(page) - 1) * LIMIT;
 
-    dbConnect();
+    await dbConnect();
 
     const user = await loadUserInfo();
     if (!user) {
@@ -22,16 +22,14 @@ export async function GET(request: Request) {
     }
     const { data: reviewData, total } = await loadMyReviews(user.id, offset);
 
-    const placeReviews = PlaceReviewModel;
-    const reviews = await placeReviews.find({ userId: user.id }).sort({
+    const reviews = await PlaceReviewModel.find({ userId: user.id }).sort({
       updateDate: -1,
     });
     const placeIds = Array.from(
       new Set(reviews.map((review) => review.contentId))
     );
 
-    const locals = LocalModel;
-    const localData = await locals.find({ id: { $in: placeIds } });
+    const localData = await LocalModel.find({ id: { $in: placeIds } });
     const localResult = await getLocals(localData, user.id);
 
     const result = reviewData.map((review: any) => {
@@ -67,17 +65,16 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  dbConnect();
-
-  const keyword = await request.json();
-  const user = await loadUserInfo();
-  if (!user) {
-    throw new NotFoundUserError();
-  }
-
   try {
-    const locals = LocalModel;
-    const localData = await locals.aggregate([
+    await dbConnect();
+
+    const keyword = await request.json();
+    const user = await loadUserInfo();
+    if (!user) {
+      throw new NotFoundUserError();
+    }
+
+    const localData = await LocalModel.aggregate([
       {
         $match: {
           name: {
@@ -145,15 +142,12 @@ const getPlaceReviews = async (
   user: { id: string; name: string },
   contentId: string
 ) => {
-  const placeReviews = PlaceReviewModel;
-  const reviews = await placeReviews
-    .find({
-      userId: user.id,
-      contentId,
-    })
-    .sort({
-      updateDate: -1,
-    });
+  const reviews = await PlaceReviewModel.find({
+    userId: user.id,
+    contentId,
+  }).sort({
+    updateDate: -1,
+  });
 
   const result = reviews.map((review) => {
     return {
@@ -172,8 +166,7 @@ const getPlaceReviews = async (
 };
 
 const getStatsForReview = async (contentId: string) => {
-  const placeReviews = PlaceReviewModel;
-  const rowData = await placeReviews.aggregate([
+  const rowData = await PlaceReviewModel.aggregate([
     { $match: { contentId } },
     {
       $group: {
@@ -186,7 +179,7 @@ const getStatsForReview = async (contentId: string) => {
   let likeCount = 0;
   let disLikeCount = 0;
 
-  rowData.map((like) => {
+  rowData.forEach((like) => {
     if (like._id === true) {
       likeCount = like.count;
     } else {
@@ -194,7 +187,7 @@ const getStatsForReview = async (contentId: string) => {
     }
   });
 
-  const total = await placeReviews.countDocuments({ contentId });
+  const total = await PlaceReviewModel.countDocuments({ contentId });
   if (total > 0) {
     const likeResult = (likeCount / total) * 100;
     const disLikeResult = (disLikeCount / total) * 100;
@@ -213,14 +206,13 @@ const getStatsForReview = async (contentId: string) => {
 };
 
 export const loadMyReviews = async (userId: string, offset: number) => {
-  const placeReviews = PlaceReviewModel;
-  const rowData = await placeReviews.aggregate([
+  const rowData = await PlaceReviewModel.aggregate([
     { $match: { userId } },
     { $sort: { updateDate: -1 } },
     {
       $facet: {
         metadata: [{ $count: "total" }],
-        data: [{ $skip: offset }, { $limit: limit }],
+        data: [{ $skip: offset }, { $limit: LIMIT }],
       },
     },
   ]);
@@ -234,8 +226,7 @@ export const loadMyReviews = async (userId: string, offset: number) => {
 };
 
 const loadMyReviewCountByPlace = async (userId: string) => {
-  const placeReviews = PlaceReviewModel;
-  const result = await placeReviews.aggregate([
+  const result = await PlaceReviewModel.aggregate([
     { $match: { userId } },
     {
       $group: {

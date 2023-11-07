@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { ProductProps } from "@/utils/types";
+import { ProductProps } from "@/types";
 import { useBoundStore as useStore } from "@/store";
 import CardList from "@/app/components/CardList";
 import ProductInfo from "@/app/components/ProductInfo";

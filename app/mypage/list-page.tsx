@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { BookProps, ProductProps } from "@/utils/types";
+import { BookProps, ProductProps } from "@/types";
 import { handleClickSignIn } from "@/utils/common";
 import { useBoundStore as useStore } from "@/store";
 import CardList from "@/app/components/CardList";

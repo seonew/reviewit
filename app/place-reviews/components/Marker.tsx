@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import type { Coordinates, KakaoMap, LocalPlace } from "@/utils/types";
+import type { Coordinates, KakaoMap, LocalPlace } from "@/types";
 
 type Props = {
   map: KakaoMap;

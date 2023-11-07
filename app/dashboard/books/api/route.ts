@@ -4,7 +4,7 @@ import {
   replaceCaretWithComma,
   replaceDateFormat8Digits,
 } from "@/utils/common";
-import { BookProps } from "@/utils/types";
+import { BookProps } from "@/types";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {

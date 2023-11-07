@@ -4,7 +4,7 @@ import {
   replaceBTagsWithEmptyString,
   replaceCaretWithComma,
 } from "@/utils/common";
-import { ProductProps } from "@/utils/types";
+import { ProductProps } from "@/types";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {

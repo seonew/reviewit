@@ -1,4 +1,4 @@
-import { dotts } from "@/app/components/Pagination";
+import { DOTTS } from "@/utils/constants";
 
 const getPages = (length: number, inc: number = 1) =>
   Array.from({ length }, (_, i) => i + inc);
@@ -16,20 +16,20 @@ export default function usePagination(
   }
   // -> 1 2 3 4 ... 10
   if (currentPage <= 3) {
-    return [1, 2, 3, 4, dotts, totalPages];
+    return [1, 2, 3, 4, DOTTS, totalPages];
   }
   // -> 1 ... 4 5 6 ... 10
   if (currentPage < totalPages - 2) {
     return [
       1,
-      dotts,
+      DOTTS,
       currentPage - 1,
       currentPage,
       currentPage + 1,
-      dotts,
+      DOTTS,
       totalPages,
     ];
   }
   // -> 1 ... 7 8 9 10
-  return [1, dotts, ...getPages(4, totalPages - 3)];
+  return [1, DOTTS, ...getPages(4, totalPages - 3)];
 }

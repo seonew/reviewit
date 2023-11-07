@@ -1,6 +1,6 @@
 "use client";
 
-import { MovieProps } from "@/utils/types";
+import { MovieProps } from "@/types";
 import ScrollContents from "./ScrollContents";
 import SectionTemplate from "./SectionTemplate";
 

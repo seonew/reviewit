@@ -1,6 +1,6 @@
 "use client";
 
-import { VideoImageBannerProps } from "@/utils/types";
+import { VideoImageBannerProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 

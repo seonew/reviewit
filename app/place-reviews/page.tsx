@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
 import { getUserId } from "../api/common";
-import { notFound } from "next/navigation";
 import dbConnect from "@/utils/db/mongodb";
 import { replaceDateFormat } from "@/utils/common";
 import PlaceReviewModel from "@/models/review/place";
@@ -24,20 +23,18 @@ async function getData() {
       return null;
     }
 
-    dbConnect();
+    await dbConnect();
 
     const { data: reviewData, total } = await loadMyReviews(userId, 0);
 
-    const placeReviews = PlaceReviewModel;
-    const reviews = await placeReviews.find({ userId }).sort({
+    const reviews = await PlaceReviewModel.find({ userId }).sort({
       updateDate: -1,
     });
     const placeIds = Array.from(
       new Set(reviews.map((review) => review.contentId))
     );
 
-    const locals = LocalModel;
-    const localData = await locals.find({ id: { $in: placeIds } });
+    const localData = await LocalModel.find({ id: { $in: placeIds } });
     const localResult = await getLocals(localData, userId);
 
     const result = reviewData.map((review: any) => {

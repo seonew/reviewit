@@ -1,7 +1,7 @@
 import {
   PlaceReviewsWithKeywordDataProps,
   PlaceReviewWithKeywordProps,
-} from "@/utils/types";
+} from "@/types";
 import Link from "next/link";
 import PlaceReviewListItem from "./PlaceReviewListItem";
 import PreferenceStatSection from "@/app/components/view/PreferenceStatSection";

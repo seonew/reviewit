@@ -2,7 +2,7 @@ import dbConnect from "@/utils/db/mongodb";
 import { NextResponse } from "next/server";
 import BookReviewModel from "@/models/review/book";
 import { getBookReviews, getUserId } from "@/app/api/common";
-import { limit } from "@/utils/constants";
+import { LIMIT } from "@/utils/constants";
 import { NotFoundContentError } from "@/utils/error";
 
 export async function GET(
@@ -10,16 +10,16 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    dbConnect();
-
     const contentId = params.id;
     if (!contentId) {
       throw new NotFoundContentError();
     }
 
+    await dbConnect();
+
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page") ?? "1";
-    const offset = (parseInt(page) - 1) * limit;
+    const offset = (parseInt(page) - 1) * LIMIT;
     const result = await getBookReviews(contentId, offset);
 
     return NextResponse.json(result);
@@ -34,8 +34,6 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    dbConnect();
-
     const contentId = params.id;
     const requestData = await request.json();
 
@@ -44,6 +42,8 @@ export async function POST(
     if (!contentId || !content) {
       throw new NotFoundContentError();
     }
+
+    await dbConnect();
 
     const userId = getUserId();
     const newReview = new BookReviewModel({

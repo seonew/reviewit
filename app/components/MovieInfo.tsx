@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Card from "@/app/components/Card";
-import { MovieProps } from "@/utils/types";
+import { MovieProps } from "@/types";
 
 const MovieInfo = ({
   item: { title, posterImage, link, releaseDate },

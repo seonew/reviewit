@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { LikedProduct } from "@/utils/types";
+import { LikedProduct } from "@/types";
 import { useBoundStore as useStore } from "@/store";
 import Card from "@/app/components/Card";
 import IconButton from "./IconButton";

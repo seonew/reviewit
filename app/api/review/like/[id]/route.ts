@@ -5,13 +5,13 @@ import { getUserId } from "@/app/api/common";
 
 export async function POST(request: Request) {
   try {
-    dbConnect();
-
     const requestData = await request.json();
     const { reviewId, contentId } = requestData;
     if (!reviewId && !contentId) {
       return NextResponse.json({ error: "Empty data", status: 400 });
     }
+
+    await dbConnect();
 
     const userId = getUserId();
     const newLike = new LikeModel({
@@ -35,16 +35,15 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    dbConnect();
-
     const reviewId = params.id;
     if (!reviewId) {
       return NextResponse.json({ error: "Empty data", status: 400 });
     }
 
+    await dbConnect();
+
     const userId = getUserId();
-    const likes = LikeModel;
-    await likes.deleteOne({ reviewId, userId });
+    await LikeModel.deleteOne({ reviewId, userId });
 
     return NextResponse.json({});
   } catch (e) {

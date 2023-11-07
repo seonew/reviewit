@@ -100,6 +100,15 @@
   .tab-active {
     @apply text-ozip-blue border-b-2 border-ozip-blue;
   }
+  .pagination-current {
+    @apply pagination z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+  }
+  .pagination-default {
+    @apply pagination text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0;
+  }
+  .pagination-end {
+    @apply relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300;
+  }
   /* common */
   .basic-border {
     @apply border-gray-200 border-solid border;
@@ -118,5 +127,8 @@
   }
   .button-xs-blue {
     @apply rounded px-2.5 py-1.5 text-xs font-bold bg-ozip-blue text-white;
+  }
+  .pagination {
+    @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold;
   }
 }

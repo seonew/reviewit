@@ -1,7 +1,7 @@
 "use client";
 
 import CardList from "@/app/components/CardList";
-import { MovieProps } from "@/utils/types";
+import { MovieProps } from "@/types";
 import MovieInfo from "@/app/components/MovieInfo";
 
 type Props = {

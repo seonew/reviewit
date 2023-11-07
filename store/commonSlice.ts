@@ -1,5 +1,5 @@
 import { StateCreator } from "zustand";
-import { User } from "@/utils/types";
+import { User } from "@/types";
 import { DashboardSlice } from "./dashboardSlice";
 import { ReviewSlice } from "./reviewSlice";
 import { MovieSlice } from "./movieSlice";

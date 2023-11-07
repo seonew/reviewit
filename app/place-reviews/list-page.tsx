@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useBoundStore as useStore } from "@/store";
 import useGeolocation from "@/hooks/useGeolocation";
-import { Coordinates, PlaceReviewDataProps } from "@/utils/types";
+import { Coordinates, PlaceReviewDataProps } from "@/types";
 import { INITIAL_CENTER } from "@/hooks/useMap";
 import SearchSection from "./components/SearchSection";
 import MapSection from "./components/MapSection";

@@ -1,4 +1,4 @@
-import { MovieProps } from "@/utils/types";
+import { MovieProps } from "@/types";
 import Image from "next/image";
 import DefaultImage from "@/app/components/DefaultImage";
 import { PhotoIcon } from "@heroicons/react/24/outline";

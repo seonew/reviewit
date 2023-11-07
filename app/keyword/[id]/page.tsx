@@ -1,5 +1,5 @@
-import { movieApiUrl, movieBaseUrl } from "@/utils/constants";
-import { MovieProps } from "@/utils/types";
+import { MOVIE_API_URL, MOVIE_BASE_URL } from "@/utils/constants";
+import { MovieProps } from "@/types";
 import dynamic from "next/dynamic";
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -10,13 +10,13 @@ export default async function Page({ params }: { params: { id: string } }) {
 
 async function getData(keywordId: string) {
   try {
-    const movie_api_key = process.env.MOVIE_READONLY_API_KEY;
-    const url = `${movieApiUrl}/keyword/${keywordId}/movies?language=ko-KR&include_adult=false`;
+    const movieApiKey = process.env.MOVIE_READONLY_API_KEY;
+    const url = `${MOVIE_API_URL}/keyword/${keywordId}/movies?language=ko-KR&include_adult=false`;
     const options = {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: `Bearer ${movie_api_key}`,
+        Authorization: `Bearer ${movieApiKey}`,
       },
     };
     const response = await fetch(url, options);
@@ -38,7 +38,7 @@ async function getData(keywordId: string) {
           releaseDate: keywordMovie.release_date,
           posterImage:
             keywordMovie.poster_path !== null
-              ? `${movieBaseUrl}/t/p/w440_and_h660_face${keywordMovie.poster_path}`
+              ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${keywordMovie.poster_path}`
               : undefined,
           link: `/movie/${keywordMovie.id}`,
           average: keywordMovie.vote_average,
@@ -46,7 +46,7 @@ async function getData(keywordId: string) {
       }
     );
 
-    const keywordUrl = `${movieApiUrl}/keyword/${keywordId}`;
+    const keywordUrl = `${MOVIE_API_URL}/keyword/${keywordId}`;
     const keywordResponse = await fetch(keywordUrl, options);
     const keywordData = await keywordResponse.json();
 

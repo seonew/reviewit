@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { MAP_KEY } from "@/hooks/useMap";
-import { KakaoMap, LocalPlace } from "@/utils/types";
+import { KakaoMap, LocalPlace } from "@/types";
 import { useBoundStore as useStore } from "@/store";
 import Marker from "./Marker";
 

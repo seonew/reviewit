@@ -1,5 +1,5 @@
 import DefaultImage from "@/app/components/DefaultImage";
-import { User } from "@/utils/types";
+import { User } from "@/types";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import githubIcon from "@/public/assets/github-icon.svg";

@@ -4,8 +4,8 @@ import { NotFoundContentError } from "@/utils/error";
 import { NextResponse } from "next/server";
 import LikeModel from "@/models/review/like";
 import MovieReviewModel from "@/models/review/movie";
-import { limit } from "@/utils/constants";
-import { ReviewProps } from "@/utils/types";
+import { LIMIT } from "@/utils/constants";
+import { ReviewProps } from "@/types";
 import { replaceDateFormat } from "@/utils/common";
 
 export async function GET(
@@ -13,16 +13,16 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    await dbConnect();
-
     const contentId = params.id;
     if (!contentId) {
       throw new NotFoundContentError();
     }
 
+    await dbConnect();
+
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page") ?? "1";
-    const offset = (parseInt(page) - 1) * limit;
+    const offset = (parseInt(page) - 1) * LIMIT;
     const result = await getMovieReviews(contentId, offset);
 
     return NextResponse.json(result);
@@ -48,9 +48,7 @@ export async function POST(
     }
 
     const userId = getUserId();
-    const movies = MovieReviewModel;
-
-    const newReview = new movies({
+    const newReview = new MovieReviewModel({
       id: Date.now().toString(),
       contentId,
       content,
@@ -74,10 +72,9 @@ const getMovieReviews = async (contentId: string, offset: number) => {
   const userId = getUserId();
   const isLogin = !userId ? false : true;
 
-  const likes = LikeModel;
   let likeData: any[] | null = null;
   if (isLogin) {
-    likeData = await likes.find({ userId, contentId });
+    likeData = await LikeModel.find({ userId, contentId });
   }
 
   const { data: movieReviewData, total } = await loadMovieReviews(
@@ -112,14 +109,13 @@ const getMovieReviews = async (contentId: string, offset: number) => {
 };
 
 const loadMovieReviews = async (contentId: string, offset: number) => {
-  const movieReviews = MovieReviewModel;
-  const rowData = await movieReviews.aggregate([
+  const rowData = await MovieReviewModel.aggregate([
     { $match: { contentId } },
     { $sort: { updateDate: -1 } },
     {
       $facet: {
         metadata: [{ $count: "total" }],
-        data: [{ $skip: offset }, { $limit: limit }],
+        data: [{ $skip: offset }, { $limit: LIMIT }],
       },
     },
   ]);
@@ -133,8 +129,7 @@ const loadMovieReviews = async (contentId: string, offset: number) => {
 };
 
 const getStatsForReview = async (contentId: string) => {
-  const movieReviews = MovieReviewModel;
-  const rowData = await movieReviews.aggregate([
+  const rowData = await MovieReviewModel.aggregate([
     { $match: { contentId } },
     {
       $group: {
@@ -155,7 +150,7 @@ const getStatsForReview = async (contentId: string) => {
     }
   });
 
-  const total = await movieReviews.countDocuments({ contentId });
+  const total = await MovieReviewModel.countDocuments({ contentId });
   if (total > 0) {
     const likeResult = (likeCount / total) * 100;
     const disLikeResult = (disLikeCount / total) * 100;

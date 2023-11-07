@@ -4,7 +4,7 @@ import {
   LocalPlace,
   PlaceReviewsWithKeywordDataProps,
   PlaceReviewDataProps,
-} from "@/utils/types";
+} from "@/types";
 import { CommonSlice } from "./commonSlice";
 import { INITIAL_CENTER } from "@/hooks/useMap";
 

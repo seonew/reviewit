@@ -3,18 +3,17 @@ import { cookies } from "next/headers";
 import BookReviewModel from "@/models/review/book";
 import UserModel from "@/models/user";
 import LikeModel from "@/models/review/like";
-import { ReviewProps } from "@/utils/types";
-import { limit } from "@/utils/constants";
+import { ReviewProps } from "@/types";
+import { LIMIT } from "@/utils/constants";
 import { NotFoundUserError } from "@/utils/error";
 
 export const getBookReviews = async (contentId: string, offset: number) => {
   const userId = getUserId();
   const isLogin = !userId ? false : true;
 
-  const likes = LikeModel;
   let likeData: any[] | null = null;
   if (isLogin) {
-    likeData = await likes.find({ userId, contentId });
+    likeData = await LikeModel.find({ userId, contentId });
   }
 
   const { data: bookReviewData, total } = await loadBookReviews(
@@ -49,8 +48,7 @@ export const getBookReviews = async (contentId: string, offset: number) => {
 };
 
 const getStatsForReview = async (contentId: string) => {
-  const bookReviews = BookReviewModel;
-  const rowData = await bookReviews.aggregate([
+  const rowData = await BookReviewModel.aggregate([
     { $match: { contentId } },
     {
       $group: {
@@ -63,7 +61,7 @@ const getStatsForReview = async (contentId: string) => {
   let likeCount = 0;
   let disLikeCount = 0;
 
-  rowData.map((like) => {
+  rowData.forEach((like) => {
     if (like._id === true) {
       likeCount = like.count;
     } else {
@@ -71,7 +69,7 @@ const getStatsForReview = async (contentId: string) => {
     }
   });
 
-  const total = await bookReviews.countDocuments({ contentId });
+  const total = await BookReviewModel.countDocuments({ contentId });
   if (total > 0) {
     const likeResult = (likeCount / total) * 100;
     const disLikeResult = (disLikeCount / total) * 100;
@@ -110,14 +108,13 @@ export const getStatsText = (like: number) => {
 };
 
 export const loadBookReviews = async (contentId: string, offset: number) => {
-  const bookReviews = BookReviewModel;
-  const rowData = await bookReviews.aggregate([
+  const rowData = await BookReviewModel.aggregate([
     { $match: { contentId } },
     { $sort: { updateDate: -1 } },
     {
       $facet: {
         metadata: [{ $count: "total" }],
-        data: [{ $skip: offset }, { $limit: limit }],
+        data: [{ $skip: offset }, { $limit: LIMIT }],
       },
     },
   ]);
@@ -131,16 +128,16 @@ export const loadBookReviews = async (contentId: string, offset: number) => {
 };
 
 export const loadBookInfo = async (id: string) => {
-  const d_isbn = id;
-  const client_id = process.env.CLIENT_ID || "";
-  const client_secret = process.env.CLIENT_SECRET || "";
+  const dIsbn = id;
+  const clientId = process.env.CLIENT_ID || "";
+  const clientSecret = process.env.CLIENT_SECRET || "";
   const bookRequestUrl = "https://openapi.naver.com/v1/search/book_adv?d_isbn=";
   const headers = {
-    "X-Naver-Client-Id": client_id,
-    "X-Naver-Client-Secret": client_secret,
+    "X-Naver-Client-Id": clientId,
+    "X-Naver-Client-Secret": clientSecret,
   };
 
-  const bookResponse = await fetch(`${bookRequestUrl}${d_isbn}`, {
+  const bookResponse = await fetch(`${bookRequestUrl}${dIsbn}`, {
     headers,
   });
   const bookData = await bookResponse.json();
@@ -148,14 +145,13 @@ export const loadBookInfo = async (id: string) => {
 };
 
 export const loadMyReviews = async (userId: string, offset: number) => {
-  const bookReviews = BookReviewModel;
-  const rowData = await bookReviews.aggregate([
+  const rowData = await BookReviewModel.aggregate([
     { $match: { userId } },
     { $sort: { updateDate: -1 } },
     {
       $facet: {
         metadata: [{ $count: "total" }],
-        data: [{ $skip: offset }, { $limit: limit }],
+        data: [{ $skip: offset }, { $limit: LIMIT }],
       },
     },
   ]);
@@ -169,14 +165,13 @@ export const loadMyReviews = async (userId: string, offset: number) => {
 };
 
 export const loadLikesForReview = async (userId: string, offset: number) => {
-  const likes = LikeModel;
-  const rowData = await likes.aggregate([
+  const rowData = await LikeModel.aggregate([
     { $match: { userId } },
     { $sort: { registDate: -1 } },
     {
       $facet: {
         metadata: [{ $count: "total" }],
-        data: [{ $skip: offset }, { $limit: limit }],
+        data: [{ $skip: offset }, { $limit: LIMIT }],
       },
     },
   ]);
@@ -191,8 +186,7 @@ export const loadLikesForReview = async (userId: string, offset: number) => {
 
 export const loadUsersForService = async () => {
   const SERVICE = process.env.NEXT_PUBLIC_SERVICE!;
-  const users = UserModel;
-  const userData = await users.find({ loginService: SERVICE });
+  const userData = await UserModel.find({ loginService: SERVICE });
   return userData;
 };
 

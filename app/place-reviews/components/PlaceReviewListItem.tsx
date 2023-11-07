@@ -1,4 +1,4 @@
-import { ReviewProps } from "@/utils/types";
+import { ReviewProps } from "@/types";
 import {
   HandThumbDownIcon,
   HandThumbUpIcon,

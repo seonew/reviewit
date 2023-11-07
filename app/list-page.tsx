@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useBoundStore as useStore } from "@/store";
-import { VideoImageBannerProps, MovieProps } from "@/utils/types";
+import { VideoImageBannerProps, MovieProps } from "@/types";
 import CardList from "@/app/components/CardList";
 import MovieInfo from "@/app/components/MovieInfo";
 import Banner from "@/app/components/Banner";

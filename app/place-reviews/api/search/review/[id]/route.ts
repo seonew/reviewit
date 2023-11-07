@@ -10,8 +10,6 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    dbConnect();
-
     const contentId = params.id;
     const requestData = await request.json();
     const { review, like, item } = requestData;
@@ -20,8 +18,8 @@ export async function POST(
       throw new NotFoundContentError();
     }
 
-    const locals = LocalModel;
-    const placeReviews = PlaceReviewModel;
+    await dbConnect();
+
     const {
       id,
       name,
@@ -33,9 +31,9 @@ export async function POST(
       telephone,
       link,
     } = item;
-    const local = await locals.findOne({ id });
+    const local = await LocalModel.findOne({ id });
     if (!local) {
-      const newLocal = new locals({
+      const newLocal = new LocalModel({
         id,
         name,
         address,
@@ -50,7 +48,7 @@ export async function POST(
     }
 
     const userId = getUserId();
-    const newReview = new placeReviews({
+    const newReview = new PlaceReviewModel({
       id: Date.now().toString(),
       contentId: item.id,
       content: review,

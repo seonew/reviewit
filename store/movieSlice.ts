@@ -1,5 +1,5 @@
 import { StateCreator } from "zustand";
-import { MovieProps, CurrentMovieProps, ReviewDataProps } from "@/utils/types";
+import { MovieProps, CurrentMovieProps, ReviewDataProps } from "@/types";
 import { CommonSlice } from "./commonSlice";
 
 type State = {

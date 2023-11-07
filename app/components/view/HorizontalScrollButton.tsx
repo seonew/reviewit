@@ -1,7 +1,7 @@
 import { RefObject, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Button from "./Button";
-import { MovieProps, MediaVideoProps } from "@/utils/types";
+import { MovieProps, MediaVideoProps } from "@/types";
 
 type Props = {
   contents: MovieProps[] | MediaVideoProps[];

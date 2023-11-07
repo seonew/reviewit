@@ -1,5 +1,5 @@
 import useMap from "@/hooks/useMap";
-import { Coordinates, KakaoMap } from "@/utils/types";
+import { Coordinates, KakaoMap } from "@/types";
 import MapKakao from "./MapKakao";
 
 type Props = {

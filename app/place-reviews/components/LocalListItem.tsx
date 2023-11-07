@@ -1,4 +1,4 @@
-import { LocalPlace } from "@/utils/types";
+import { LocalPlace } from "@/types";
 import { useBoundStore as useStore } from "@/store";
 
 type Props = {

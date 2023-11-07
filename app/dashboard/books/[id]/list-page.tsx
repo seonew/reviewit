@@ -8,8 +8,8 @@ import CommentSection from "@/app/components/view/CommentSection";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/app/components/DefaultImage";
 import Pagination from "@/app/components/Pagination";
-import { limit } from "@/utils/constants";
-import { BookProps } from "@/utils/types";
+import { LIMIT } from "@/utils/constants";
+import { BookProps } from "@/types";
 
 export default function List({ id, book }: { id: string; book: BookProps }) {
   const {
@@ -130,7 +130,7 @@ export default function List({ id, book }: { id: string; book: BookProps }) {
         />
         <Pagination
           total={reviewData.count}
-          limit={limit}
+          limit={LIMIT}
           currentPage={page}
           onClickPage={handleClickPage}
           onClickPrev={handleClickPrevButton}

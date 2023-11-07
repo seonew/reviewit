@@ -13,7 +13,7 @@ import DefaultImage from "@/app/components/DefaultImage";
 import VideoSection from "@/app/components/view/VideoSection";
 import InitializeBanner from "@/app/components/InitializeBanner";
 import Pagination from "@/app/components/Pagination";
-import { limit } from "@/utils/constants";
+import { LIMIT } from "@/utils/constants";
 
 export default function List({ id }: { id: string }) {
   const {
@@ -201,7 +201,7 @@ export default function List({ id }: { id: string }) {
         />
         <Pagination
           total={movieReviews.count}
-          limit={limit}
+          limit={LIMIT}
           currentPage={page}
           onClickPage={handleClickPage}
           onClickPrev={handleClickPrevButton}

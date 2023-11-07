@@ -1,7 +1,7 @@
 import { StateCreator } from "zustand";
 import { CommonSlice } from "./commonSlice";
 import { DashboardSlice } from "@/store/dashboardSlice";
-import { ReviewProps } from "@/utils/types";
+import { ReviewProps } from "@/types";
 
 type State = {
   contentLikes: { reviews: ReviewProps[]; count: number };

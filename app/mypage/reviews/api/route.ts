@@ -2,15 +2,15 @@ import dbConnect from "@/utils/db/mongodb";
 import { replaceDateFormat } from "@/utils/common";
 import { NextResponse } from "next/server";
 import { getUserId, loadMyReviews } from "@/app/api/common";
-import { ReviewProps } from "@/utils/types";
-import { limit } from "@/utils/constants";
+import { ReviewProps } from "@/types";
+import { LIMIT } from "@/utils/constants";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const page = searchParams.get("page") ?? "1";
-  const offset = (parseInt(page) - 1) * limit;
+  const offset = (parseInt(page) - 1) * LIMIT;
 
-  dbConnect();
+  await dbConnect();
 
   const userId = getUserId();
   const isLogin = !userId ? false : true;

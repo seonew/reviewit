@@ -1,5 +1,9 @@
-import { movieApiUrl, movieBaseUrl, movieImageUrl } from "@/utils/constants";
-import { VideoImageBannerProps, MovieProps } from "@/utils/types";
+import {
+  MOVIE_API_URL,
+  MOVIE_BASE_URL,
+  MOVIE_IMAGE_URL,
+} from "@/utils/constants";
+import { VideoImageBannerProps, MovieProps } from "@/types";
 import dynamic from "next/dynamic";
 
 export default async function Home() {
@@ -12,13 +16,13 @@ export default async function Home() {
 
 async function getData() {
   try {
-    const movie_api_key = process.env.MOVIE_READONLY_API_KEY;
-    const url = `${movieApiUrl}/discover/movie?include_adult=false&language=ko-KR&region=KR&certification.lte=MA%2015%2B&sort_by=popularity.desc`;
+    const movieApiKey = process.env.MOVIE_READONLY_API_KEY;
+    const url = `${MOVIE_API_URL}/discover/movie?include_adult=false&language=ko-KR&region=KR&certification.lte=MA%2015%2B&sort_by=popularity.desc`;
     const options = {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: `Bearer ${movie_api_key}`,
+        Authorization: `Bearer ${movieApiKey}`,
       },
     };
 
@@ -37,7 +41,7 @@ async function getData() {
         return {
           id: movie.id,
           title: movie.title,
-          posterImage: `${movieBaseUrl}/t/p/w440_and_h660_face${movie.poster_path}`,
+          posterImage: `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${movie.poster_path}`,
           releaseDate: movie.release_date,
           link: `/movie/${movie.id}`,
           description: movie.overview,
@@ -46,21 +50,21 @@ async function getData() {
       }
     );
 
-    const nowPlayingUrl = `${movieApiUrl}/movie/now_playing?language=ko-KR&region=KR`;
+    const nowPlayingUrl = `${MOVIE_API_URL}/movie/now_playing?language=ko-KR&region=KR`;
     const nowPlayingResponse = await fetch(nowPlayingUrl, options);
     const nowPlayingData = await nowPlayingResponse.json();
     const nowPlaying = nowPlayingData.results;
     const movieId =
       nowPlaying[Math.floor(Math.random() * nowPlaying.length)].id;
 
-    const movieDetailUrl = `${movieApiUrl}/movie/${movieId}?language=ko-KR&append_to_reponse=videos`;
+    const movieDetailUrl = `${MOVIE_API_URL}/movie/${movieId}?language=ko-KR&append_to_reponse=videos`;
     const movieDetailResponse = await fetch(movieDetailUrl, options);
     const movieDetailData = await movieDetailResponse.json();
     const imageBannerInfo: VideoImageBannerProps = {
       id: movieDetailData.id,
       title: movieDetailData.title,
-      posterImage: `${movieBaseUrl}/t/p/w440_and_h660_face${movieDetailData.poster_path}`,
-      backdropImage: `${movieImageUrl}/t/p/original${movieDetailData.backdrop_path}`,
+      posterImage: `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${movieDetailData.poster_path}`,
+      backdropImage: `${MOVIE_IMAGE_URL}/t/p/original${movieDetailData.backdrop_path}`,
       releaseDate: movieDetailData.release_date,
       link: `/movie/${movieDetailData.id}`,
       description: movieDetailData.overview,

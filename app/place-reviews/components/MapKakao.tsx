@@ -1,5 +1,5 @@
 import Script from "next/script";
-import { Coordinates, KakaoMap } from "@/utils/types";
+import { Coordinates, KakaoMap } from "@/types";
 import { INITIAL_CENTER, INITIAL_LEVEL } from "@/hooks/useMap";
 import { useEffect } from "react";
 

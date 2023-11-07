@@ -4,7 +4,7 @@ import {
   replaceCaretWithComma,
   replaceDateFormat8Digits,
 } from "@/utils/common";
-import { BookProps } from "@/utils/types";
+import { BookProps } from "@/types";
 import dynamic from "next/dynamic";
 
 export default async function Page() {

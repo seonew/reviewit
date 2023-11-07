@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { HeartIcon, UserCircleIcon } from "@heroicons/react/24/outline";
-import { ReviewProps } from "@/utils/types";
+import { ReviewProps } from "@/types";
 import CommentTextEditor from "./CommentTextEditor";
 import PreferenceSection from "./PreferenceSection";
 import PreferenceStatSection from "./PreferenceStatSection";

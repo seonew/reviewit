@@ -4,7 +4,7 @@ import {
   replaceCaretWithComma,
   replaceDateFormat8Digits,
 } from "@/utils/common";
-import { BookProps } from "@/utils/types";
+import { BookProps } from "@/types";
 import { loadBookInfo } from "@/app/api/common";
 import { notFound } from "next/navigation";
 

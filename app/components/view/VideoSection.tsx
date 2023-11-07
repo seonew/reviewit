@@ -5,7 +5,7 @@ import { ReactNode, useRef, useState } from "react";
 import Image from "next/image";
 import { PlayIcon } from "@heroicons/react/24/solid";
 import HorizontalScrollButton from "./HorizontalScrollButton";
-import { MediaVideoProps } from "@/utils/types";
+import { MediaVideoProps } from "@/types";
 
 const VideoSection = ({ videos: contents }: { videos: MediaVideoProps[] }) => {
   const uListElement = useRef<HTMLUListElement>(null);
