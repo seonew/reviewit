@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ReactNode } from "react";
+import { Children, ReactNode } from "react";
 import Empty from "./Empty";
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 const CardList = ({ title, color, children, targetUrl }: Props) => {
   return (
     <div className="card-list">
-      {(children as Array<ReactNode>).length > 0 ? (
+      {Children.count(children) > 0 ? (
         <>
           <div className="py-5 flex items-center justify-between">
             <h2 className={`text-xl font-bold ${color ?? "text-naver-green"}`}>

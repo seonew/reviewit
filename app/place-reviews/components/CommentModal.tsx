@@ -23,6 +23,10 @@ const CommentModal = ({ onSubmit }: Props) => {
     setLike(item);
   };
 
+  const handleClick = () => {
+    setOpenModal(false);
+  };
+
   return (
     <Transition.Root show={openModal} as={Fragment}>
       <div className="relative z-10">
@@ -59,7 +63,7 @@ const CommentModal = ({ onSubmit }: Props) => {
                         </span>
                         <button
                           className="flex justify-center absolute top-5 right-5"
-                          onClick={() => setOpenModal(false)}
+                          onClick={handleClick}
                           ref={cancelButtonRef}
                         >
                           <XMarkIcon className="h-7 w-7 font-bold" />

@@ -25,7 +25,7 @@ const HorizontalScrollButton = ({ contents, limit, uListElement }: Props) => {
     });
   };
 
-  const onMoveBox = (item: string) => {
+  const onMoveBox = (item: string) => () => {
     let result = 0;
 
     if (item === "prev") {
@@ -41,12 +41,12 @@ const HorizontalScrollButton = ({ contents, limit, uListElement }: Props) => {
   return (
     <>
       {startIndex > 0 && (
-        <Button label="prev" position="left-0" onClick={onMoveBox}>
+        <Button label="prev" position="left-0" onClick={onMoveBox("prev")}>
           <ChevronLeftIcon className="w-7 h-6" />
         </Button>
       )}
       {startIndex !== endPage && (
-        <Button label="next" position="left-full" onClick={onMoveBox}>
+        <Button label="next" position="left-full" onClick={onMoveBox("next")}>
           <ChevronRightIcon className="w-7 h-6" />
         </Button>
       )}

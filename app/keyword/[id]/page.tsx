@@ -1,5 +1,5 @@
 import { MOVIE_API_URL, MOVIE_BASE_URL } from "@/utils/constants";
-import { MovieProps } from "@/types";
+import { MovieApiResponse, MovieProps } from "@/types";
 import dynamic from "next/dynamic";
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -23,14 +23,7 @@ async function getData(keywordId: string) {
     const data = await response.json();
     const keywordMoviesResult = data.results;
     const movies: MovieProps[] = keywordMoviesResult.map(
-      (keywordMovie: {
-        id: string;
-        title: string;
-        overview: string;
-        release_date: string;
-        poster_path: string;
-        vote_average: string;
-      }) => {
+      (keywordMovie: MovieApiResponse) => {
         return {
           id: keywordMovie.id,
           title: keywordMovie.title,

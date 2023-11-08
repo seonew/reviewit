@@ -14,7 +14,13 @@ export type BookProps = {
 export type ReviewDataProps = {
   reviews: ReviewProps[];
   count: number;
-  stats: [];
+  stats: StatsProps[];
+};
+
+export type StatsProps = {
+  id: number;
+  displayText: string;
+  percentText: string;
 };
 
 export type ProductProps = {
@@ -73,7 +79,6 @@ export type CurrentMovieProps = {
   movie: DetailMovieProps;
   keywords: Array<{ id: string; name: string }>;
   recommendations: MovieProps[];
-  reviewData: { reviews: ReviewProps[]; count: number };
   similars: MovieProps[];
   videos: MediaVideoProps[];
 };
@@ -87,6 +92,16 @@ export type MediaVideoProps = {
   publishedDate: string;
   link: string;
   backgroundImage: string;
+};
+
+export type MovieApiResponse = {
+  id: string;
+  title: string;
+  poster_path: string;
+  release_date: string;
+  overview: string;
+  vote_average: number;
+  adult?: boolean;
 };
 
 export type ReviewProps = {

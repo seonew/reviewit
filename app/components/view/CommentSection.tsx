@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { HeartIcon, UserCircleIcon } from "@heroicons/react/24/outline";
-import { ReviewProps } from "@/types";
+import { ReviewProps, StatsProps } from "@/types";
 import CommentTextEditor from "./CommentTextEditor";
 import PreferenceSection from "./PreferenceSection";
 import PreferenceStatSection from "./PreferenceStatSection";
@@ -10,9 +10,9 @@ import { HandThumbUpIcon, HandThumbDownIcon } from "@heroicons/react/24/solid";
 
 type Props = {
   reviewData: {
-    reviews: ReviewProps[] | undefined;
+    reviews?: ReviewProps[];
     count: number;
-    stats?: [];
+    stats?: StatsProps[];
   };
   onSubmit: (item: string, like: boolean) => void;
   onClickLike: (reviewId: string, like: boolean | undefined) => void;

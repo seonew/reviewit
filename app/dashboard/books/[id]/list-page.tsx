@@ -11,7 +11,12 @@ import Pagination from "@/app/components/Pagination";
 import { LIMIT } from "@/utils/constants";
 import { BookProps } from "@/types";
 
-export default function List({ id, book }: { id: string; book: BookProps }) {
+type Props = {
+  id: string;
+  book: BookProps;
+};
+
+export default function List({ id, book }: Props) {
   const {
     currentBookReview: reviewData,
     user,

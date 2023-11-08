@@ -5,7 +5,11 @@ import { useBoundStore as useStore } from "@/store";
 import Card from "@/app/components/Card";
 import IconButton from "./IconButton";
 
-const BookInfo = ({ item }: { item: LikedBook }) => {
+type Props = {
+  item: LikedBook;
+};
+
+const BookInfo = ({ item }: Props) => {
   const { title, author, discount, image, link, checked } = item;
   const { updateLikedBooks, updateCheckedToTopBooks } = useStore();
 
@@ -18,7 +22,7 @@ const BookInfo = ({ item }: { item: LikedBook }) => {
   return (
     <div className="flex flex-col w-full min-w-0">
       <Link href={link}>
-        <Card width="w-52" height="h-52">
+        <Card height="h-52">
           <Image
             src={image}
             alt={title}

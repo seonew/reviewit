@@ -109,6 +109,13 @@
   .pagination-end {
     @apply relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300;
   }
+  .category-button {
+    @apply px-2 py-1.5 text-ozip-blue rounded-full text-xs font-semibold border-2 border-ozip-blue;
+  }
+  .category-button-active {
+    @apply px-2.5 py-2 bg-ozip-blue rounded-full text-xs font-semibold text-white;
+  }
+
   /* common */
   .basic-border {
     @apply border-gray-200 border-solid border;

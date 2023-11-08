@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import LikeModel from "@/models/review/like";
 import MovieReviewModel from "@/models/review/movie";
 import { LIMIT } from "@/utils/constants";
-import { ReviewProps } from "@/types";
+import { ReviewProps, StatsProps } from "@/types";
 import { replaceDateFormat } from "@/utils/common";
 
 export async function GET(
@@ -156,10 +156,10 @@ const getStatsForReview = async (contentId: string) => {
     const disLikeResult = (disLikeCount / total) * 100;
     const textResult = getStatsText(likeResult);
 
-    const stats: any = [
-      { id: 1, name: "", value: textResult },
-      { id: 2, name: "좋아요", value: `${likeResult.toFixed(2)}%` },
-      { id: 3, name: "싫어요", value: `${disLikeResult.toFixed(2)}%` },
+    const stats: StatsProps[] = [
+      { id: 1, displayText: "", percentText: textResult },
+      { id: 2, displayText: "좋아요", percentText: `${likeResult.toFixed(2)}%` },
+      { id: 3, displayText: "싫어요", percentText: `${disLikeResult.toFixed(2)}%` },
     ];
 
     return stats;

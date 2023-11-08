@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import PlaceReviewModel from "@/models/review/place";
 import LocalModel from "@/models/local";
 import { getStatsText, loadUserInfo } from "@/app/api/common";
-import { LocalPlace } from "@/types";
+import { LocalPlace, StatsProps } from "@/types";
 import { LIMIT } from "@/utils/constants";
 
 export async function GET(request: Request) {
@@ -88,7 +88,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ data: null, locals: null });
     }
     const localResult = await getLocals(localData, user.id);
-    const result: any = await getReviewsByPlace(user, localResult);
+    const result = await getReviewsByPlace(user, localResult);
 
     return NextResponse.json({
       data: result,
@@ -193,10 +193,10 @@ const getStatsForReview = async (contentId: string) => {
     const disLikeResult = (disLikeCount / total) * 100;
     const textResult = getStatsText(likeResult);
 
-    const stats: any = [
-      { id: 1, name: "", value: textResult },
-      { id: 2, name: "좋아요", value: `${likeResult.toFixed(2)}%` },
-      { id: 3, name: "싫어요", value: `${disLikeResult.toFixed(2)}%` },
+    const stats: StatsProps[] = [
+      { id: 1, displayText: "", percentText: textResult },
+      { id: 2, displayText: "좋아요", percentText: `${likeResult.toFixed(2)}%` },
+      { id: 3, displayText: "싫어요", percentText: `${disLikeResult.toFixed(2)}%` },
     ];
 
     return stats;
@@ -222,6 +222,7 @@ export const loadMyReviews = async (userId: string, offset: number) => {
     total: rowData[0].metadata[0] ? rowData[0].metadata[0].total : 0,
   };
 
+  console.log(rowData[0])
   return result;
 };
 

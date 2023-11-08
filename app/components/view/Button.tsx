@@ -4,11 +4,11 @@ type Props = {
   label: string;
   position: string;
   children: ReactNode;
-  onClick?: (label: string) => void;
+  onClick?: () => void;
 };
 const Button = ({ label, position, children, onClick }: Props) => {
-  const handleClick = (label: string) => () => {
-    onClick?.(label);
+  const handleClick = () => {
+    onClick?.();
   };
 
   return (
@@ -19,7 +19,7 @@ const Button = ({ label, position, children, onClick }: Props) => {
         type="button"
         aria-label={label}
         className="w-11 h-11 text-base font-black text-center bg-white text-black flex items-center justify-center rounded-full shadow-md m-0 p-0"
-        onClick={handleClick(label)}
+        onClick={handleClick}
       >
         <span className="inline-block text-xl">{children}</span>
       </button>

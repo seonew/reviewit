@@ -14,21 +14,25 @@ const CategoryButtonGroup = ({ onClick, children, selectedCode }: Props) => {
     { name: "약국", code: "PM9" },
     { name: "문화시설", code: "CT1" },
   ];
-  const initCSS = `px-2 py-1.5 text-ozip-blue rounded-full text-xs font-semibold border-2 border-ozip-blue`;
-  const selectedCSS = `px-2.5 py-2 bg-ozip-blue rounded-full text-xs font-semibold text-white`;
+
+  const handleClick = (code: string) => () => {
+    onClick?.(code);
+  };
 
   return (
     <div className="my-1 flex items-center">
       {places.map((place) => {
         return (
           <button
-            className="pr-1"
-            onClick={() => onClick?.(place.code)}
             key={place.code}
+            className="pr-1"
+            onClick={handleClick(place.code)}
           >
             <span
               className={`${
-                selectedCode === place.code ? selectedCSS : initCSS
+                selectedCode === place.code
+                  ? "category-button-active"
+                  : "category-button"
               }`}
             >
               {place.name}

@@ -1,6 +1,11 @@
 import { replaceDateFormat } from "@/utils/common";
 import { MOVIE_API_URL, MOVIE_BASE_URL } from "@/utils/constants";
-import { MediaVideoProps, MovieProps, ReviewProps } from "@/types";
+import {
+  MediaVideoProps,
+  MovieApiResponse,
+  MovieProps,
+  ReviewProps,
+} from "@/types";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -50,15 +55,7 @@ export async function GET(
     const recommendationsData = await recommendationsResponse.json();
     const recommendationsResult = recommendationsData.results;
     const recommendations: MovieProps[] = recommendationsResult.map(
-      (recommendation: {
-        id: string;
-        title: string;
-        overview: string;
-        release_date: string;
-        poster_path: string;
-        vote_average: string;
-        adult: boolean;
-      }) => {
+      (recommendation: MovieApiResponse) => {
         if (!recommendation.adult)
           return {
             id: recommendation.id,
@@ -81,15 +78,7 @@ export async function GET(
     const similarData = await similarResponse.json();
     const similarResult = similarData.results;
     const similars: MovieProps[] = similarResult.map(
-      (similar: {
-        id: string;
-        title: string;
-        overview: string;
-        release_date: string;
-        poster_path: string;
-        vote_average: string;
-        adult: boolean;
-      }) => {
+      (similar: MovieApiResponse) => {
         if (!similar.adult)
           return {
             id: similar.id,

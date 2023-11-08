@@ -7,7 +7,11 @@ import { PlayIcon } from "@heroicons/react/24/solid";
 import HorizontalScrollButton from "./HorizontalScrollButton";
 import { MediaVideoProps } from "@/types";
 
-const VideoSection = ({ videos: contents }: { videos: MediaVideoProps[] }) => {
+type Props = {
+  videos: MediaVideoProps[];
+};
+
+const VideoSection = ({ videos: contents }: Props) => {
   const uListElement = useRef<HTMLUListElement>(null);
 
   return (

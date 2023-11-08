@@ -12,7 +12,7 @@ const MovieInfo = ({
     <div className="flex flex-col w-full min-w-0">
       {link && (
         <Link href={link}>
-          <Card width="w-52" height="h-52">
+          <Card height="h-52">
             {posterImage && (
               <Image
                 src={posterImage}

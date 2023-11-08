@@ -1,5 +1,7 @@
+import { StatsProps } from "@/types";
+
 type Props = {
-  stats?: { id: number; name: string; value: string }[];
+  stats?: StatsProps[];
 };
 
 const PreferenceStatSection = ({ stats }: Props) => {
@@ -18,10 +20,10 @@ const PreferenceStatSection = ({ stats }: Props) => {
                   className="mx-auto flex flex-col gap-y-1 rounded-lg shadow p-4 w-full bg-white"
                 >
                   <dt className="text-sm leading-3 text-gray-400">
-                    {stat.name}
+                    {stat.displayText}
                   </dt>
                   <dd className="text-lg font-semibold tracking-tight text-gray-900">
-                    {stat.value}
+                    {stat.percentText}
                   </dd>
                 </div>
               ))}

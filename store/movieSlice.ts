@@ -48,10 +48,6 @@ const initialState: State = {
     },
     keywords: [],
     recommendations: [],
-    reviewData: {
-      reviews: [],
-      count: 0,
-    },
     similars: [],
     videos: [],
   },

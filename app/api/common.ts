@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import BookReviewModel from "@/models/review/book";
 import UserModel from "@/models/user";
 import LikeModel from "@/models/review/like";
-import { ReviewProps } from "@/types";
+import { ReviewProps, StatsProps } from "@/types";
 import { LIMIT } from "@/utils/constants";
 import { NotFoundUserError } from "@/utils/error";
 
@@ -75,10 +75,10 @@ const getStatsForReview = async (contentId: string) => {
     const disLikeResult = (disLikeCount / total) * 100;
     const textResult = getStatsText(likeResult);
 
-    const stats: any = [
-      { id: 1, name: "", value: textResult },
-      { id: 2, name: "좋아요", value: `${likeResult.toFixed(2)}%` },
-      { id: 3, name: "싫어요", value: `${disLikeResult.toFixed(2)}%` },
+    const stats: StatsProps[] = [
+      { id: 1, displayText: "", percentText: textResult },
+      { id: 2, displayText: "좋아요", percentText: `${likeResult.toFixed(2)}%` },
+      { id: 3, displayText: "싫어요", percentText: `${disLikeResult.toFixed(2)}%` },
     ];
 
     return stats;

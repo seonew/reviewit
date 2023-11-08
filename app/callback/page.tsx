@@ -1,19 +1,17 @@
 "use client";
 
-import { AuthInfo, initCallbackPage } from "coco-people-client";
-import { useCallback, useEffect, useState } from "react";
+import { initCallbackPage } from "coco-people-client";
+import { useCallback, useEffect } from "react";
 import { useBoundStore as useStore } from "@/store";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
-  const { fetchUserInfo, setIsSignedIn, user, isSignedIn } = useStore();
+  const { fetchUserInfo, setIsSignedIn, user } = useStore();
   const router = useRouter();
 
   const initialize = useCallback(async () => {
     try {
       const authInfo = await initCallbackPage();
-      setAuthInfo(authInfo);
       setIsSignedIn(true);
 
       if (authInfo?.accessToken) {
@@ -24,11 +22,7 @@ export default function Page() {
         router.push("/");
       }
     } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      } else {
-        console.log(error);
-      }
+      console.log(error);
       setIsSignedIn(false);
     }
   }, [fetchUserInfo, router, setIsSignedIn]);

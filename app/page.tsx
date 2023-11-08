@@ -3,7 +3,7 @@ import {
   MOVIE_BASE_URL,
   MOVIE_IMAGE_URL,
 } from "@/utils/constants";
-import { VideoImageBannerProps, MovieProps } from "@/types";
+import { VideoImageBannerProps, MovieProps, MovieApiResponse } from "@/types";
 import dynamic from "next/dynamic";
 
 export default async function Home() {
@@ -29,26 +29,17 @@ async function getData() {
     const response = await fetch(url, options);
     const data = await response.json();
     const movies = data.results;
-    const movieResult: MovieProps[] = movies.map(
-      (movie: {
-        id: string;
-        title: string;
-        poster_path: string;
-        release_date: string;
-        overview: string;
-        vote_average: number;
-      }) => {
-        return {
-          id: movie.id,
-          title: movie.title,
-          posterImage: `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${movie.poster_path}`,
-          releaseDate: movie.release_date,
-          link: `/movie/${movie.id}`,
-          description: movie.overview,
-          average: movie.vote_average,
-        };
-      }
-    );
+    const movieResult: MovieProps[] = movies.map((movie: MovieApiResponse) => {
+      return {
+        id: movie.id,
+        title: movie.title,
+        posterImage: `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${movie.poster_path}`,
+        releaseDate: movie.release_date,
+        link: `/movie/${movie.id}`,
+        description: movie.overview,
+        average: movie.vote_average,
+      };
+    });
 
     const nowPlayingUrl = `${MOVIE_API_URL}/movie/now_playing?language=ko-KR&region=KR`;
     const nowPlayingResponse = await fetch(nowPlayingUrl, options);
