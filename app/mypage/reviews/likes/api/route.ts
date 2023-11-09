@@ -6,7 +6,7 @@ import {
   loadLikesForReview,
   loadUsersForService,
 } from "@/app/api/common";
-import { ReviewProps } from "@/types";
+import { ReviewDataProps, ReviewProps } from "@/types";
 import BookReviewModel from "@/models/review/book";
 import { LIMIT } from "@/utils/constants";
 
@@ -18,36 +18,10 @@ export async function GET(request: Request) {
     const page = searchParams.get("page") ?? "1";
     const offset = (parseInt(page) - 1) * LIMIT;
 
-    const userId = getUserId();
-    const { data: likeData, total } = await loadLikesForReview(userId, offset);
-    const userData = await loadUsersForService();
-
-    const reviews = await Promise.all(
-      likeData.map(async (like: { reviewId: string }) => {
-        const bookReview: ReviewProps | null = await BookReviewModel.findOne({
-          id: like.reviewId,
-        });
-
-        if (bookReview !== null) {
-          const author = userData.find((user) => user.id === bookReview.userId);
-
-          return {
-            id: bookReview.id,
-            content: bookReview.content,
-            contentId: bookReview.contentId,
-            contentImgUrl: bookReview.contentImgUrl,
-            contentTitle: bookReview.contentTitle,
-            userId: bookReview.userId,
-            userName: author.name,
-            updateDate: replaceDateFormat(bookReview.updateDate),
-          };
-        }
-      })
-    );
-
-    const result = {
+    const { reviews, count } = await getLikesForReviews(offset);
+    const result: ReviewDataProps = {
       reviews,
-      count: total,
+      count,
     };
 
     return NextResponse.json(result);
@@ -56,3 +30,34 @@ export async function GET(request: Request) {
   }
   return NextResponse.json({ error: "Internal Server Error", status: 500 });
 }
+
+export const getLikesForReviews = async (offset: number) => {
+  const userId = getUserId();
+  const { data: likeData, total } = await loadLikesForReview(userId, offset);
+  const userData = await loadUsersForService();
+
+  const reviews: ReviewProps[] = await Promise.all(
+    likeData.map(async (like: { reviewId: string }) => {
+      const bookReview: ReviewProps | null = await BookReviewModel.findOne({
+        id: like.reviewId,
+      });
+
+      if (bookReview !== null) {
+        const author = userData.find((user) => user.id === bookReview.userId);
+
+        return {
+          id: bookReview.id,
+          content: bookReview.content,
+          contentId: bookReview.contentId,
+          contentImgUrl: bookReview.contentImgUrl,
+          contentTitle: bookReview.contentTitle,
+          userId: bookReview.userId,
+          userName: author.name,
+          updateDate: replaceDateFormat(bookReview.updateDate),
+        };
+      }
+    })
+  );
+
+  return { reviews, count: total };
+};

@@ -7,7 +7,6 @@ import { Coordinates } from "@/types";
 import useGeolocation from "@/hooks/useGeolocation";
 import LoadingMap from "../components/LoadingMap";
 import MapSection from "../components/MapSection";
-import ResetButton from "../components/ResetButton";
 import SearchSection from "../components/SearchSection";
 
 export default function ListLayout({

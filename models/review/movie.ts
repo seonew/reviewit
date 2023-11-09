@@ -34,7 +34,7 @@ export const MovieSchema = new Schema({
     type: String,
     required: true,
   },
-  registDate: {
+  registerDate: {
     type: Date,
   },
   updateDate: {

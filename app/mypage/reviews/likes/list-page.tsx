@@ -6,9 +6,14 @@ import Empty from "@/app/components/Empty";
 import Pagination from "@/app/components/Pagination";
 import LikeList from "../../components/LikeList";
 import Tab from "../../components/Tab";
+import { ReviewDataProps } from "@/types";
 
-const List = () => {
-  const { fetchContetLikes, contentLikes } = useStore();
+type Props = {
+  contentLikesApiData: ReviewDataProps;
+};
+
+const List = ({ contentLikesApiData }: Props) => {
+  const { fetchContetLikes, setContentLikes, contentLikes } = useStore();
   const [page, setPage] = useState<number>(1);
 
   const handleClickPage = (current: number) => {
@@ -27,8 +32,8 @@ const List = () => {
   };
 
   useEffect(() => {
-    fetchContetLikes(1);
-  }, [fetchContetLikes]);
+    setContentLikes(contentLikesApiData);
+  }, [contentLikesApiData, setContentLikes]);
 
   return (
     <div className="contents-container">

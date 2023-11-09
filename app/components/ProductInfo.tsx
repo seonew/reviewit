@@ -11,11 +11,7 @@ type Props = {
 
 const ProductInfo = ({ item }: Props) => {
   const { title, image, link, lprice, brand, checked } = item;
-  const {
-    updateLikedProducts,
-    updateCheckedToTopProducts,
-    updateCurrentProduct,
-  } = useStore();
+  const { updateLikedProducts, updateCheckedToTopProducts } = useStore();
 
   const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
     updateLikedProducts(item);
@@ -23,13 +19,9 @@ const ProductInfo = ({ item }: Props) => {
     e.stopPropagation();
   };
 
-  const handleClickItemToUpdate = () => {
-    updateCurrentProduct(item);
-  };
-
   return (
     <div className="flex flex-col w-full min-w-0">
-      <Link href={link} onClick={handleClickItemToUpdate}>
+      <Link href={link}>
         <Card height="h-52">
           <Image
             src={image}

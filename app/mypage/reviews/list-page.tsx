@@ -6,9 +6,14 @@ import LikeList from "../components/LikeList";
 import Empty from "@/app/components/Empty";
 import Pagination from "@/app/components/Pagination";
 import Tab from "../components/Tab";
+import { ReviewDataProps } from "@/types";
 
-const List = () => {
-  const { fetchMyReviews, myReviews } = useStore();
+type Props = {
+  myReiviewsApiData: ReviewDataProps;
+};
+
+const List = ({ myReiviewsApiData }: Props) => {
+  const { fetchMyReviews, setMyReviews, myReviews } = useStore();
   const [page, setPage] = useState<number>(1);
 
   const handleClickPage = (current: number) => {
@@ -27,8 +32,8 @@ const List = () => {
   };
 
   useEffect(() => {
-    fetchMyReviews(1);
-  }, [fetchMyReviews]);
+    setMyReviews(myReiviewsApiData);
+  }, [myReiviewsApiData, setMyReviews]);
 
   return (
     <div className="contents-container">

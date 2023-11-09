@@ -33,7 +33,7 @@ export const LocalSchema = new Schema({
   link: {
     type: String,
   },
-  registDate: {
+  registerDate: {
     type: Date,
   },
   updateDate: {

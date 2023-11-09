@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useBoundStore as useStore } from "@/store";
 import useGeolocation from "@/hooks/useGeolocation";
 import LocalList from "../components/LocalList";
-import SearchSection from "../components/SearchSection";
 import Loading from "../components/Loading";
 import CommentModal from "../components/CommentModal";
 import { handleClickSignIn } from "@/utils/common";

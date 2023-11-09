@@ -14,7 +14,7 @@ export type BookProps = {
 export type ReviewDataProps = {
   reviews: ReviewProps[];
   count: number;
-  stats: StatsProps[];
+  stats?: StatsProps[];
 };
 
 export type StatsProps = {
@@ -102,6 +102,22 @@ export type MovieApiResponse = {
   overview: string;
   vote_average: number;
   adult?: boolean;
+};
+
+export type ProductApiResponse = {
+  title: string;
+  image: string;
+  link: string;
+  lprice: string;
+  brand: string;
+  productId: string;
+  mallName: string;
+  maker: string;
+  productType: string;
+  category1: string;
+  category2: string;
+  category3: string;
+  category4: string;
 };
 
 export type ReviewProps = {

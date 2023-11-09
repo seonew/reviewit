@@ -18,24 +18,11 @@ export async function GET(request: Request) {
   if (!isLogin) {
     return NextResponse.json({ error: "Unauthorized", status: 401 });
   } else {
-    const { data: reviewData, total } = await loadMyReviews(userId, offset);
-
     try {
-      const reviews = reviewData.map((review: ReviewProps) => {
-        return {
-          id: review.id,
-          content: review.content,
-          contentId: review.contentId,
-          contentImgUrl: review.contentImgUrl,
-          contentTitle: review.contentTitle,
-          userId: review.userId,
-          updateDate: replaceDateFormat(review.updateDate),
-        };
-      });
-
+      const { reviews, count } = await getMyReviews(offset);
       const result = {
         reviews,
-        count: total,
+        count,
       };
 
       return NextResponse.json(result);
@@ -45,3 +32,21 @@ export async function GET(request: Request) {
     }
   }
 }
+
+export const getMyReviews = async (offset: number) => {
+  const userId = getUserId();
+  const { data: reviewData, total } = await loadMyReviews(userId, offset);
+  const reviews = reviewData.map((review: ReviewProps) => {
+    return {
+      id: review.id,
+      content: review.content,
+      contentId: review.contentId,
+      contentImgUrl: review.contentImgUrl,
+      contentTitle: review.contentTitle,
+      userId: review.userId,
+      updateDate: replaceDateFormat(review.updateDate),
+    };
+  });
+
+  return { reviews, count: total };
+};

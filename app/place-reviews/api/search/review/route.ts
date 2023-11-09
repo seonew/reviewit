@@ -16,48 +16,8 @@ export async function GET(request: Request) {
 
     await dbConnect();
 
-    const user = await loadUserInfo();
-    if (!user) {
-      throw new NotFoundUserError();
-    }
-    const { data: reviewData, total } = await loadMyReviews(user.id, offset);
-
-    const reviews = await PlaceReviewModel.find({ userId: user.id }).sort({
-      updateDate: -1,
-    });
-    const placeIds = Array.from(
-      new Set(reviews.map((review) => review.contentId))
-    );
-
-    const localData = await LocalModel.find({ id: { $in: placeIds } });
-    const localResult = await getLocals(localData, user.id);
-
-    const result = reviewData.map((review: any) => {
-      const local = localResult.find((item) => item.id === review.contentId);
-      const { id: localId, name, link } = local;
-      const { id, content, contentId, contentLike, like, userId, updateDate } =
-        review;
-
-      return {
-        place: { id: localId, name, link },
-        review: {
-          id,
-          content,
-          contentId,
-          contentLike,
-          like,
-          userId,
-          userName: user.name,
-          updateDate: replaceDateFormat(updateDate),
-        },
-      };
-    });
-
-    return NextResponse.json({
-      data: result,
-      locals: localResult,
-      count: total,
-    });
+    const result = await getPlaceReviews(offset);
+    return NextResponse.json(result);
   } catch (error) {
     console.error(error);
   }
@@ -100,7 +60,48 @@ export async function POST(request: Request) {
   return NextResponse.json({ error: "Internal Server Error", status: 500 });
 }
 
-export const getLocals = async (localData: any, userId: string) => {
+export const getPlaceReviews = async (offset: number) => {
+  const user = await loadUserInfo();
+  if (!user) {
+    throw new NotFoundUserError();
+  }
+  const { data: reviewData, total } = await loadMyReviews(user.id, offset);
+
+  const reviews = await PlaceReviewModel.find({ userId: user.id }).sort({
+    updateDate: -1,
+  });
+  const placeIds = Array.from(
+    new Set(reviews.map((review) => review.contentId))
+  );
+
+  const localData = await LocalModel.find({ id: { $in: placeIds } });
+  const localResult = await getLocals(localData, user.id);
+
+  const result = reviewData.map((review: any) => {
+    const local = localResult.find((item) => item.id === review.contentId);
+    const { id: localId, name, link } = local;
+    const { id, content, contentId, contentLike, like, userId, updateDate } =
+      review;
+
+    return {
+      place: { id: localId, name, link },
+      review: {
+        id,
+        content,
+        contentId,
+        contentLike,
+        like,
+        userId,
+        userName: user.name,
+        updateDate: replaceDateFormat(updateDate),
+      },
+    };
+  });
+
+  return { data: result, locals: localResult, count: total };
+};
+
+const getLocals = async (localData: any, userId: string) => {
   const localsCount = await loadMyReviewCountByPlace(userId);
   const localResult: any[] = localData.map((local: LocalPlace) => {
     const localCount = localsCount.find((item) => item._id === local.id).count;
@@ -126,8 +127,8 @@ const getReviewsByPlace = async (
   localResult: LocalPlace[]
 ) => {
   const reviewResult = localResult.map(async (local) => {
-    const reviews = await getPlaceReviews(user, local.id);
-    const stats = await getStatsForReview(local.id);
+    const reviews = await loadPlaceReviews(user, local.id);
+    const stats = await loadStatsForReview(local.id);
 
     return {
       place: { id: local.id, name: local.name, link: local.link },
@@ -138,7 +139,7 @@ const getReviewsByPlace = async (
   return result;
 };
 
-const getPlaceReviews = async (
+const loadPlaceReviews = async (
   user: { id: string; name: string },
   contentId: string
 ) => {
@@ -165,7 +166,7 @@ const getPlaceReviews = async (
   return result;
 };
 
-const getStatsForReview = async (contentId: string) => {
+const loadStatsForReview = async (contentId: string) => {
   const rowData = await PlaceReviewModel.aggregate([
     { $match: { contentId } },
     {
@@ -195,8 +196,16 @@ const getStatsForReview = async (contentId: string) => {
 
     const stats: StatsProps[] = [
       { id: 1, displayText: "", percentText: textResult },
-      { id: 2, displayText: "좋아요", percentText: `${likeResult.toFixed(2)}%` },
-      { id: 3, displayText: "싫어요", percentText: `${disLikeResult.toFixed(2)}%` },
+      {
+        id: 2,
+        displayText: "좋아요",
+        percentText: `${likeResult.toFixed(2)}%`,
+      },
+      {
+        id: 3,
+        displayText: "싫어요",
+        percentText: `${disLikeResult.toFixed(2)}%`,
+      },
     ];
 
     return stats;
@@ -205,7 +214,7 @@ const getStatsForReview = async (contentId: string) => {
   return null;
 };
 
-export const loadMyReviews = async (userId: string, offset: number) => {
+const loadMyReviews = async (userId: string, offset: number) => {
   const rowData = await PlaceReviewModel.aggregate([
     { $match: { userId } },
     { $sort: { updateDate: -1 } },
@@ -222,7 +231,6 @@ export const loadMyReviews = async (userId: string, offset: number) => {
     total: rowData[0].metadata[0] ? rowData[0].metadata[0].total : 0,
   };
 
-  console.log(rowData[0])
   return result;
 };
 

@@ -34,7 +34,7 @@ export const BookSchema = new Schema({
     type: String,
     required: true,
   },
-  registDate: {
+  registerDate: {
     type: Date,
   },
   updateDate: {

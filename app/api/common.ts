@@ -77,8 +77,16 @@ const getStatsForReview = async (contentId: string) => {
 
     const stats: StatsProps[] = [
       { id: 1, displayText: "", percentText: textResult },
-      { id: 2, displayText: "좋아요", percentText: `${likeResult.toFixed(2)}%` },
-      { id: 3, displayText: "싫어요", percentText: `${disLikeResult.toFixed(2)}%` },
+      {
+        id: 2,
+        displayText: "좋아요",
+        percentText: `${likeResult.toFixed(2)}%`,
+      },
+      {
+        id: 3,
+        displayText: "싫어요",
+        percentText: `${disLikeResult.toFixed(2)}%`,
+      },
     ];
 
     return stats;
@@ -167,7 +175,7 @@ export const loadMyReviews = async (userId: string, offset: number) => {
 export const loadLikesForReview = async (userId: string, offset: number) => {
   const rowData = await LikeModel.aggregate([
     { $match: { userId } },
-    { $sort: { registDate: -1 } },
+    { $sort: { registerDate: -1 } },
     {
       $facet: {
         metadata: [{ $count: "total" }],

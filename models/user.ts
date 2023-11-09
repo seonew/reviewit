@@ -20,7 +20,7 @@ export const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  registDate: {
+  registerDate: {
     type: Date,
     required: true,
   },

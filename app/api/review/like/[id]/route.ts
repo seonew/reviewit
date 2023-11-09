@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       reviewId,
       contentId,
       userId,
-      registDate: new Date(),
+      registerDate: new Date(),
     });
     await newLike.save();
 

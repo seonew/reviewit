@@ -16,7 +16,6 @@ type State = {
   dashboardBooks: BookProps[];
   dashboardProducts: ProductProps[];
   currentBookReview: ReviewDataProps;
-  currentProduct: ProductProps;
 };
 
 type Actions = {
@@ -24,7 +23,6 @@ type Actions = {
   updateLikedProducts: (item: LikedProduct) => void;
   updateCheckedToTopBooks: (item: LikedBook) => void;
   updateCheckedToTopProducts: (item: LikedProduct) => void;
-  updateCurrentProduct: (item: ProductProps) => void;
 
   initTopBooks: (books: BookProps[]) => void;
   initTopProducts: (products: ProductProps[]) => void;
@@ -58,16 +56,6 @@ const initialState: State = {
     reviews: [],
     count: 0,
     stats: [],
-  },
-  currentProduct: {
-    title: "",
-    image: "",
-    link: "",
-    lprice: "",
-    productId: "",
-    mall: "",
-    category: "",
-    brand: "",
   },
 };
 
@@ -109,9 +97,6 @@ const createDashboardSlice: StateCreator<
     set((state) => ({
       currentBookReview: { ...state.currentBookReview, ...item },
     }));
-  },
-  updateCurrentProduct: (item: ProductProps) => {
-    set((state) => ({ currentProduct: item }));
   },
   updateDashboardBooks: async (page) => {
     try {
@@ -245,9 +230,9 @@ const createDashboardSlice: StateCreator<
       };
     }),
   initializeBookReview: () => {
-    set(() => ({
+    set({
       currentBookReview: initialState.currentBookReview,
-    }));
+    });
   },
   reset: () => {
     set(initialState);

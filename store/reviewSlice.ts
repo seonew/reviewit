@@ -1,11 +1,11 @@
 import { StateCreator } from "zustand";
 import { CommonSlice } from "./commonSlice";
 import { DashboardSlice } from "@/store/dashboardSlice";
-import { ReviewProps } from "@/types";
+import { ReviewDataProps } from "@/types";
 
 type State = {
-  contentLikes: { reviews: ReviewProps[]; count: number };
-  myReviews: { reviews: ReviewProps[]; count: number };
+  contentLikes: ReviewDataProps;
+  myReviews: ReviewDataProps;
 };
 
 type Actions = {
@@ -15,6 +15,8 @@ type Actions = {
   insertReviewLike: (reviewId: string, contentId: string, page: number) => void;
   deleteReviewLike: (reviewId: string, page: number) => void;
   resetReviewData: () => void;
+  setContentLikes: (item: ReviewDataProps) => void;
+  setMyReviews: (item: ReviewDataProps) => void;
 };
 
 const initialState: State = {
@@ -94,6 +96,12 @@ const createReviewSlice: StateCreator<
   },
   resetReviewData: () => {
     set(initialState);
+  },
+  setContentLikes: (item) => {
+    set({ contentLikes: item });
+  },
+  setMyReviews: (item) => {
+    set({ myReviews: item });
   },
 });
 
