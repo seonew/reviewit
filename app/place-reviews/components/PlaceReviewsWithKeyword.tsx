@@ -7,13 +7,11 @@ import PlaceReviewListItem from "./PlaceReviewListItem";
 import PreferenceStatSection from "@/app/components/view/PreferenceStatSection";
 
 type Props = {
-  data: PlaceReviewsWithKeywordDataProps;
+  placeReviewsWithKeywordData: PlaceReviewsWithKeywordDataProps;
 };
 
-const PlaceReviewsWithKeyword = ({
-  data: PlaceReviewsWithKeywordData,
-}: Props) => {
-  const { data } = PlaceReviewsWithKeywordData;
+const PlaceReviewsWithKeyword = ({ placeReviewsWithKeywordData }: Props) => {
+  const { data } = placeReviewsWithKeywordData;
 
   return (
     <div className="pb-10">

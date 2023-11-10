@@ -2,7 +2,6 @@
 
 import React from "react";
 import { BookProps, ProductProps } from "@/types";
-import { handleClickSignIn } from "@/utils/common";
 import { useBoundStore as useStore } from "@/store";
 import CardList from "@/app/components/CardList";
 import BookInfo from "@/app/components/BookInfo";
@@ -29,13 +28,13 @@ const List = () => {
       <CardList title={"My Book List"}>
         {books &&
           books.map((item: BookProps) => {
-            return <BookInfo key={item.isbn} item={item} />;
+            return <BookInfo key={item.isbn} book={item} />;
           })}
       </CardList>
       <CardList title={"My Product List"}>
         {products &&
           products.map((item: ProductProps) => {
-            return <ProductInfo key={item.productId} item={item} />;
+            return <ProductInfo key={item.productId} product={item} />;
           })}
       </CardList>
     </div>

@@ -1,6 +1,6 @@
 import { RefObject, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import Button from "./Button";
+import IconButton from "./IconButton";
 import { MovieProps, MediaVideoProps } from "@/types";
 
 type Props = {
@@ -41,14 +41,18 @@ const HorizontalScrollButton = ({ contents, limit, uListElement }: Props) => {
   return (
     <>
       {startIndex > 0 && (
-        <Button label="prev" position="left-0" onClick={onMoveBox("prev")}>
+        <IconButton label="prev" position="left-0" onClick={onMoveBox("prev")}>
           <ChevronLeftIcon className="w-7 h-6" />
-        </Button>
+        </IconButton>
       )}
       {startIndex !== endPage && (
-        <Button label="next" position="left-full" onClick={onMoveBox("next")}>
+        <IconButton
+          label="next"
+          position="left-full"
+          onClick={onMoveBox("next")}
+        >
           <ChevronRightIcon className="w-7 h-6" />
-        </Button>
+        </IconButton>
       )}
     </>
   );

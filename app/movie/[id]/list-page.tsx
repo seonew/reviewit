@@ -11,7 +11,7 @@ import CommentSection from "@/app/components/view/CommentSection";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/app/components/DefaultImage";
 import VideoSection from "@/app/components/view/VideoSection";
-import InitializeBanner from "@/app/components/InitializeBanner";
+import LoadingBanner from "@/app/components/LoadingBanner";
 import Pagination from "@/app/components/Pagination";
 import { LIMIT } from "@/utils/constants";
 
@@ -96,7 +96,7 @@ export default function List({ id }: { id: string }) {
   return (
     <div className="contents-container">
       {!loaded ? (
-        <InitializeBanner />
+        <LoadingBanner />
       ) : (
         <div className="banner-container">
           {movie.backdropImage && (
@@ -199,14 +199,16 @@ export default function List({ id }: { id: string }) {
           onSubmit={handleSubmitReview}
           onClickLike={handleLikeReview}
         />
-        <Pagination
-          total={movieReviews.count}
-          limit={LIMIT}
-          currentPage={page}
-          onClickPage={handleClickPage}
-          onClickPrev={handleClickPrevButton}
-          onClickNext={handleClickNextButton}
-        />
+        {movieReviews.count > 0 && (
+          <Pagination
+            total={movieReviews.count}
+            limit={LIMIT}
+            currentPage={page}
+            onClickPage={handleClickPage}
+            onClickPrev={handleClickPrevButton}
+            onClickNext={handleClickNextButton}
+          />
+        )}
       </div>
     </div>
   );

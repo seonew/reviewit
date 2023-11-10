@@ -5,26 +5,26 @@ import { useBoundStore as useStore } from "@/store";
 import Marker from "./Marker";
 
 type Props = {
-  items: LocalPlace[] | null;
+  locals: LocalPlace[] | null;
 };
 
-const Markers = ({ items }: Props) => {
+const Markers = ({ locals }: Props) => {
   const { data: map } = useSWR<KakaoMap>(MAP_KEY);
   const { setSelectedMarkerId } = useStore();
 
-  if (!map || !items) {
+  if (!map || !locals) {
     return null;
   }
 
   return (
     <>
-      {items.map((item) => {
+      {locals.map((local) => {
         return (
           <Marker
-            key={item.id}
+            key={local.id}
             map={map}
-            coordinates={[item.mapy, item.mapx]}
-            onClick={() => setSelectedMarkerId(item.id)}
+            coordinates={[local.mapy, local.mapx]}
+            onClick={() => setSelectedMarkerId(local.id)}
           />
         );
       })}

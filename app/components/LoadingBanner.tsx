@@ -1,6 +1,6 @@
 import DefaultImage from "@/app/components/DefaultImage";
 
-const InitializeBanner = () => {
+const LoadingBanner = () => {
   return (
     <div className="banner-container">
       <div className="relative pt-24 ml-16 z-10 text-white">
@@ -13,4 +13,4 @@ const InitializeBanner = () => {
   );
 };
 
-export default InitializeBanner;
+export default LoadingBanner;

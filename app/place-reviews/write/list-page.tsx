@@ -90,7 +90,7 @@ const List = () => {
                 <span className="font-semibold">{localPlaces?.length}건</span>의
                 검색 결과가 있습니다.
               </p>
-              <LocalList items={localPlaces} />
+              <LocalList locals={localPlaces} />
             </div>
           )}
           <CommentModal onSubmit={handleSubmitReview} />

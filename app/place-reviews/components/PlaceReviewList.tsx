@@ -3,11 +3,11 @@ import Link from "next/link";
 import PlaceReviewListItem from "./PlaceReviewListItem";
 
 type Props = {
-  data: PlaceReviewDataProps;
+  placeReviewData: PlaceReviewDataProps;
 };
 
-const PlaceReviewList = ({ data: PlaceReviewData }: Props) => {
-  const { data } = PlaceReviewData;
+const PlaceReviewList = ({ placeReviewData }: Props) => {
+  const { data } = placeReviewData;
 
   return (
     <div className="pb-10">

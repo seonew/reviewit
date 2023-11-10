@@ -47,15 +47,21 @@ const List = ({ reviews }: Props) => {
       <div className="relative pt-8">
         <SearchSection />
       </div>
-      <PlaceReviewList data={placeReviews} />
-      <Pagination
-        total={count}
-        limit={5}
-        currentPage={page}
-        onClickPage={handleClickPage}
-        onClickPrev={handleClickPrevButton}
-        onClickNext={handleClickNextButton}
-      />
+      {count > 0 ? (
+        <>
+          <PlaceReviewList placeReviewData={placeReviews} />
+          <Pagination
+            total={count}
+            limit={5}
+            currentPage={page}
+            onClickPage={handleClickPage}
+            onClickPrev={handleClickPrevButton}
+            onClickNext={handleClickNextButton}
+          />
+        </>
+      ) : (
+        <div>로그인이 필요한 걸?</div>
+      )}
     </div>
   );
 };

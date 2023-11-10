@@ -6,17 +6,17 @@ import { PhotoIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   title: string;
-  items: ReviewProps[];
+  reviews: ReviewProps[];
 };
 
-const LikeList = ({ title, items }: Props) => {
+const LikeList = ({ title, reviews }: Props) => {
   return (
     <div className="pb-10">
       <div className="py-5 flex items-center justify-between">
         <h2 className="text-xl font-bold text-black">{title}</h2>
       </div>
       <ul role="list" className="divide-y divide-gray-100 break-words">
-        {items.map((like: ReviewProps) => {
+        {reviews.map((like: ReviewProps) => {
           return (
             <li key={like.id} className="flex justify-between py-4">
               <div className="flex gap-x-6">

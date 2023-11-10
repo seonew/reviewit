@@ -44,7 +44,7 @@ const List = ({ books, total, limit }: Props) => {
       <CardList title={"Book List"}>
         {dashboardBooks &&
           dashboardBooks.map((item: BookProps) => {
-            return <BookInfo key={item.isbn} item={item} />;
+            return <BookInfo key={item.isbn} book={item} />;
           })}
       </CardList>
       <Pagination

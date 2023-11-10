@@ -25,13 +25,13 @@ const List = ({ products, books }: Props) => {
       <CardList title={"Book List"} targetUrl={"/dashboard/books"}>
         {topBooks &&
           topBooks.map((item: BookProps) => {
-            return <BookInfo key={item.isbn} item={item} />;
+            return <BookInfo key={item.isbn} book={item} />;
           })}
       </CardList>
       <CardList title={"Product List"} targetUrl={"/dashboard/products"}>
         {topProducts &&
           topProducts.map((item: ProductProps) => {
-            return <ProductInfo key={item.productId} item={item} />;
+            return <ProductInfo key={item.productId} product={item} />;
           })}
       </CardList>
     </div>

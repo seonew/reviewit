@@ -40,7 +40,7 @@ const List = ({ contentLikesApiData }: Props) => {
       <Tab />
       {contentLikes.count > 0 ? (
         <>
-          <LikeList title={"Likes"} items={contentLikes.reviews} />
+          <LikeList title={"Likes"} reviews={contentLikes.reviews} />
           <Pagination
             total={contentLikes.count}
             limit={5}

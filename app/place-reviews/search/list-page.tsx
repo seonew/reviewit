@@ -23,13 +23,15 @@ const List = () => {
         <Empty title={""} message={"작성된 리뷰가 없어요 ㅜ.ㅜ"} />
       ) : (
         <>
-          {locals && <Markers items={locals} />}
+          {locals && <Markers locals={locals} />}
           <div className="relative h-2">
             <div className="absolute right-0 py-2">
               <ResetButton onClick={handleClickReset} />
             </div>
           </div>
-          <PlaceReviewsWithKeyword data={keywordReviews} />
+          <PlaceReviewsWithKeyword
+            placeReviewsWithKeywordData={keywordReviews}
+          />
         </>
       )}
     </>

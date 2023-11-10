@@ -3,24 +3,24 @@ import { useBoundStore as useStore } from "@/store";
 import LocalListItem from "./LocalListItem";
 
 type Props = {
-  items: LocalPlace[] | null;
+  locals: LocalPlace[] | null;
 };
 
-const LocalList = ({ items }: Props) => {
+const LocalList = ({ locals }: Props) => {
   const { selectedMarkerId } = useStore();
 
   return (
     <div className="pb-4">
       <ul>
-        {items?.map((item) => {
+        {locals?.map((local) => {
           return (
             <li
-              key={item.id}
+              key={local.id}
               className={`my-4 ${
-                selectedMarkerId === item.id && "text-ozip-blue"
+                selectedMarkerId === local.id && "text-ozip-blue"
               }`}
             >
-              <LocalListItem item={item} />
+              <LocalListItem place={local} />
             </li>
           );
         })}

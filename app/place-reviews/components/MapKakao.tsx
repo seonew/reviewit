@@ -1,7 +1,6 @@
 import Script from "next/script";
 import { Coordinates, KakaoMap } from "@/types";
 import { INITIAL_CENTER, INITIAL_LEVEL } from "@/hooks/useMap";
-import { useEffect } from "react";
 
 const KAKAO_MAP_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_MAP_CLIENT_ID;
 

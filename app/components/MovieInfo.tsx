@@ -3,11 +3,13 @@ import Link from "next/link";
 import Card from "@/app/components/Card";
 import { MovieProps } from "@/types";
 
+type Props = {
+  movie: MovieProps;
+};
+
 const MovieInfo = ({
-  item: { title, posterImage, link, releaseDate },
-}: {
-  item: MovieProps;
-}) => {
+  movie: { title, posterImage, link, releaseDate },
+}: Props) => {
   return (
     <div className="flex flex-col w-full min-w-0">
       {link && (

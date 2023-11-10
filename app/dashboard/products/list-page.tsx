@@ -44,7 +44,7 @@ const List = ({ products, total, limit }: Props) => {
       <CardList title={"Product List"}>
         {dashboardProducts &&
           dashboardProducts.map((item: ProductProps) => {
-            return <ProductInfo key={item.productId} item={item} />;
+            return <ProductInfo key={item.productId} product={item} />;
           })}
       </CardList>
       <Pagination

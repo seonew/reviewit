@@ -3,19 +3,19 @@ import Link from "next/link";
 import { LikedBook } from "@/types";
 import { useBoundStore as useStore } from "@/store";
 import Card from "@/app/components/Card";
-import IconButton from "./IconButton";
+import BookmarkButton from "./BookmarkButton";
 
 type Props = {
-  item: LikedBook;
+  book: LikedBook;
 };
 
-const BookInfo = ({ item }: Props) => {
-  const { title, author, discount, image, link, checked } = item;
+const BookInfo = ({ book }: Props) => {
+  const { title, author, discount, image, link, checked } = book;
   const { updateLikedBooks, updateCheckedToTopBooks } = useStore();
 
   const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
-    updateLikedBooks(item);
-    updateCheckedToTopBooks(item);
+    updateLikedBooks(book);
+    updateCheckedToTopBooks(book);
     e.stopPropagation();
   };
 
@@ -33,7 +33,7 @@ const BookInfo = ({ item }: Props) => {
               objectFit: "contain",
             }}
           />
-          <IconButton onClick={handleClickItem} checked={checked} />
+          <BookmarkButton onClick={handleClickItem} checked={checked} />
         </Card>
         <div className="mt-2.5 text-sm font-normal min-w-0 break-keep break-words">
           <div className="overflow-hidden ">

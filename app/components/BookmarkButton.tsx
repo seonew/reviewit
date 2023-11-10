@@ -7,19 +7,19 @@ type Props = {
   checked?: boolean;
 };
 
-const IconButton = ({ onClick, checked }: Props) => {
-  const [show, setShow] = useState(false);
+const BookmarkButton = ({ onClick, checked }: Props) => {
+  const [isShow, setIsShow] = useState(false);
 
-  const handleClickItem = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     onClick?.(event);
-    setShow(!show);
+    setIsShow(!isShow);
   };
 
   return (
-    <button className="absolute bottom-0 right-0 p-2" onClick={handleClickItem}>
+    <button className="absolute bottom-0 right-0 p-2" onClick={handleClick}>
       <span className="relative w-9 h-9 flex items-center justify-center -mr-1 -mb-1">
-        {checked ?? show ? (
+        {checked ?? isShow ? (
           <BookmarkSolidIcon className="h-6 w-6 text-ozip-blue absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2" />
         ) : (
           <>
@@ -32,4 +32,4 @@ const IconButton = ({ onClick, checked }: Props) => {
   );
 };
 
-export default IconButton;
+export default BookmarkButton;

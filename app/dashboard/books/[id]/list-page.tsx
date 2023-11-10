@@ -133,14 +133,16 @@ export default function List({ id, book }: Props) {
           onSubmit={handleSubmitReview}
           onClickLike={handleLikeReview}
         />
-        <Pagination
-          total={reviewData.count}
-          limit={LIMIT}
-          currentPage={page}
-          onClickPage={handleClickPage}
-          onClickPrev={handleClickPrevButton}
-          onClickNext={handleClickNextButton}
-        />
+        {reviewData.count > 0 && (
+          <Pagination
+            total={reviewData.count}
+            limit={LIMIT}
+            currentPage={page}
+            onClickPage={handleClickPage}
+            onClickPrev={handleClickPrevButton}
+            onClickNext={handleClickNextButton}
+          />
+        )}
       </div>
     </div>
   );

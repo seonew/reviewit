@@ -15,7 +15,7 @@ const List = ({ movies, keyword }: Props) => {
       <CardList title={`${keyword}`} color={"text-black"}>
         {movies &&
           movies.map((item: MovieProps) => {
-            return <MovieInfo key={item.id} item={item} />;
+            return <MovieInfo key={item.id} movie={item} />;
           })}
       </CardList>
     </div>
