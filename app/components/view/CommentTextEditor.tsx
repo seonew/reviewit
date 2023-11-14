@@ -66,7 +66,7 @@ const CommentTextEditor = ({ onClick }: Props) => {
 
   const changeIsInput = (current: string | null) => {
     const length = current?.trim().length;
-    if (!current || length === 0) {
+    if (!current ?? length === 0) {
       setIsInput(false);
     } else {
       setIsInput(true);

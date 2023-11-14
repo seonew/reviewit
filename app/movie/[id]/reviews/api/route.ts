@@ -43,7 +43,7 @@ export async function POST(
     const contentId = params.id;
     const requestData = await request.json();
     const { content, contentImgUrl, contentTitle, like } = requestData;
-    if (!contentId || !content) {
+    if (!contentId && !content) {
       throw new NotFoundContentError();
     }
 
@@ -158,8 +158,16 @@ const getStatsForReview = async (contentId: string) => {
 
     const stats: StatsProps[] = [
       { id: 1, displayText: "", percentText: textResult },
-      { id: 2, displayText: "좋아요", percentText: `${likeResult.toFixed(2)}%` },
-      { id: 3, displayText: "싫어요", percentText: `${disLikeResult.toFixed(2)}%` },
+      {
+        id: 2,
+        displayText: "좋아요",
+        percentText: `${likeResult.toFixed(2)}%`,
+      },
+      {
+        id: 3,
+        displayText: "싫어요",
+        percentText: `${disLikeResult.toFixed(2)}%`,
+      },
     ];
 
     return stats;

@@ -6,6 +6,7 @@ import { PlaceReviewDataProps } from "@/types";
 import SearchSection from "./components/SearchSection";
 import PlaceReviewList from "./components/PlaceReviewList";
 import Pagination from "../components/Pagination";
+import Empty from "../components/Empty";
 
 type Props = {
   reviews: PlaceReviewDataProps | null;
@@ -60,7 +61,7 @@ const List = ({ reviews }: Props) => {
           />
         </>
       ) : (
-        <div>로그인이 필요한 걸?</div>
+        <Empty title={""} message={"작성된 리뷰가 없어요 ㅜ.ㅜ"} />
       )}
     </div>
   );

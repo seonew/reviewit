@@ -39,7 +39,7 @@ export async function POST(
 
     const { contentInfo, like } = requestData;
     const { content, contentImgUrl, contentTitle } = contentInfo;
-    if (!contentId || !content) {
+    if (!contentId && !content) {
       throw new NotFoundContentError();
     }
 

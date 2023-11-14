@@ -41,6 +41,6 @@ export const LocalSchema = new Schema({
   },
 });
 
-const Local = models?.Local || mongoose.model("Local", LocalSchema);
+const Local = models?.Local ?? mongoose.model("Local", LocalSchema);
 
 export default Local;

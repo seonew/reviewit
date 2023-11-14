@@ -156,7 +156,7 @@ export type LocalPlace = {
   roadAddress: string;
   telephone?: string;
   link?: string;
-  count?: string;
+  displayReviewCount?: string;
 };
 
 export type PlaceReviewsWithKeywordDataProps = {

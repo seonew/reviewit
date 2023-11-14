@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import PlaceReviewModel from "@/models/review/place";
 import LocalModel from "@/models/local";
 import { getStatsText, loadUserInfo } from "@/app/api/common";
-import { LocalPlace, StatsProps } from "@/types";
+import { LocalPlace, ReviewProps, StatsProps } from "@/types";
 import { LIMIT } from "@/utils/constants";
 
 export async function GET(request: Request) {
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       throw new NotFoundUserError();
     }
 
-    const localData = await LocalModel.aggregate([
+    const localData: LocalPlace[] = await LocalModel.aggregate([
       {
         $match: {
           name: {
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
         },
       },
     ]);
-    if (!localData || localData.length === 0) {
+    if (localData.length === 0) {
       return NextResponse.json({ data: null, locals: null });
     }
     const localResult = await getLocals(localData, user.id);
@@ -77,8 +77,15 @@ export const getPlaceReviews = async (offset: number) => {
   const localData = await LocalModel.find({ id: { $in: placeIds } });
   const localResult = await getLocals(localData, user.id);
 
-  const result = reviewData.map((review: any) => {
-    const local = localResult.find((item) => item.id === review.contentId);
+  const result: {
+    place: { id: string; name: string; link: string | undefined };
+    review: ReviewProps;
+  }[] = reviewData.map((review: ReviewProps) => {
+    const local = localResult.find((item) => item.id === review.contentId) ?? {
+      id: "",
+      name: "",
+      link: "",
+    };
     const { id: localId, name, link } = local;
     const { id, content, contentId, contentLike, like, userId, updateDate } =
       review;
@@ -101,10 +108,15 @@ export const getPlaceReviews = async (offset: number) => {
   return { data: result, locals: localResult, count: total };
 };
 
-const getLocals = async (localData: any, userId: string) => {
-  const localsCount = await loadMyReviewCountByPlace(userId);
-  const localResult: any[] = localData.map((local: LocalPlace) => {
-    const localCount = localsCount.find((item) => item._id === local.id).count;
+const getLocals = async (localData: LocalPlace[], userId: string) => {
+  const localsReviewCount = await loadMyReviewCountByPlace(userId);
+  const localResult: LocalPlace[] = localData.map((local: LocalPlace) => {
+    const localReviewCount = localsReviewCount.find(
+      (item) => item._id === local.id
+    );
+    const localCount = localReviewCount?.count;
+    const displayReviewCount =
+      localCount !== undefined && localCount > 10 ? `10+` : localCount ?? 0;
     return {
       id: local.id,
       name: local.name,
@@ -115,7 +127,7 @@ const getLocals = async (localData: any, userId: string) => {
       mapy: local.mapy,
       telephone: local.telephone,
       link: local.link,
-      count: localCount > 10 ? `10+` : localCount,
+      displayReviewCount: displayReviewCount.toString(),
     };
   });
 
@@ -150,7 +162,7 @@ const loadPlaceReviews = async (
     updateDate: -1,
   });
 
-  const result = reviews.map((review) => {
+  const result: ReviewProps[] = reviews.map((review) => {
     return {
       id: review.id,
       content: review.content,
@@ -226,7 +238,10 @@ const loadMyReviews = async (userId: string, offset: number) => {
     },
   ]);
 
-  const result = {
+  const result: {
+    data: ReviewProps[];
+    total: number;
+  } = {
     data: rowData[0].data,
     total: rowData[0].metadata[0] ? rowData[0].metadata[0].total : 0,
   };
@@ -235,15 +250,16 @@ const loadMyReviews = async (userId: string, offset: number) => {
 };
 
 const loadMyReviewCountByPlace = async (userId: string) => {
-  const result = await PlaceReviewModel.aggregate([
-    { $match: { userId } },
-    {
-      $group: {
-        _id: "$contentId",
-        count: { $sum: 1 },
+  const result: { _id: string; count: number }[] =
+    await PlaceReviewModel.aggregate([
+      { $match: { userId } },
+      {
+        $group: {
+          _id: "$contentId",
+          count: { $sum: 1 },
+        },
       },
-    },
-  ]);
+    ]);
 
   return result;
 };
