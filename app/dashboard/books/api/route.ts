@@ -22,8 +22,8 @@ export async function GET(request: Request) {
 }
 
 export const getBooks = async (startNumber: number, displayCount: number) => {
-  const client_id = process.env.CLIENT_ID || "";
-  const client_secret = process.env.CLIENT_SECRET || "";
+  const client_id = process.env.CLIENT_ID ?? "";
+  const client_secret = process.env.CLIENT_SECRET ?? "";
   const bookRequestUrl = "https://openapi.naver.com/v1/search/book?query=";
   const headers = {
     "X-Naver-Client-Id": client_id,

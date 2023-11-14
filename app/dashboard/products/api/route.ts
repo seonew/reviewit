@@ -25,8 +25,8 @@ export const getProducts = async (
   startNumber: number,
   displayCount: number
 ) => {
-  const client_id = process.env.CLIENT_ID || "";
-  const client_secret = process.env.CLIENT_SECRET || "";
+  const client_id = process.env.CLIENT_ID ?? "";
+  const client_secret = process.env.CLIENT_SECRET ?? "";
   const shopRequestUrl = "https://openapi.naver.com/v1/search/shop?query=";
   const headers = {
     "X-Naver-Client-Id": client_id,

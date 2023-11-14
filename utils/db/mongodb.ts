@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const DB_URI = process.env.MONGODB_URI || "";
+const DB_URI = process.env.MONGODB_URI ?? "";
 
 let cached = global.mongoose;
 

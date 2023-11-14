@@ -137,8 +137,8 @@ export const loadBookReviews = async (contentId: string, offset: number) => {
 
 export const loadBookInfo = async (id: string) => {
   const dIsbn = id;
-  const clientId = process.env.CLIENT_ID || "";
-  const clientSecret = process.env.CLIENT_SECRET || "";
+  const clientId = process.env.CLIENT_ID ?? "";
+  const clientSecret = process.env.CLIENT_SECRET ?? "";
   const bookRequestUrl = "https://openapi.naver.com/v1/search/book_adv?d_isbn=";
   const headers = {
     "X-Naver-Client-Id": clientId,

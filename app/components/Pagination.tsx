@@ -38,7 +38,7 @@ const Pagination = ({
         }
         break;
       default:
-        const current = parseInt(e.currentTarget.textContent || "");
+        const current = parseInt(e.currentTarget.textContent ?? "");
         onClickPage(current);
     }
   };

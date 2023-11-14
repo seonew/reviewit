@@ -16,7 +16,7 @@ export async function POST(
       throw new NotFoundContentError();
     }
 
-    const client_id = process.env.NEXT_PUBLIC_KAKAO_API_CLIENT_ID || "";
+    const client_id = process.env.NEXT_PUBLIC_KAKAO_API_CLIENT_ID ?? "";
     const requestUrl = "https://dapi.kakao.com/v2/local/search/keyword.json";
     const headers = {
       Authorization: `KakaoAK ${client_id}`,

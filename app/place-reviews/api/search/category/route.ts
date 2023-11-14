@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       throw new NotFoundContentError();
     }
 
-    const client_id = process.env.NEXT_PUBLIC_KAKAO_API_CLIENT_ID || "";
+    const client_id = process.env.NEXT_PUBLIC_KAKAO_API_CLIENT_ID ?? "";
     const requestUrl = "https://dapi.kakao.com/v2/local/search/category.json";
     const headers = {
       Authorization: `KakaoAK ${client_id}`,
