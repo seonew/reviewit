@@ -4,7 +4,7 @@ import { NotFoundUserError } from "@/utils/error";
 import { NextResponse } from "next/server";
 import PlaceReviewModel from "@/models/review/place";
 import LocalModel from "@/models/local";
-import { getStatsText, loadUserInfo } from "@/app/api/common";
+import { getStatsText, getUserInfo } from "@/app/api/common";
 import { LocalPlace, ReviewProps, StatsProps } from "@/types";
 import { LIMIT } from "@/utils/constants";
 
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     await dbConnect();
 
     const keyword = await request.json();
-    const user = await loadUserInfo();
+    const user = getUserInfo();
     if (!user) {
       throw new NotFoundUserError();
     }
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
 }
 
 export const getPlaceReviews = async (offset: number) => {
-  const user = await loadUserInfo();
+  const user = getUserInfo();
   if (!user) {
     throw new NotFoundUserError();
   }

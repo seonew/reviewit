@@ -2,13 +2,17 @@ import dynamic from "next/dynamic";
 import { getUserId } from "../api/common";
 import dbConnect from "@/utils/db/mongodb";
 import { getPlaceReviews } from "./api/search/review/route";
+import { notFound } from "next/navigation";
 
 export default async function Page() {
-  const reviews = await getData();
+  const data = await getData();
+  if (!data) {
+    notFound();
+  }
   const DynamicListPage = dynamic(() => import("./list-page"), {
     ssr: false,
   });
-  return <DynamicListPage reviews={reviews} />;
+  return <DynamicListPage reviews={data} />;
 }
 
 async function getData() {
@@ -22,7 +26,8 @@ async function getData() {
       return null;
     }
 
-    const result = await getPlaceReviews(0);
+    const offset = 0;
+    const result = await getPlaceReviews(offset);
     return result;
   } catch (error) {
     console.log(error);

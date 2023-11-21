@@ -198,7 +198,7 @@ export const loadUsersForService = async () => {
   return userData;
 };
 
-export const loadUserInfo = () => {
+export const getUserInfo = () => {
   try {
     return getUser();
   } catch (error) {
@@ -213,13 +213,13 @@ export const loadUserInfo = () => {
 };
 
 export const getUserId = () => {
-  const data = loadUserInfo();
+  const data = getUserInfo();
 
   if (!data) {
     return null;
   }
 
-  const userId = data.id;
+  const userId: string = data.id;
   return userId;
 };
 

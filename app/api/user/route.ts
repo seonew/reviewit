@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const token = searchParams.get("token") ?? "";
-  const SERVICE = process.env.NEXT_PUBLIC_SERVICE!;
+  const SERVICE = process.env.NEXT_PUBLIC_SERVICE ?? "";
   const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL;
 
   try {
