@@ -216,7 +216,7 @@ export const getUserId = () => {
   const data = getUserInfo();
 
   if (!data) {
-    return null;
+    throw new NotFoundUserError();
   }
 
   const userId: string = data.id;
