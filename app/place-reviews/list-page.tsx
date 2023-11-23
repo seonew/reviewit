@@ -9,7 +9,7 @@ import Pagination from "../components/Pagination";
 import Empty from "../components/Empty";
 
 type Props = {
-  reviews: PlaceReviewDataProps | null;
+  reviews: PlaceReviewDataProps;
 };
 
 const List = ({ reviews }: Props) => {

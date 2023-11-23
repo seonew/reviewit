@@ -19,17 +19,11 @@ export default async function Page() {
 const getData = async () => {
   try {
     await dbConnect();
-    const userId = await getUserId();
-    const isLogin = !userId ? false : true;
-
-    if (!isLogin) {
-      return null;
-    }
+    await getUserId();
 
     const { reviews, count } = await getMyReviews(0);
     return { reviews, count };
   } catch (error) {
     console.log(error);
-    return { reviews: [], count: 0 };
   }
 };
