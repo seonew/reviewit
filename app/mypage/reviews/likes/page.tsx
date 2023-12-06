@@ -19,7 +19,7 @@ export default async function Page() {
 const getData = async () => {
   try {
     await dbConnect();
-    await getUserId();
+    getUserId();
 
     const { reviews, count } = await getLikesForReviews(0);
     return { reviews, count };

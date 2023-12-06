@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import PlaceReviewModel from "@/models/review/place";
 import LocalModel from "@/models/local";
 import { getUserId } from "@/app/api/common";
+import { generateId } from "@/utils/common";
 
 export async function POST(
   request: Request,
@@ -49,7 +50,7 @@ export async function POST(
 
     const userId = getUserId();
     const newReview = new PlaceReviewModel({
-      id: Date.now().toString(),
+      id: generateId(),
       contentId: item.id,
       content: review,
       contentLike: like,

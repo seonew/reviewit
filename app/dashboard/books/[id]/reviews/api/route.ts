@@ -4,6 +4,7 @@ import BookReviewModel from "@/models/review/book";
 import { getBookReviews, getUserId } from "@/app/api/common";
 import { LIMIT } from "@/utils/constants";
 import { NotFoundContentError } from "@/utils/error";
+import { generateId } from "@/utils/common";
 
 export async function GET(
   request: Request,
@@ -47,7 +48,7 @@ export async function POST(
 
     const userId = getUserId();
     const newReview = new BookReviewModel({
-      id: Date.now().toString(),
+      id: generateId(),
       contentId,
       content,
       contentTitle,

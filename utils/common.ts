@@ -1,6 +1,10 @@
 import { signIn } from "coco-people-client";
 import jwt from "jsonwebtoken";
 
+export const generateId = (): string => {
+  return Date.now().toString();
+};
+
 export const numberWithCommas = (number: number): string => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };

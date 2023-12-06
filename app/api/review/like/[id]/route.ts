@@ -2,6 +2,7 @@ import dbConnect from "@/utils/db/mongodb";
 import { NextResponse } from "next/server";
 import LikeModel from "@/models/review/like";
 import { getUserId } from "@/app/api/common";
+import { generateId } from "@/utils/common";
 
 export async function POST(request: Request) {
   try {
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
 
     const userId = getUserId();
     const newLike = new LikeModel({
-      id: Date.now().toString(),
+      id: generateId(),
       reviewId,
       contentId,
       userId,

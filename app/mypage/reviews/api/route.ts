@@ -12,24 +12,17 @@ export async function GET(request: Request) {
 
   await dbConnect();
 
-  const userId = getUserId();
-  const isLogin = !userId ? false : true;
+  try {
+    const { reviews, count } = await getMyReviews(offset);
+    const result = {
+      reviews,
+      count,
+    };
 
-  if (!isLogin) {
-    return NextResponse.json({ error: "Unauthorized", status: 401 });
-  } else {
-    try {
-      const { reviews, count } = await getMyReviews(offset);
-      const result = {
-        reviews,
-        count,
-      };
-
-      return NextResponse.json(result);
-    } catch (e) {
-      console.error(e);
-      return NextResponse.json({ error: "Internal Server Error", status: 500 });
-    }
+    return NextResponse.json(result);
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: "Internal Server Error", status: 500 });
   }
 }
 

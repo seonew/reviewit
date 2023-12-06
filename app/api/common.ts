@@ -8,11 +8,15 @@ import { LIMIT } from "@/utils/constants";
 import { NotFoundUserError } from "@/utils/error";
 
 export const getBookReviews = async (contentId: string, offset: number) => {
-  const userId = getUserId();
-  const isLogin = !userId ? false : true;
+  let userId = null;
+  try {
+    userId = getUserId();
+  } catch (error) {
+    console.log(error);
+  }
 
   let likeData: any[] | null = null;
-  if (isLogin) {
+  if (userId) {
     likeData = await LikeModel.find({ userId, contentId });
   }
 
@@ -24,10 +28,8 @@ export const getBookReviews = async (contentId: string, offset: number) => {
   const userData = await loadUsersForService();
   const reviews = bookReviewData.map((review: ReviewProps) => {
     const author = userData.find((user) => user.id === review.userId);
-    const like =
-      likeData === null
-        ? undefined
-        : likeData.find((like) => like.reviewId === review.id);
+    const like = likeData?.find((like) => like.reviewId === review.id);
+
     const contentLike =
       review.contentLike === undefined ? false : review.contentLike;
 
@@ -152,7 +154,10 @@ export const loadBookInfo = async (id: string) => {
   return bookData;
 };
 
-export const loadMyReviews = async (userId: string, offset: number) => {
+export const loadMyReviews = async (
+  userId: string,
+  offset: number
+): Promise<{ data: any; total: any }> => {
   const rowData = await BookReviewModel.aggregate([
     { $match: { userId } },
     { $sort: { updateDate: -1 } },

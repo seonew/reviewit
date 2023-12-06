@@ -18,7 +18,7 @@ export default async function Page() {
 async function getData() {
   try {
     await dbConnect();
-    await getUserId();
+    getUserId();
 
     const offset = 0;
     const result = await getPlaceReviews(offset);
