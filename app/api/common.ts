@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import BookReviewModel from "@/models/review/book";
 import UserModel from "@/models/user";
 import LikeModel from "@/models/review/like";
-import { ReviewProps, StatsProps } from "@/types";
+import { ReviewProps, StatsProps, User } from "@/types";
 import { LIMIT } from "@/utils/constants";
 import { NotFoundUserError } from "@/utils/error";
 
@@ -29,18 +29,18 @@ export const getBookReviews = async (contentId: string, offset: number) => {
   const reviews = bookReviewData.map((review: ReviewProps) => {
     const author = userData.find((user) => user.id === review.userId);
     const like = likeData?.find((like) => like.reviewId === review.id);
-
     const contentLike =
       review.contentLike === undefined ? false : review.contentLike;
+    const userName = !author ? "홍길동" : author.name;
 
     return {
       id: review.id,
       contentId,
       content: review.content,
       contentLike,
-      like: like ? true : false,
+      like: !!like,
       updateDate: replaceDateFormat(review.updateDate),
-      userName: author.name,
+      userName,
       userId: review.userId,
     };
   });
@@ -197,7 +197,7 @@ export const loadLikesForReview = async (userId: string, offset: number) => {
   return result;
 };
 
-export const loadUsersForService = async () => {
+export const loadUsersForService = async (): Promise<User[]> => {
   const SERVICE = process.env.NEXT_PUBLIC_SERVICE!;
   const userData = await UserModel.find({ loginService: SERVICE });
   return userData;

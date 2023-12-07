@@ -97,7 +97,7 @@ const CommentTextEditor = ({ onClick }: Props) => {
                 type="submit"
                 onClick={handleSubmit}
                 className="comment-editor-contents-button"
-                disabled={isInput ? false : true}
+                disabled={!!!isInput}
               >
                 입력
               </button>

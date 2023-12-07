@@ -44,6 +44,7 @@ export const getLikesForReviews = async (offset: number) => {
 
       if (bookReview !== null) {
         const author = userData.find((user) => user.id === bookReview.userId);
+        const userName = !author ? "홍길동" : author.name;
 
         return {
           id: bookReview.id,
@@ -52,7 +53,7 @@ export const getLikesForReviews = async (offset: number) => {
           contentImgUrl: bookReview.contentImgUrl,
           contentTitle: bookReview.contentTitle,
           userId: bookReview.userId,
-          userName: author.name,
+          userName,
           updateDate: replaceDateFormat(bookReview.updateDate),
         };
       }

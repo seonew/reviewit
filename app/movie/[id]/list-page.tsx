@@ -29,7 +29,7 @@ export default function List({ id }: { id: string }) {
     user,
   } = useStore();
   const { movie, keywords, recommendations, similars, videos } = currentMovie;
-  const loaded = movie.id === "" ? false : true;
+  const loaded = !!movie.id;
   const [page, setPage] = useState<number>(1);
 
   const handleClickPage = (current: number) => {

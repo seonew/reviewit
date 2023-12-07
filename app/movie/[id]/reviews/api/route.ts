@@ -92,15 +92,16 @@ const getMovieReviews = async (contentId: string, offset: number) => {
     const like = likeData?.find((like) => like.reviewId === review.id);
     const contentLike =
       review.contentLike === undefined ? false : review.contentLike;
+    const userName = !author ? "홍길동" : author.name;
 
     return {
       id: review.id,
       contentId,
       content: review.content,
       contentLike,
-      like: like ? true : false,
+      like: !!like,
       updateDate: replaceDateFormat(review.updateDate),
-      userName: author.name,
+      userName,
       userId: review.userId,
     };
   });
