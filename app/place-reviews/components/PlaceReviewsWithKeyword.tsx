@@ -3,7 +3,7 @@ import {
   PlaceReviewWithKeywordProps,
 } from "@/types";
 import Link from "next/link";
-import PlaceReviewListItem from "./PlaceReviewListItem";
+import PlaceReviewsItem from "./PlaceReviewsItem";
 import PreferenceStatSection from "@/app/components/view/PreferenceStatSection";
 
 type Props = {
@@ -15,7 +15,7 @@ const PlaceReviewsWithKeyword = ({ placeReviewsWithKeywordData }: Props) => {
 
   return (
     <div className="pb-10">
-      <ul className="list-none my-10 mr-8">
+      <ul className="list-none my-10">
         {data &&
           data.map((current: PlaceReviewWithKeywordProps, index) => {
             const { place, items } = current;
@@ -40,7 +40,7 @@ const PlaceReviewsWithKeyword = ({ placeReviewsWithKeywordData }: Props) => {
                     reviews.map((review) => {
                       return (
                         <div key={review.id} className="pt-2 first:pt-0">
-                          <PlaceReviewListItem review={review} />
+                          <PlaceReviewsItem review={review} />
                         </div>
                       );
                     })}

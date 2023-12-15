@@ -8,7 +8,7 @@ type Props = {
   review: ReviewProps;
 };
 
-const PlaceReviewListItem = ({ review }: Props) => {
+const PlaceReviewsItem = ({ review }: Props) => {
   const iconCSS = `absolute w-5 h-5 -left-7 rounded-full p-1`;
 
   return (
@@ -40,4 +40,4 @@ const PlaceReviewListItem = ({ review }: Props) => {
   );
 };
 
-export default PlaceReviewListItem;
+export default PlaceReviewsItem;
