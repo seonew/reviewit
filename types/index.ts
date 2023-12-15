@@ -151,6 +151,7 @@ export type LocalPlace = {
   name: string;
   address: string;
   category: string;
+  categoryCode: string;
   mapx: number;
   mapy: number;
   roadAddress: string;
@@ -176,6 +177,6 @@ export type PlaceReviewDataProps = {
 };
 
 export type PlaceReviewProps = {
-  place: { id: string; name: string; link?: string };
+  place: { id: string; name: string; link?: string; categoryCode: string };
   review: ReviewProps;
 };

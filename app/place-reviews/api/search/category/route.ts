@@ -31,6 +31,7 @@ export async function POST(request: Request) {
       (marker: {
         place_name: string;
         category_name: string;
+        category_group_code: string;
         id: string;
         phone: string;
         place_url: string;
@@ -44,6 +45,7 @@ export async function POST(request: Request) {
           name: replaceBTagsWithEmptyString(marker.place_name),
           address: marker.address_name,
           category: marker.category_name,
+          categoryCode: marker.category_group_code,
           link: marker.place_url,
           mapx: parseFloat(marker.x),
           mapy: parseFloat(marker.y),

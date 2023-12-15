@@ -22,7 +22,7 @@ export async function POST(
       Authorization: `KakaoAK ${client_id}`,
     };
     const SIZE = 10;
-    const CATEGORY_CODE = "FD6,CE7";
+    const CATEGORY_CODE = "FD6,CE7,HP8,PM9,CT1";
     const RADIUS = 20000;
     const paramsQuery = `?y=${lat}&x=${lng}&size=${SIZE}&category_group_code=${CATEGORY_CODE}&query=`;
 
@@ -39,6 +39,7 @@ export async function POST(
       (marker: {
         place_name: string;
         category_name: string;
+        category_group_code: string;
         id: string;
         phone: string;
         place_url: string;
@@ -52,6 +53,7 @@ export async function POST(
           name: replaceBTagsWithEmptyString(marker.place_name),
           address: marker.address_name,
           category: marker.category_name,
+          categoryCode: marker.category_group_code,
           link: marker.place_url,
           mapx: parseFloat(marker.x),
           mapy: parseFloat(marker.y),

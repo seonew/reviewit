@@ -70,7 +70,7 @@ export const getPlaceReviews = async (offset: number) => {
   const reviews = await PlaceReviewModel.find({ userId: user.id }).sort({
     updateDate: -1,
   });
-  const placeIds = Array.from(
+  const placeIds: string[] = Array.from(
     new Set(reviews.map((review) => review.contentId))
   );
 
@@ -85,13 +85,14 @@ export const getPlaceReviews = async (offset: number) => {
       id: "",
       name: "",
       link: "",
+      categoryCode: "",
     };
-    const { id: localId, name, link } = local;
+    const { id: localId, name, link, categoryCode } = local;
     const { id, content, contentId, contentLike, like, userId, updateDate } =
       review;
 
     return {
-      place: { id: localId, name, link },
+      place: { id: localId, name, link, categoryCode },
       review: {
         id,
         content,
@@ -117,12 +118,14 @@ const getLocals = async (localData: LocalPlace[], userId: string) => {
     const localCount = localReviewCount?.count;
     const displayReviewCount =
       localCount !== undefined && localCount > 10 ? `10+` : localCount ?? 0;
+
     return {
       id: local.id,
       name: local.name,
       address: local.address,
       roadAddress: local.roadAddress,
       category: local.category,
+      categoryCode: local.categoryCode,
       mapx: local.mapx,
       mapy: local.mapy,
       telephone: local.telephone,

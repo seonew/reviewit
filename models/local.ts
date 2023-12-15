@@ -19,6 +19,9 @@ export const LocalSchema = new Schema({
   category: {
     type: String,
   },
+  categoryCode: {
+    type: String,
+  },
   mapx: {
     type: Number,
     required: true,
