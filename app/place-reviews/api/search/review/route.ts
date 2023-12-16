@@ -78,7 +78,12 @@ export const getPlaceReviews = async (offset: number) => {
   const localResult = await getLocals(localData, user.id);
 
   const result: {
-    place: { id: string; name: string; link: string | undefined };
+    place: {
+      id: string;
+      name: string;
+      link: string | undefined;
+      categoryCode: string;
+    };
     review: ReviewProps;
   }[] = reviewData.map((review: ReviewProps) => {
     const local = localResult.find((item) => item.id === review.contentId) ?? {
