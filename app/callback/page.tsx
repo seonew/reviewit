@@ -28,12 +28,8 @@ export default function Page() {
   }, [fetchUserInfo, router, setIsSignedIn]);
 
   useEffect(() => {
-    if (user.id !== "") {
-      return;
-    }
-
     initialize();
-  }, [initialize, user.id]);
+  }, [initialize]);
 
   return <></>;
 }

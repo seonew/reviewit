@@ -59,6 +59,12 @@ const nextConfig = {
         port: "",
         pathname: "/dn/**",
       },
+      {
+        protocol: "https",
+        hostname: "ssl.pstatic.net",
+        port: "",
+        pathname: "/static/**",
+      },
     ],
   },
 };

@@ -4,7 +4,7 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import githubIcon from "@/public/assets/github-icon.svg";
 import kakaoTalkIcon from "@/public/assets/kakaotalk-icon.png";
-import googleIcon from "@/public/assets/google-icon.png";
+import naverIcon from "@/public/assets/naver-icon.png";
 import Link from "next/link";
 import { MapIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
 
@@ -57,7 +57,7 @@ const UserInfo = ({ user, onClickSignOut }: Props) => {
                         ? githubIcon
                         : user.loginType === "kakao"
                         ? kakaoTalkIcon
-                        : googleIcon
+                        : naverIcon
                     }
                     alt={user.loginType}
                     width={24}
