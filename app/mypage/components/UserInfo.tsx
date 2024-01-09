@@ -2,11 +2,11 @@ import DefaultImage from "@/app/components/DefaultImage";
 import { User } from "@/types";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import githubIcon from "@/public/assets/github-icon.svg";
+import githubIcon from "@/public/assets/github-icon.png";
 import kakaoTalkIcon from "@/public/assets/kakaotalk-icon.png";
 import naverIcon from "@/public/assets/naver-icon.png";
 import Link from "next/link";
-import { MapIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
+import { PencilSquareIcon } from "@heroicons/react/20/solid";
 
 type Props = {
   user: User;
