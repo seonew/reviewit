@@ -74,20 +74,6 @@ const UserInfo = ({ user, onClickSignOut }: Props) => {
                   </div>
                 </Link>
               </div>
-              <div className="flex items-center pb-3">
-                <Link href={"/place-reviews"} className="mr-2">
-                  <div className="button-xs-blue flex items-center">
-                    <MapIcon className="w-3.5 h-3.5 mr-1" />
-                    <span>장소 리뷰 보러가기</span>
-                  </div>
-                </Link>
-                <Link href={"/place-reviews/write"}>
-                  <div className="button-xs-blue flex items-center">
-                    <PencilSquareIcon className="w-3.5 h-3.5 mr-1" />
-                    <span>장소 리뷰 작성하기</span>
-                  </div>
-                </Link>
-              </div>
             </div>
           </div>
         </div>
