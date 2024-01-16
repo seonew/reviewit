@@ -9,11 +9,12 @@ import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/app/components/DefaultImage";
 import Pagination from "@/app/components/Pagination";
 import { LIMIT } from "@/utils/constants";
-import { BookProps } from "@/types";
+import { LikedBook } from "@/types";
+import BookmarkButton from "@/app/components/BookmarkButton";
 
 type Props = {
   id: string;
-  book: BookProps;
+  book: LikedBook;
 };
 
 export default function List({ id, book }: Props) {
@@ -25,6 +26,10 @@ export default function List({ id, book }: Props) {
     insertReviewLike,
     deleteReviewLike,
     initializeBookReview,
+    currentBook,
+    setCurrentBook,
+    addLikedBook,
+    deleteLikedBook,
   } = useStore();
   const [page, setPage] = useState<number>(1);
 
@@ -76,35 +81,60 @@ export default function List({ id, book }: Props) {
     await fetchBookReview(id, page);
   };
 
+  const handleClickBookmark = () => {
+    const isChecked = book.checked;
+    if (isChecked) {
+      deleteLikedBook(book.isbn);
+    } else {
+      addLikedBook(book);
+    }
+  };
+
   useEffect(() => {
     if (id === book.isbn) {
+      setCurrentBook(book);
       fetchBookReview(id, 1);
     } else {
       initializeBookReview();
     }
-  }, [book.isbn, fetchBookReview, id, initializeBookReview]);
+  }, [
+    book,
+    book.isbn,
+    fetchBookReview,
+    id,
+    initializeBookReview,
+    setCurrentBook,
+  ]);
 
   return (
     <div className="contents-container">
       <div className="banner-container">
-        <div className="relative pt-24 ml-16 z-10 text-white">
-          <div className="float-left mr-10 w-52 h-80">
-            {book.image ? (
-              <Image
-                className="rounded"
-                src={book.image}
-                alt={book.title}
-                width={200}
-                height={300}
+        <div className="relative pt-24 ml-12 z-10 text-white flex-row">
+          <div
+            className={`flex items-center rounded-lg w-64 shadow h-80 bg-gray-200 relative float-left`}
+          >
+            <div className="mx-10 flex justify-center">
+              {book.image ? (
+                <Image
+                  className="rounded"
+                  src={book.image}
+                  alt={book.title}
+                  width={200}
+                  height={300}
+                />
+              ) : (
+                <DefaultImage size="w-52 h-80">
+                  <PhotoIcon className="w-40 h-40" />
+                </DefaultImage>
+              )}
+              <BookmarkButton
+                onClick={handleClickBookmark}
+                checked={currentBook.checked}
               />
-            ) : (
-              <DefaultImage size="w-52 h-80">
-                <PhotoIcon className="w-40 h-40" />
-              </DefaultImage>
-            )}
+            </div>
           </div>
           {book.isbn !== "" && (
-            <div className="relative ml-10 float-left w-2/3">
+            <div className="relative ml-14 float-left w-2/3">
               <div className="break-words">
                 <h3 className="text-3xl leading-10 font-bold text-ellipsis">
                   {book.title}

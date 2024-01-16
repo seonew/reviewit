@@ -2,6 +2,7 @@ import { StateCreator } from "zustand";
 import {
   BookProps,
   LikedBook,
+  LikedContent,
   LikedProduct,
   ProductProps,
   ReviewDataProps,
@@ -11,25 +12,28 @@ import { CommonSlice } from "./commonSlice";
 type State = {
   likedBooks: LikedBook[];
   likedProducts: LikedProduct[];
-  topBooks: BookProps[];
+  likedContents: LikedContent[];
   topProducts: ProductProps[];
   dashboardBooks: BookProps[];
   dashboardProducts: ProductProps[];
   currentBookReview: ReviewDataProps;
+  currentBook: LikedBook;
 };
 
 type Actions = {
-  updateLikedBooks: (item: LikedBook) => void;
   updateLikedProducts: (item: LikedProduct) => void;
-  updateCheckedToTopBooks: (item: LikedBook) => void;
   updateCheckedToTopProducts: (item: LikedProduct) => void;
+  fetchLikedContents: () => void;
+  addLikedBook: (book: LikedBook) => void;
+  deleteLikedBook: (id: string) => void;
 
-  initTopBooks: (books: BookProps[]) => void;
   initTopProducts: (products: ProductProps[]) => void;
-  fetchDashboardBooks: (books: BookProps[]) => void;
   fetchDashboardProducts: (products: ProductProps[]) => void;
-  updateDashboardBooks: (page: number) => void;
+  updateDashboardBooks: (page: number, displayCount?: number) => void;
   updateDashboardProducts: (page: number) => void;
+  setDashboardBooks: (books: BookProps[]) => void;
+  setDashboardBooksAndCurrentBook: (id: string, checked: boolean) => void;
+  setCurrentBook: (book: LikedBook) => void;
 
   fetchBookReview: (contentId: string, page: number) => void;
   insertBookReview: (
@@ -48,7 +52,7 @@ type Actions = {
 const initialState: State = {
   likedBooks: [],
   likedProducts: [],
-  topBooks: [],
+  likedContents: [],
   topProducts: [],
   dashboardBooks: [],
   dashboardProducts: [],
@@ -56,6 +60,17 @@ const initialState: State = {
     reviews: [],
     count: 0,
     stats: [],
+  },
+  currentBook: {
+    title: "",
+    author: "",
+    discount: "",
+    image: "",
+    link: "",
+    isbn: "",
+    pubdate: "",
+    catalogLink: "",
+    checked: false,
   },
 };
 
@@ -98,46 +113,98 @@ const createDashboardSlice: StateCreator<
       currentBookReview: { ...state.currentBookReview, ...item },
     }));
   },
-  updateDashboardBooks: async (page) => {
+  updateDashboardBooks: async (page, displayCount = 20) => {
     try {
-      const res = await fetch(`/dashboard/books/api?page=${page}`);
+      const res = await fetch(
+        `/dashboard/books/api?page=${page}&displayCount=${displayCount}`
+      );
       const data = await res.json();
-
-      get().fetchDashboardBooks(data.books);
+      set({ dashboardBooks: data.books });
     } catch (e) {
       console.error(e);
     }
   },
-  fetchDashboardBooks: (books) =>
-    set((state) => {
-      const modifiedBooks = books.map((item) => {
-        const commonElement = state.likedBooks.find(
-          (likeItem) => likeItem.isbn === item.isbn
-        );
-        return commonElement ? { ...item, ...commonElement } : item;
-      });
-
-      return {
-        dashboardBooks: modifiedBooks,
+  fetchLikedContents: async () => {
+    const contentType = "book";
+    const res = await fetch(`/api/bookmarks/${contentType}`);
+    const data: LikedContent[] = await res.json();
+    set({ likedContents: data });
+  },
+  addLikedBook: async (book) => {
+    try {
+      const contentType = "book";
+      const params = {
+        contentId: book.isbn,
+        contentTitle: book.title,
+        contentImgUrl: book.image,
+        contentType,
       };
-    }),
-  updateLikedBooks: (item) =>
-    set((state) => {
-      let nextLikedBooks: LikedBook[] = [];
-      const isExists = state.likedBooks.some(
-        (current) => current.isbn === item.isbn
-      );
 
-      if (isExists) {
-        nextLikedBooks = state.likedBooks.filter(
-          (current) => current.isbn !== item.isbn
+      const res = await fetch(`/api/bookmarks/${contentType}/${book.isbn}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+      const data = await res.json();
+      const nextChecked: boolean = data.checked;
+
+      get().setDashboardBooksAndCurrentBook(book.isbn, nextChecked);
+      set((state) => {
+        const nextLikedBooks: LikedBook[] = [
+          ...state.likedBooks,
+          { ...book, checked: true },
+        ];
+        const nextLikedContents: LikedContent[] = [
+          ...state.likedContents,
+          {
+            id: book.isbn,
+            imgUrl: book.image,
+            title: book.title,
+            link: book.link,
+          },
+        ];
+
+        return {
+          likedBooks: nextLikedBooks,
+          likedContents: nextLikedContents,
+        };
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  deleteLikedBook: async (id) => {
+    try {
+      const contentType = "book";
+      const res = await fetch(`/api/bookmarks/${contentType}/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      const nextChecked: boolean = data.checked;
+
+      get().setDashboardBooksAndCurrentBook(id, nextChecked);
+      set((state) => {
+        const nextLikedBooks: LikedBook[] = state.likedBooks.filter(
+          (current) => current.isbn !== id
         );
-      } else {
-        nextLikedBooks = [...state.likedBooks, { ...item, checked: true }];
-      }
+        const nextLikedContents: LikedContent[] = state.likedContents.filter(
+          (current) => current.id !== id
+        );
 
-      return { likedBooks: nextLikedBooks };
-    }),
+        return {
+          likedBooks: nextLikedBooks,
+          likedContents: nextLikedContents,
+        };
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  },
   updateDashboardProducts: async (page) => {
     try {
       const res = await fetch(`/dashboard/products/api?page=${page}`);
@@ -181,16 +248,6 @@ const createDashboardSlice: StateCreator<
 
       return { likedProducts: nextLikedProducts };
     }),
-  updateCheckedToTopBooks: (item) =>
-    set((state) => {
-      const nextTopBooks: BookProps[] = state.topBooks.map((current) => {
-        return current.isbn === item.isbn
-          ? { ...item, checked: !item.checked }
-          : current;
-      });
-
-      return { topBooks: nextTopBooks };
-    }),
   updateCheckedToTopProducts: (item) =>
     set((state) => {
       const nextTopProducts: ProductProps[] = state.topProducts.map(
@@ -202,19 +259,6 @@ const createDashboardSlice: StateCreator<
       );
 
       return { topProducts: nextTopProducts };
-    }),
-  initTopBooks: (books) =>
-    set((state) => {
-      const modifiedBooks: BookProps[] = books.map((item) => {
-        const commonElement = state.likedBooks.find(
-          (likeItem) => likeItem.isbn === item.isbn
-        );
-        return commonElement ? { ...item, ...commonElement } : item;
-      });
-
-      return {
-        topBooks: modifiedBooks,
-      };
     }),
   initTopProducts: (products) =>
     set((state) => {
@@ -233,6 +277,24 @@ const createDashboardSlice: StateCreator<
     set({
       currentBookReview: initialState.currentBookReview,
     });
+  },
+  setDashboardBooksAndCurrentBook: (id: string, nextChecked: boolean) => {
+    set((state) => {
+      const modifiedBooks = state.dashboardBooks.map((item) => {
+        return id === item.isbn ? { ...item, checked: nextChecked } : item;
+      });
+
+      return {
+        dashboardBooks: modifiedBooks,
+        currentBook: { ...state.currentBook, checked: nextChecked },
+      };
+    });
+  },
+  setDashboardBooks: (dashboardBooks) => {
+    set({ dashboardBooks });
+  },
+  setCurrentBook: (currentBook) => {
+    set({ currentBook });
   },
   reset: () => {
     set(initialState);

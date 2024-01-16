@@ -4,16 +4,20 @@ import {
   replaceCaretWithComma,
   replaceDateFormat8Digits,
 } from "@/utils/common";
-import { BookProps } from "@/types";
+import { BookProps, LikedBook } from "@/types";
 import { NextResponse } from "next/server";
+import { getUserBookmarks } from "@/app/api/common";
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
+    const displayCount: number = parseInt(
+      searchParams.get("displayCount") ?? "20"
+    );
     const pageParam = searchParams.get("page") ?? "1";
     const startNumber = (parseInt(pageParam) - 1) * 20 + 1;
 
-    const result = await getBooks(startNumber, 20);
+    const result = await getBooks(startNumber, displayCount);
     return NextResponse.json(result);
   } catch (e) {
     console.error(e);
@@ -42,9 +46,13 @@ export const getBooks = async (startNumber: number, displayCount: number) => {
   const bookData = await bookResponse.json();
   const total = getTotalItems(bookData.total);
 
+  const bookmarks = await getUserBookmarks("book");
   const books = bookData.items;
-  const booksResult = books.map((book: BookProps) => {
-    const result: BookProps = {
+  const booksResult: LikedBook[] = books.map((book: BookProps) => {
+    const bookmark = bookmarks.find((bookmark) => bookmark.id === book.isbn);
+    const checked = !bookmark ? false : true;
+
+    const result: LikedBook = {
       title: book.title,
       author: replaceCaretWithComma(book.author),
       discount: numberWithCommas(parseInt(book.discount)),
@@ -55,6 +63,7 @@ export const getBooks = async (startNumber: number, displayCount: number) => {
       description: book.description,
       catalogLink: book.link,
       pubdate: replaceDateFormat8Digits(book.pubdate),
+      checked,
     };
     return result;
   });

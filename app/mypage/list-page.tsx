@@ -1,24 +1,29 @@
 "use client";
 
-import React from "react";
-import { BookProps, ProductProps } from "@/types";
+import React, { useEffect } from "react";
+import { LikedContent, ProductProps } from "@/types";
 import { useBoundStore as useStore } from "@/store";
 import CardList from "@/app/components/CardList";
-import BookInfo from "@/app/components/BookInfo";
 import ProductInfo from "@/app/components/ProductInfo";
 import UserInfo from "./components/UserInfo";
+import CardInfo from "./components/CardInfo";
 
 const List = () => {
   const {
-    likedBooks: books,
     likedProducts: products,
     user,
     signOut,
+    likedContents,
+    fetchLikedContents,
   } = useStore();
 
   const handleClickSignOut = () => {
     signOut();
   };
+
+  useEffect(() => {
+    fetchLikedContents();
+  }, [fetchLikedContents]);
 
   return (
     <div className="contents-container">
@@ -26,9 +31,9 @@ const List = () => {
         <UserInfo user={user} onClickSignOut={handleClickSignOut} />
       )}
       <CardList title={"My Book List"}>
-        {books &&
-          books.map((item: BookProps) => {
-            return <BookInfo key={item.isbn} book={item} />;
+        {likedContents &&
+          likedContents.map((item: LikedContent) => {
+            return <CardInfo key={item.id} content={item} />;
           })}
       </CardList>
       <CardList title={"My Product List"}>

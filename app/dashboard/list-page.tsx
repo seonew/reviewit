@@ -9,22 +9,25 @@ import ProductInfo from "@/app/components/ProductInfo";
 
 type Props = {
   products: ProductProps[];
-  books: BookProps[];
 };
 
-const List = ({ products, books }: Props) => {
-  const { topBooks, topProducts, initTopBooks, initTopProducts } = useStore();
+const List = ({ products }: Props) => {
+  const { topProducts, initTopProducts, dashboardBooks, updateDashboardBooks } =
+    useStore();
 
   useEffect(() => {
-    initTopBooks(books);
     initTopProducts(products);
-  }, [books, initTopBooks, initTopProducts, products]);
+  }, [initTopProducts, products]);
+
+  useEffect(() => {
+    updateDashboardBooks(1, 10);
+  }, [updateDashboardBooks]);
 
   return (
     <div className="contents-container">
       <CardList title={"Book List"} targetUrl={"/dashboard/books"}>
-        {topBooks &&
-          topBooks.map((item: BookProps) => {
+        {dashboardBooks &&
+          dashboardBooks.map((item: BookProps) => {
             return <BookInfo key={item.isbn} book={item} />;
           })}
       </CardList>

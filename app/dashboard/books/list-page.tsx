@@ -8,14 +8,12 @@ import BookInfo from "@/app/components/BookInfo";
 import Pagination from "@/app/components/Pagination";
 
 type Props = {
-  books: BookProps[] | null;
   total: number;
   limit: number;
 };
 
-const List = ({ books, total, limit }: Props) => {
-  const { dashboardBooks, fetchDashboardBooks, updateDashboardBooks } =
-    useStore();
+const List = ({ total, limit }: Props) => {
+  const { dashboardBooks, updateDashboardBooks } = useStore();
   const [page, setPage] = useState<number>(1);
 
   const handleClickPage = (current: number) => {
@@ -34,10 +32,8 @@ const List = ({ books, total, limit }: Props) => {
   };
 
   useEffect(() => {
-    if (books) {
-      fetchDashboardBooks(books);
-    }
-  }, [books, fetchDashboardBooks]);
+    updateDashboardBooks(1);
+  }, [updateDashboardBooks]);
 
   return (
     <div className="contents-container">
