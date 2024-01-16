@@ -44,6 +44,13 @@ export type LikedProduct = ProductProps & {
   checked?: boolean;
 };
 
+export type LikedContent = {
+  id: string;
+  imgUrl: string;
+  title: string;
+  link: string;
+};
+
 export type MovieProps = {
   id: string;
   title: string;

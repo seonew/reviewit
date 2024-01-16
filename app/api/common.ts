@@ -3,9 +3,48 @@ import { cookies } from "next/headers";
 import BookReviewModel from "@/models/review/book";
 import UserModel from "@/models/user";
 import LikeModel from "@/models/review/like";
+import BookmarkModel from "@/models/bookmark";
 import { ReviewProps, StatsProps, User } from "@/types";
 import { LIMIT } from "@/utils/constants";
 import { NotFoundUserError } from "@/utils/error";
+import dbConnect from "@/utils/db/mongodb";
+
+export const getUserBookmarks = async (contentType: string) => {
+  await dbConnect();
+
+  const userId = await getUserId();
+  const bookmarks = await BookmarkModel.find({ contentType, userId }).sort({
+    registerDate: -1,
+  });
+
+  const result = bookmarks.map((bookmark) => {
+    const { contentId, contentImgUrl, contentTitle, contentType } = bookmark;
+    const link = `/dashboard/books/${contentId}`;
+
+    return {
+      id: contentId,
+      imgUrl: contentImgUrl,
+      title: contentTitle,
+      type: contentType,
+      link,
+    };
+  });
+
+  return result;
+};
+
+export const isBookmarked = async (contentType: string, contentId: string) => {
+  await dbConnect();
+
+  const userId = await getUserId();
+  const bookmark = await BookmarkModel.findOne({
+    contentType,
+    contentId,
+    userId,
+  });
+
+  return !bookmark ? false : true;
+};
 
 export const getBookReviews = async (contentId: string, offset: number) => {
   let userId = null;

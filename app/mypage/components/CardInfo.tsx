@@ -1,25 +1,18 @@
-import Image from "next/image";
 import Link from "next/link";
-import { LikedBook } from "@/types";
+import Image from "next/image";
 import { useBoundStore as useStore } from "@/store";
+import { LikedContent } from "@/types";
 import Card from "@/app/components/Card";
-import BookmarkButton from "./BookmarkButton";
+import BookmarkButton from "@/app/components/BookmarkButton";
 
-type Props = {
-  book: LikedBook;
-};
+type Props = { content: LikedContent };
 
-const BookInfo = ({ book }: Props) => {
-  const { title, author, discount, image, link, checked } = book;
-  const { addLikedBook, deleteLikedBook } = useStore();
+const CardInfo = ({ content }: Props) => {
+  const { imgUrl: image, title, id, link } = content;
+  const { deleteLikedBook } = useStore();
 
   const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const isChecked = book.checked;
-    if (isChecked) {
-      deleteLikedBook(book.isbn);
-    } else {
-      addLikedBook(book);
-    }
+    deleteLikedBook(id);
     e.stopPropagation();
   };
 
@@ -37,15 +30,11 @@ const BookInfo = ({ book }: Props) => {
               objectFit: "contain",
             }}
           />
-          <BookmarkButton onClick={handleClickItem} checked={checked} />
+          <BookmarkButton onClick={handleClickItem} checked={true} />
         </Card>
         <div className="mt-2.5 text-sm font-normal min-w-0 break-keep break-words">
           <div className="overflow-hidden ">
             <span className="text-ozip-blue font-bold">{title}</span>
-            <div className="overflow-hidden block">
-              <span className="mr-1">{author}</span>
-              <span className="text-xs">{discount}원</span>
-            </div>
           </div>
         </div>
       </Link>
@@ -53,4 +42,4 @@ const BookInfo = ({ book }: Props) => {
   );
 };
 
-export default BookInfo;
+export default CardInfo;

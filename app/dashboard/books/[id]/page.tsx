@@ -4,8 +4,8 @@ import {
   replaceCaretWithComma,
   replaceDateFormat8Digits,
 } from "@/utils/common";
-import { BookProps } from "@/types";
-import { loadBookInfo } from "@/app/api/common";
+import { LikedBook } from "@/types";
+import { isBookmarked, loadBookInfo } from "@/app/api/common";
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -26,7 +26,8 @@ const getData = async (id: string) => {
     notFound();
   }
 
-  const result: BookProps = {
+  const checked = await isBookmarked("book", id);
+  const result: LikedBook = {
     title: book.title,
     author: replaceCaretWithComma(book.author),
     discount: numberWithCommas(parseInt(book.discount)),
@@ -37,6 +38,7 @@ const getData = async (id: string) => {
     description: book.description,
     catalogLink: book.link,
     pubdate: replaceDateFormat8Digits(book.pubdate),
+    checked,
   };
 
   return result;
