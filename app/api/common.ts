@@ -4,20 +4,30 @@ import BookReviewModel from "@/models/review/book";
 import UserModel from "@/models/user";
 import LikeModel from "@/models/review/like";
 import BookmarkModel from "@/models/bookmark";
-import { ReviewProps, StatsProps, User } from "@/types";
+import { LikedContent, ReviewProps, StatsProps, User } from "@/types";
 import { LIMIT } from "@/utils/constants";
 import { NotFoundUserError } from "@/utils/error";
 import dbConnect from "@/utils/db/mongodb";
 
+type bookmarkType = {
+  contentId: string;
+  contentImgUrl: string;
+  contentTitle: string;
+  contentType: string;
+};
+
 export const getUserBookmarks = async (contentType: string) => {
-  await dbConnect();
+  let bookmarks: bookmarkType[] | null = null;
+  try {
+    await dbConnect();
 
-  const userId = await getUserId();
-  const bookmarks = await BookmarkModel.find({ contentType, userId }).sort({
-    registerDate: -1,
-  });
+    const userId = await getUserId();
+    bookmarks = await BookmarkModel.find({ contentType, userId }).sort({
+      registerDate: -1,
+    });
+  } catch (err) {}
 
-  const result = bookmarks.map((bookmark) => {
+  const result: LikedContent[] | undefined = bookmarks?.map((bookmark) => {
     const { contentId, contentImgUrl, contentTitle, contentType } = bookmark;
     const link = `/dashboard/books/${contentId}`;
 
@@ -29,13 +39,10 @@ export const getUserBookmarks = async (contentType: string) => {
       link,
     };
   });
-
-  return result;
+  return result === undefined ? null : result;
 };
 
 export const isBookmarked = async (contentType: string, contentId: string) => {
-  await dbConnect();
-
   const userId = await getUserId();
   const bookmark = await BookmarkModel.findOne({
     contentType,
@@ -49,10 +56,8 @@ export const isBookmarked = async (contentType: string, contentId: string) => {
 export const getBookReviews = async (contentId: string, offset: number) => {
   let userId = null;
   try {
-    userId = getUserId();
-  } catch (error) {
-    console.log(error);
-  }
+    userId = await getUserId();
+  } catch (error) {}
 
   let likeData: any[] | null = null;
   if (userId) {
@@ -248,8 +253,6 @@ export const getUserInfo = () => {
   } catch (error) {
     if (error instanceof NotFoundUserError) {
       return null;
-    } else {
-      console.log(error);
     }
   }
 
@@ -258,7 +261,6 @@ export const getUserInfo = () => {
 
 export const getUserId = () => {
   const data = getUserInfo();
-
   if (!data) {
     throw new NotFoundUserError();
   }

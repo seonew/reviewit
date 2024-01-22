@@ -5,7 +5,7 @@ import {
   replaceDateFormat8Digits,
 } from "@/utils/common";
 import { LikedBook } from "@/types";
-import { isBookmarked, loadBookInfo } from "@/app/api/common";
+import { getUserId, isBookmarked, loadBookInfo } from "@/app/api/common";
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -26,7 +26,14 @@ const getData = async (id: string) => {
     notFound();
   }
 
-  const checked = await isBookmarked("book", id);
+  let checked = false;
+  try {
+    await getUserId();
+    checked = await isBookmarked("book", id);
+  } catch (err) {
+    console.log(err);
+  }
+
   const result: LikedBook = {
     title: book.title,
     author: replaceCaretWithComma(book.author),

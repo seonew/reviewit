@@ -4,16 +4,20 @@ import {
   replaceBTagsWithEmptyString,
   replaceCaretWithComma,
 } from "@/utils/common";
-import { ProductApiResponse, ProductProps } from "@/types";
+import { LikedContent, LikedProduct, ProductApiResponse } from "@/types";
 import { NextResponse } from "next/server";
+import { getUserBookmarks, getUserId } from "@/app/api/common";
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
+    const displayCount: number = parseInt(
+      searchParams.get("displayCount") ?? "20"
+    );
     const pageParam = searchParams.get("page") ?? "1";
     const startNumber = (parseInt(pageParam) - 1) * 20 + 1;
 
-    const result = await getProducts(startNumber, 20);
+    const result = await getProducts(startNumber, displayCount);
     return NextResponse.json(result);
   } catch (e) {
     console.error(e);
@@ -45,9 +49,20 @@ export const getProducts = async (
   const shopData = await shopResponse.json();
   const total = getTotalItems(shopData.total);
 
+  let bookmarks: LikedContent[] | null = null;
+  try {
+    await getUserId();
+    bookmarks = await getUserBookmarks("product");
+  } catch (err) {}
+
   const products = shopData.items;
   const productsResult = products.map((product: ProductApiResponse) => {
-    const result: ProductProps = {
+    const bookmark = bookmarks?.find(
+      (bookmark) => bookmark.id === product.productId
+    );
+    const checked = !bookmark ? false : true;
+
+    const result: LikedProduct = {
       title: replaceBTagsWithEmptyString(product.title),
       brand: replaceCaretWithComma(product.brand),
       lprice: numberWithCommas(parseInt(product.lprice)),
@@ -58,6 +73,7 @@ export const getProducts = async (
       productId: product.productId,
       productType: product.productType,
       category: `${product.category1} > ${product.category2} > ${product.category3} > ${product.category4}`,
+      checked,
     };
     return result;
   });

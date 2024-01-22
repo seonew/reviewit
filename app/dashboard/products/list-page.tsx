@@ -8,14 +8,12 @@ import ProductInfo from "@/app/components/ProductInfo";
 import Pagination from "@/app/components/Pagination";
 
 type Props = {
-  products: ProductProps[] | null;
   total: number;
   limit: number;
 };
 
-const List = ({ products, total, limit }: Props) => {
-  const { dashboardProducts, fetchDashboardProducts, updateDashboardProducts } =
-    useStore();
+const List = ({ total, limit }: Props) => {
+  const { dashboardProducts, updateDashboardProducts } = useStore();
   const [page, setPage] = useState<number>(1);
 
   const handleClickPage = (current: number) => {
@@ -34,10 +32,8 @@ const List = ({ products, total, limit }: Props) => {
   };
 
   useEffect(() => {
-    if (products) {
-      fetchDashboardProducts(products);
-    }
-  }, [fetchDashboardProducts, products]);
+    updateDashboardProducts(1);
+  }, [updateDashboardProducts]);
 
   return (
     <div className="contents-container">

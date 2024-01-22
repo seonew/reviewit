@@ -69,17 +69,12 @@ export async function POST(
 }
 
 const getMovieReviews = async (contentId: string, offset: number) => {
-  let userId = null;
-  try {
-    userId = getUserId();
-  } catch (error) {
-    console.log(error);
-  }
-
   let likeData: any[] | null = null;
-  if (userId) {
+  try {
+    await getUserId();
+    const userId = await getUserId();
     likeData = await LikeModel.find({ userId, contentId });
-  }
+  } catch (err) {}
 
   const { data: movieReviewData, total } = await loadMovieReviews(
     contentId,

@@ -4,9 +4,9 @@ import {
   replaceCaretWithComma,
   replaceDateFormat8Digits,
 } from "@/utils/common";
-import { BookProps, LikedBook } from "@/types";
+import { BookProps, LikedBook, LikedContent } from "@/types";
 import { NextResponse } from "next/server";
-import { getUserBookmarks } from "@/app/api/common";
+import { getUserBookmarks, getUserId } from "@/app/api/common";
 
 export async function GET(request: Request) {
   try {
@@ -46,10 +46,15 @@ export const getBooks = async (startNumber: number, displayCount: number) => {
   const bookData = await bookResponse.json();
   const total = getTotalItems(bookData.total);
 
-  const bookmarks = await getUserBookmarks("book");
+  let bookmarks: LikedContent[] | null = null;
+  try {
+    await getUserId();
+    bookmarks = await getUserBookmarks("book");
+  } catch (err) {}
+
   const books = bookData.items;
   const booksResult: LikedBook[] = books.map((book: BookProps) => {
-    const bookmark = bookmarks.find((bookmark) => bookmark.id === book.isbn);
+    const bookmark = bookmarks?.find((bookmark) => bookmark.id === book.isbn);
     const checked = !bookmark ? false : true;
 
     const result: LikedBook = {

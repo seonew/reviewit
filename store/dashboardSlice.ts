@@ -4,36 +4,45 @@ import {
   LikedBook,
   LikedContent,
   LikedProduct,
-  ProductProps,
   ReviewDataProps,
 } from "@/types";
 import { CommonSlice } from "./commonSlice";
 
+type bookmarkParams = {
+  contentId: string;
+  contentTitle: string;
+  contentImgUrl: string;
+  contentType: string;
+};
+
 type State = {
-  likedBooks: LikedBook[];
-  likedProducts: LikedProduct[];
-  likedContents: LikedContent[];
-  topProducts: ProductProps[];
-  dashboardBooks: BookProps[];
-  dashboardProducts: ProductProps[];
+  likedBooks: LikedContent[];
+  likedProducts: LikedContent[];
+  dashboardBooks: LikedBook[];
+  dashboardProducts: LikedProduct[];
   currentBookReview: ReviewDataProps;
   currentBook: LikedBook;
 };
 
 type Actions = {
-  updateLikedProducts: (item: LikedProduct) => void;
-  updateCheckedToTopProducts: (item: LikedProduct) => void;
-  fetchLikedContents: () => void;
   addLikedBook: (book: LikedBook) => void;
   deleteLikedBook: (id: string) => void;
-
-  initTopProducts: (products: ProductProps[]) => void;
-  fetchDashboardProducts: (products: ProductProps[]) => void;
   updateDashboardBooks: (page: number, displayCount?: number) => void;
-  updateDashboardProducts: (page: number) => void;
   setDashboardBooks: (books: BookProps[]) => void;
   setDashboardBooksAndCurrentBook: (id: string, checked: boolean) => void;
   setCurrentBook: (book: LikedBook) => void;
+
+  addLikedProduct: (product: LikedProduct) => void;
+  deleteLikedProduct: (id: string) => void;
+  updateDashboardProducts: (page: number, displayCount?: number) => void;
+  setDashboardProducts: (id: string, checked: boolean) => void;
+
+  fetchLikedContents: (type: string) => void;
+  insertLikedContent: (
+    contentType: string,
+    params: bookmarkParams
+  ) => Promise<boolean>;
+  deleteLikeContent: (contentType: string, id: string) => Promise<boolean>;
 
   fetchBookReview: (contentId: string, page: number) => void;
   insertBookReview: (
@@ -52,8 +61,6 @@ type Actions = {
 const initialState: State = {
   likedBooks: [],
   likedProducts: [],
-  likedContents: [],
-  topProducts: [],
   dashboardBooks: [],
   dashboardProducts: [],
   currentBookReview: {
@@ -124,11 +131,15 @@ const createDashboardSlice: StateCreator<
       console.error(e);
     }
   },
-  fetchLikedContents: async () => {
-    const contentType = "book";
-    const res = await fetch(`/api/bookmarks/${contentType}`);
+  fetchLikedContents: async (type: string) => {
+    const res = await fetch(`/api/bookmarks/${type}`);
     const data: LikedContent[] = await res.json();
-    set({ likedContents: data });
+
+    if (type === "book") {
+      set({ likedBooks: data });
+    } else if (type === "product") {
+      set({ likedProducts: data });
+    }
   },
   addLikedBook: async (book) => {
     try {
@@ -139,36 +150,22 @@ const createDashboardSlice: StateCreator<
         contentImgUrl: book.image,
         contentType,
       };
-
-      const res = await fetch(`/api/bookmarks/${contentType}/${book.isbn}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(params),
-      });
-      const data = await res.json();
-      const nextChecked: boolean = data.checked;
+      const nextChecked = await get().insertLikedContent(contentType, params);
 
       get().setDashboardBooksAndCurrentBook(book.isbn, nextChecked);
       set((state) => {
-        const nextLikedBooks: LikedBook[] = [
+        const nextLikedBooks: LikedContent[] = [
           ...state.likedBooks,
-          { ...book, checked: true },
-        ];
-        const nextLikedContents: LikedContent[] = [
-          ...state.likedContents,
           {
             id: book.isbn,
             imgUrl: book.image,
             title: book.title,
             link: book.link,
+            type: contentType,
           },
         ];
-
         return {
           likedBooks: nextLikedBooks,
-          likedContents: nextLikedContents,
         };
       });
     } catch (e) {
@@ -178,115 +175,134 @@ const createDashboardSlice: StateCreator<
   deleteLikedBook: async (id) => {
     try {
       const contentType = "book";
-      const res = await fetch(`/api/bookmarks/${contentType}/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
-      const nextChecked: boolean = data.checked;
-
+      const nextChecked: boolean = await get().deleteLikeContent(
+        contentType,
+        id
+      );
       get().setDashboardBooksAndCurrentBook(id, nextChecked);
+
       set((state) => {
-        const nextLikedBooks: LikedBook[] = state.likedBooks.filter(
-          (current) => current.isbn !== id
-        );
-        const nextLikedContents: LikedContent[] = state.likedContents.filter(
+        const nextLikedBooks: LikedContent[] = state.likedBooks.filter(
           (current) => current.id !== id
         );
-
         return {
           likedBooks: nextLikedBooks,
-          likedContents: nextLikedContents,
         };
       });
     } catch (e) {
       console.error(e);
     }
   },
-  updateDashboardProducts: async (page) => {
+  updateDashboardProducts: async (page, displayCount = 20) => {
     try {
-      const res = await fetch(`/dashboard/products/api?page=${page}`);
+      const res = await fetch(
+        `/dashboard/products/api?page=${page}&displayCount=${displayCount}`
+      );
       const data = await res.json();
-
-      get().fetchDashboardProducts(data.products);
+      set({ dashboardProducts: data.products });
     } catch (e) {
       console.error(e);
     }
   },
-  fetchDashboardProducts: (products) =>
-    set((state) => {
-      const modifiedProducts = products.map((product) => {
-        const commonElement = state.likedProducts.find(
-          (likeItem) => likeItem.productId === product.productId
-        );
-        return commonElement ? { ...product, ...commonElement } : product;
-      });
-
-      return {
-        dashboardProducts: modifiedProducts,
+  addLikedProduct: async (product) => {
+    try {
+      const contentType = "product";
+      const params = {
+        contentId: product.productId,
+        contentTitle: product.title,
+        contentImgUrl: product.image,
+        contentType,
       };
-    }),
-  updateLikedProducts: (item) =>
-    set((state) => {
-      const isExists = state.likedProducts.some(
-        (current) => current.productId === item.productId
-      );
+      const nextChecked = await get().insertLikedContent(contentType, params);
 
-      let nextLikedProducts = [];
-      if (isExists) {
-        nextLikedProducts = state.likedProducts.filter(
-          (current) => current.productId !== item.productId
-        );
-      } else {
-        nextLikedProducts = [
+      get().setDashboardProducts(product.productId, nextChecked);
+      set((state) => {
+        const nextLikedProducts: LikedContent[] = [
           ...state.likedProducts,
-          { ...item, checked: true },
+          {
+            id: product.productId,
+            imgUrl: product.image,
+            title: product.title,
+            link: product.link,
+            type: contentType,
+          },
         ];
-      }
-
-      return { likedProducts: nextLikedProducts };
-    }),
-  updateCheckedToTopProducts: (item) =>
-    set((state) => {
-      const nextTopProducts: ProductProps[] = state.topProducts.map(
-        (current) => {
-          return current.productId === item.productId
-            ? { ...item, checked: !item.checked }
-            : current;
-        }
-      );
-
-      return { topProducts: nextTopProducts };
-    }),
-  initTopProducts: (products) =>
-    set((state) => {
-      const modifiedProducts: ProductProps[] = products.map((item) => {
-        const commonElement = state.likedProducts.find(
-          (likeItem) => likeItem.productId === item.productId
-        );
-        return commonElement ? { ...item, ...commonElement } : item;
+        return {
+          likedProducts: nextLikedProducts,
+        };
       });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  deleteLikedProduct: async (id) => {
+    try {
+      const contentType = "product";
+      const nextChecked: boolean = await get().deleteLikeContent(
+        contentType,
+        id
+      );
+      get().setDashboardProducts(id, nextChecked);
+      set((state) => {
+        const nextLikedProducts: LikedContent[] = state.likedProducts.filter(
+          (current) => current.id !== id
+        );
+        return {
+          likedProducts: nextLikedProducts,
+        };
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  insertLikedContent: async (contentType, params) => {
+    const id = params.contentId;
+    const res = await fetch(`/api/bookmarks/${contentType}/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    });
 
-      return {
-        topProducts: modifiedProducts,
-      };
-    }),
+    const checked: boolean = await res.json();
+    return checked;
+  },
+  deleteLikeContent: async (contentType, id) => {
+    const res = await fetch(`/api/bookmarks/${contentType}/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const checked = await res.json();
+    return checked;
+  },
   initializeBookReview: () => {
     set({
       currentBookReview: initialState.currentBookReview,
     });
   },
-  setDashboardBooksAndCurrentBook: (id: string, nextChecked: boolean) => {
+  setDashboardProducts: (id, checked) => {
+    set((state) => {
+      const modifiedProducts = state.dashboardProducts.map((item) => {
+        return id === item.productId ? { ...item, checked } : item;
+      });
+
+      return {
+        dashboardProducts: modifiedProducts,
+      };
+    });
+  },
+  setDashboardBooksAndCurrentBook: (id, checked) => {
     set((state) => {
       const modifiedBooks = state.dashboardBooks.map((item) => {
-        return id === item.isbn ? { ...item, checked: nextChecked } : item;
+        return id === item.isbn ? { ...item, checked } : item;
       });
 
       return {
         dashboardBooks: modifiedBooks,
-        currentBook: { ...state.currentBook, checked: nextChecked },
+        currentBook: { ...state.currentBook, checked },
       };
     });
   },
