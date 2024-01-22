@@ -27,7 +27,7 @@ export async function GET(request: Request) {
 }
 
 export const getMyReviews = async (offset: number) => {
-  const userId = getUserId();
+  const userId = await getUserId();
   const { data: reviewData, total } = await loadMyReviews(userId, offset);
   const reviews = reviewData.map((review: ReviewProps) => {
     return {

@@ -49,6 +49,7 @@ export type LikedContent = {
   imgUrl: string;
   title: string;
   link: string;
+  type?: string;
 };
 
 export type MovieProps = {

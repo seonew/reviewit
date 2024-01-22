@@ -8,11 +8,15 @@ import BookmarkButton from "@/app/components/BookmarkButton";
 type Props = { content: LikedContent };
 
 const CardInfo = ({ content }: Props) => {
-  const { imgUrl: image, title, id, link } = content;
-  const { deleteLikedBook } = useStore();
+  const { imgUrl: image, title, id, link, type } = content;
+  const { deleteLikedBook, deleteLikedProduct } = useStore();
 
   const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
-    deleteLikedBook(id);
+    if (type === "book") {
+      deleteLikedBook(id);
+    } else if (type === "product") {
+      deleteLikedProduct(id);
+    }
     e.stopPropagation();
   };
 

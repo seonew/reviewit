@@ -11,11 +11,15 @@ type Props = {
 
 const ProductInfo = ({ product }: Props) => {
   const { title, image, link, lprice, brand, checked } = product;
-  const { updateLikedProducts, updateCheckedToTopProducts } = useStore();
+  const { addLikedProduct, deleteLikedProduct } = useStore();
 
   const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
-    updateLikedProducts(product);
-    updateCheckedToTopProducts(product);
+    const isChecked = product.checked;
+    if (isChecked) {
+      deleteLikedProduct(product.productId);
+    } else {
+      addLikedProduct(product);
+    }
     e.stopPropagation();
   };
 

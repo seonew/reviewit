@@ -20,7 +20,7 @@ export async function POST(
       throw new NotFoundContentError();
     }
 
-    const userId = getUserId();
+    const userId = await getUserId();
     const newBookmark = new BookmarkModel({
       id: generateId(),
       contentId,
@@ -51,7 +51,7 @@ export async function DELETE(
 
     await dbConnect();
 
-    const userId = getUserId();
+    const userId = await getUserId();
     await BookmarkModel.deleteOne({ contentId, contentType, userId });
 
     return NextResponse.json({ checked: false });

@@ -32,7 +32,7 @@ export async function GET(request: Request) {
 }
 
 export const getLikesForReviews = async (offset: number) => {
-  const userId = getUserId();
+  const userId = await getUserId();
   const { data: likeData, total } = await loadLikesForReview(userId, offset);
   const userData = await loadUsersForService();
 

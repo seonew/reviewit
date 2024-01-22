@@ -7,21 +7,18 @@ import CardList from "@/app/components/CardList";
 import BookInfo from "@/app/components/BookInfo";
 import ProductInfo from "@/app/components/ProductInfo";
 
-type Props = {
-  products: ProductProps[];
-};
-
-const List = ({ products }: Props) => {
-  const { topProducts, initTopProducts, dashboardBooks, updateDashboardBooks } =
-    useStore();
-
-  useEffect(() => {
-    initTopProducts(products);
-  }, [initTopProducts, products]);
+const List = () => {
+  const {
+    dashboardBooks,
+    updateDashboardBooks,
+    dashboardProducts,
+    updateDashboardProducts,
+  } = useStore();
 
   useEffect(() => {
     updateDashboardBooks(1, 10);
-  }, [updateDashboardBooks]);
+    updateDashboardProducts(1, 10);
+  }, [updateDashboardBooks, updateDashboardProducts]);
 
   return (
     <div className="contents-container">
@@ -32,8 +29,8 @@ const List = ({ products }: Props) => {
           })}
       </CardList>
       <CardList title={"Product List"} targetUrl={"/dashboard/products"}>
-        {topProducts &&
-          topProducts.map((item: ProductProps) => {
+        {dashboardProducts &&
+          dashboardProducts.map((item: ProductProps) => {
             return <ProductInfo key={item.productId} product={item} />;
           })}
       </CardList>
