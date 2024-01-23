@@ -1,17 +1,14 @@
 import { StateCreator } from "zustand";
-import { MovieProps, CurrentMovieProps, ReviewDataProps } from "@/types";
+import { MovieProps, ReviewDataProps } from "@/types";
 import { CommonSlice } from "./commonSlice";
 
 type State = {
   dashboardMovies: MovieProps[];
-  currentMovie: CurrentMovieProps;
   movieReviews: ReviewDataProps;
 };
 
 type Actions = {
-  fetchDashboardMovies: (movies: MovieProps[]) => void;
-  fetchMovieDetail: (id: string) => void;
-  fetchCurrentMovie: (id: string) => void;
+  setDashboardMovies: (movies: MovieProps[]) => void;
   fetchMovieReviews: (id: string, page: number) => void;
   insertMovieReview: ({
     content,
@@ -26,31 +23,10 @@ type Actions = {
     contentTitle: string;
     like: boolean;
   }) => void;
-
-  initializeMovie: () => void;
 };
 
 const initialState: State = {
   dashboardMovies: [],
-  currentMovie: {
-    movie: {
-      id: "",
-      title: "",
-      releaseDate: "",
-      genres: [],
-      originalTitle: "",
-      tagline: "",
-      budget: 0,
-      revenue: 0,
-      runtime: 0,
-      average: 0,
-      adult: false,
-    },
-    keywords: [],
-    recommendations: [],
-    similars: [],
-    videos: [],
-  },
   movieReviews: {
     reviews: [],
     count: 0,
@@ -97,50 +73,10 @@ const createMovieSlice: StateCreator<
       console.log(error);
     }
   },
-  fetchCurrentMovie: async (id) => {
-    try {
-      const res = await fetch(`/movie/${id}/api`);
-      const data = await res.json();
-
-      set((state) => ({
-        currentMovie: {
-          ...state.currentMovie,
-          movie: data.movie,
-        },
-      }));
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  fetchMovieDetail: async (id) => {
-    try {
-      const res = await fetch(`/movie/${id}/contents/api`);
-      const data = await res.json();
-      const { keywords, reviewData, recommendations, similars, videos } = data;
-
-      set((state) => ({
-        currentMovie: {
-          ...state.currentMovie,
-          keywords,
-          reviewData,
-          recommendations,
-          similars,
-          videos,
-        },
-      }));
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  fetchDashboardMovies: (movies) =>
-    set(() => ({
+  setDashboardMovies: (movies) =>
+    set({
       dashboardMovies: movies,
-    })),
-  initializeMovie: () => {
-    set(() => ({
-      currentMovie: initialState.currentMovie,
-    }));
-  },
+    }),
   reset: () => {
     set(initialState);
   },
