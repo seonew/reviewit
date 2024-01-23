@@ -22,6 +22,7 @@ export async function GET(
   } catch (error) {
     console.log(error);
   }
+  return NextResponse.json(false);
 }
 
 export async function POST(
