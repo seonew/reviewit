@@ -1,9 +1,28 @@
 import dbConnect from "@/utils/db/mongodb";
 import BookmarkModel from "@/models/bookmark";
 import { NextResponse } from "next/server";
-import { getUserId } from "@/app/api/common";
+import { getUserId, isBookmarked } from "@/app/api/common";
 import { generateId } from "@/utils/common";
 import { NotFoundContentError } from "@/utils/error";
+
+export async function GET(
+  request: Request,
+  { params }: { params: { type: string; id: string } }
+) {
+  try {
+    await dbConnect();
+
+    const { id: contentId, type: contentType } = params;
+    if (!contentId) {
+      throw new NotFoundContentError();
+    }
+
+    const data = await isBookmarked(contentType, contentId);
+    return NextResponse.json(data);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export async function POST(
   request: Request,

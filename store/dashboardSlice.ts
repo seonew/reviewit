@@ -28,7 +28,6 @@ type Actions = {
   addLikedBook: (book: LikedBook) => void;
   deleteLikedBook: (id: string) => void;
   updateDashboardBooks: (page: number, displayCount?: number) => void;
-  setDashboardBooks: (books: BookProps[]) => void;
   setDashboardBooksAndCurrentBook: (id: string, checked: boolean) => void;
   setCurrentBook: (book: LikedBook) => void;
 
@@ -43,6 +42,7 @@ type Actions = {
     params: bookmarkParams
   ) => Promise<boolean>;
   deleteLikeContent: (contentType: string, id: string) => Promise<boolean>;
+  fetchBookmarkedContent: (type: string, id: string) => Promise<boolean>;
 
   fetchBookReview: (contentId: string, page: number) => void;
   insertBookReview: (
@@ -265,8 +265,8 @@ const createDashboardSlice: StateCreator<
       body: JSON.stringify(params),
     });
 
-    const checked: boolean = await res.json();
-    return checked;
+    const data = await res.json();
+    return data.checked;
   },
   deleteLikeContent: async (contentType, id) => {
     const res = await fetch(`/api/bookmarks/${contentType}/${id}`, {
@@ -275,6 +275,11 @@ const createDashboardSlice: StateCreator<
         "Content-Type": "application/json",
       },
     });
+    const data = await res.json();
+    return data.checked;
+  },
+  fetchBookmarkedContent: async (contentType, id) => {
+    const res = await fetch(`/api/bookmarks/${contentType}/${id}`);
     const checked = await res.json();
     return checked;
   },
@@ -306,11 +311,15 @@ const createDashboardSlice: StateCreator<
       };
     });
   },
-  setDashboardBooks: (dashboardBooks) => {
-    set({ dashboardBooks });
-  },
-  setCurrentBook: (currentBook) => {
-    set({ currentBook });
+  setCurrentBook: async (currentBook) => {
+    const checked = await get().fetchBookmarkedContent(
+      "book",
+      currentBook.isbn
+    );
+    set((state) => {
+      const nextCurrentBook = { ...state.currentBook, checked };
+      return { currentBook: nextCurrentBook };
+    });
   },
   reset: () => {
     set(initialState);
