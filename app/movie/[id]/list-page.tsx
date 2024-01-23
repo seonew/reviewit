@@ -14,13 +14,15 @@ import VideoSection from "@/app/components/view/VideoSection";
 import LoadingBanner from "@/app/components/LoadingBanner";
 import Pagination from "@/app/components/Pagination";
 import { LIMIT } from "@/utils/constants";
+import { CurrentMovieProps } from "@/types";
 
-export default function List({ id }: { id: string }) {
+type Props = {
+  id: string;
+  currentMovie: CurrentMovieProps;
+};
+
+export default function List({ id, currentMovie }: Props) {
   const {
-    currentMovie,
-    fetchMovieDetail,
-    fetchCurrentMovie,
-    initializeMovie,
     fetchMovieReviews,
     insertMovieReview,
     insertReviewLike,
@@ -81,17 +83,11 @@ export default function List({ id }: { id: string }) {
   };
 
   useEffect(() => {
-    initializeMovie();
-    fetchCurrentMovie(id);
-  }, [fetchCurrentMovie, id, initializeMovie]);
-
-  useEffect(() => {
     if (!loaded) {
       return;
     }
-    fetchMovieDetail(id);
     fetchMovieReviews(id, 1);
-  }, [fetchMovieDetail, fetchMovieReviews, id, loaded]);
+  }, [fetchMovieReviews, id, loaded]);
 
   return (
     <div className="contents-container">

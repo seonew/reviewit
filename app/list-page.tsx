@@ -13,13 +13,13 @@ type Props = {
 };
 
 const List = ({ movies, imageBannerInfo }: Props) => {
-  const { fetchDashboardMovies } = useStore();
+  const { setDashboardMovies } = useStore();
 
   useEffect(() => {
     if (movies) {
-      fetchDashboardMovies(movies);
+      setDashboardMovies(movies);
     }
-  }, [fetchDashboardMovies, movies]);
+  }, [setDashboardMovies, movies]);
 
   return (
     <div className="contents-container">
