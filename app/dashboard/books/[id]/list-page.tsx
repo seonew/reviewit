@@ -82,6 +82,11 @@ export default function List({ id, book }: Props) {
   };
 
   const handleClickBookmark = () => {
+    if (!user.id && !user.name) {
+      handleClickSignIn();
+      return;
+    }
+
     const isChecked = currentBook.checked;
     if (isChecked) {
       deleteLikedBook(book.isbn);
