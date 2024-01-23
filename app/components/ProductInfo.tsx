@@ -4,6 +4,7 @@ import { LikedProduct } from "@/types";
 import { useBoundStore as useStore } from "@/store";
 import Card from "@/app/components/Card";
 import BookmarkButton from "./BookmarkButton";
+import { handleClickSignIn } from "@/utils/common";
 
 type Props = {
   product: LikedProduct;
@@ -11,9 +12,14 @@ type Props = {
 
 const ProductInfo = ({ product }: Props) => {
   const { title, image, link, lprice, brand, checked } = product;
-  const { addLikedProduct, deleteLikedProduct } = useStore();
+  const { addLikedProduct, deleteLikedProduct, user } = useStore();
 
   const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!user.id && !user.name) {
+      handleClickSignIn();
+      return;
+    }
+
     const isChecked = product.checked;
     if (isChecked) {
       deleteLikedProduct(product.productId);
