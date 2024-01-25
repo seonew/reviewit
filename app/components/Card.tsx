@@ -6,12 +6,10 @@ type Props = {
   color?: string;
 };
 
-const Card = ({ children, height = "h-60", color }: Props) => {
+const Card = ({ children, height = "h-60", color = "bg-gray-100" }: Props) => {
   return (
     <div
-      className={`flex items-center justify-center rounded-lg w-full relative shadow ${
-        color ?? "bg-gray-100"
-      } ${height}`}
+      className={`flex items-center justify-center rounded-lg w-full relative shadow ${color} ${height}`}
     >
       {children}
     </div>

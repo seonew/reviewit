@@ -1,6 +1,5 @@
 import { StateCreator } from "zustand";
 import {
-  BookProps,
   LikedBook,
   LikedContent,
   LikedProduct,
@@ -22,6 +21,7 @@ type State = {
   dashboardProducts: LikedProduct[];
   currentBookReview: ReviewDataProps;
   currentBook: LikedBook;
+  loading: boolean;
 };
 
 type Actions = {
@@ -30,11 +30,13 @@ type Actions = {
   updateDashboardBooks: (page: number, displayCount?: number) => void;
   setDashboardBooksAndCurrentBook: (id: string, checked: boolean) => void;
   setCurrentBook: (book: LikedBook) => void;
+  clearDashboardBooks: () => void;
 
   addLikedProduct: (product: LikedProduct) => void;
   deleteLikedProduct: (id: string) => void;
   updateDashboardProducts: (page: number, displayCount?: number) => void;
   setDashboardProducts: (id: string, checked: boolean) => void;
+  clearDashboardProducts: () => void;
 
   fetchLikedContents: (type: string) => void;
   insertLikedContent: (
@@ -79,6 +81,7 @@ const initialState: State = {
     catalogLink: "",
     checked: false,
   },
+  loading: true,
 };
 
 const createDashboardSlice: StateCreator<
@@ -92,9 +95,9 @@ const createDashboardSlice: StateCreator<
     const res = await fetch(`/dashboard/books/${id}/reviews/api?page=${page}`);
     const data = await res.json();
 
-    set((state) => ({
+    set({
       currentBookReview: data,
-    }));
+    });
   },
   insertBookReview: async (contentInfo, like) => {
     const { contentId } = contentInfo;
@@ -120,13 +123,16 @@ const createDashboardSlice: StateCreator<
       currentBookReview: { ...state.currentBookReview, ...item },
     }));
   },
+  clearDashboardBooks: () => {
+    set({ dashboardBooks: [], loading: true });
+  },
   updateDashboardBooks: async (page, displayCount = 20) => {
     try {
       const res = await fetch(
         `/dashboard/books/api?page=${page}&displayCount=${displayCount}`
       );
       const data = await res.json();
-      set({ dashboardBooks: data.books });
+      set({ dashboardBooks: data.books, loading: false });
     } catch (e) {
       console.error(e);
     }
@@ -193,13 +199,16 @@ const createDashboardSlice: StateCreator<
       console.error(e);
     }
   },
+  clearDashboardProducts: () => {
+    set({ dashboardProducts: [], loading: true });
+  },
   updateDashboardProducts: async (page, displayCount = 20) => {
     try {
       const res = await fetch(
         `/dashboard/products/api?page=${page}&displayCount=${displayCount}`
       );
       const data = await res.json();
-      set({ dashboardProducts: data.products });
+      set({ dashboardProducts: data.products, loading: false });
     } catch (e) {
       console.error(e);
     }

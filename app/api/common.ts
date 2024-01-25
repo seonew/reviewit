@@ -242,8 +242,7 @@ export const loadLikesForReview = async (userId: string, offset: number) => {
 };
 
 export const loadUsersForService = async (): Promise<User[]> => {
-  const SERVICE = process.env.NEXT_PUBLIC_SERVICE!;
-  const userData = await UserModel.find({ loginService: SERVICE });
+  const userData = await UserModel.find();
   return userData;
 };
 
