@@ -30,9 +30,6 @@ export const UserSchema = new Schema({
   },
 });
 
-const USER_DB_URI = process.env.USER_MONGODB_URI ?? "";
-const conn = mongoose.createConnection(USER_DB_URI);
-
-const User = models?.User ?? conn.model("User", UserSchema);
+const User = models?.Bookmark ?? mongoose.model("User", UserSchema);
 
 export default User;

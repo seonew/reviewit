@@ -38,7 +38,7 @@ const ProductInfo = ({ product }: Props) => {
             alt={title}
             quality={80}
             fill
-            sizes="100vw"
+            sizes="(max-width: 768px) 100vw"
             style={{
               objectFit: "contain",
             }}

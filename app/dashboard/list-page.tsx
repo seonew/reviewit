@@ -6,6 +6,7 @@ import { useBoundStore as useStore } from "@/store";
 import CardList from "@/app/components/CardList";
 import BookInfo from "@/app/components/BookInfo";
 import ProductInfo from "@/app/components/ProductInfo";
+import Skeleton from "./components/Skeleton";
 
 const List = () => {
   const {
@@ -13,27 +14,41 @@ const List = () => {
     updateDashboardBooks,
     dashboardProducts,
     updateDashboardProducts,
+    loading,
+    clearDashboardBooks,
   } = useStore();
 
   useEffect(() => {
     updateDashboardBooks(1, 10);
     updateDashboardProducts(1, 10);
-  }, [updateDashboardBooks, updateDashboardProducts]);
+
+    return () => {
+      clearDashboardBooks();
+    };
+  }, [clearDashboardBooks, updateDashboardBooks, updateDashboardProducts]);
 
   return (
     <div className="contents-container">
-      <CardList title={"Book List"} targetUrl={"/dashboard/books"}>
-        {dashboardBooks &&
-          dashboardBooks.map((item: BookProps) => {
-            return <BookInfo key={item.isbn} book={item} />;
-          })}
-      </CardList>
-      <CardList title={"Product List"} targetUrl={"/dashboard/products"}>
-        {dashboardProducts &&
-          dashboardProducts.map((item: ProductProps) => {
-            return <ProductInfo key={item.productId} product={item} />;
-          })}
-      </CardList>
+      {loading ? (
+        <Skeleton arrayRows={[0, 1]} />
+      ) : (
+        <CardList title={"Book List"} targetUrl={"/dashboard/books"}>
+          {dashboardBooks &&
+            dashboardBooks.map((item: BookProps) => {
+              return <BookInfo key={item.isbn} book={item} />;
+            })}
+        </CardList>
+      )}
+      {loading ? (
+        <Skeleton arrayRows={[0, 1]} />
+      ) : (
+        <CardList title={"Product List"} targetUrl={"/dashboard/products"}>
+          {dashboardProducts &&
+            dashboardProducts.map((item: ProductProps) => {
+              return <ProductInfo key={item.productId} product={item} />;
+            })}
+        </CardList>
+      )}
     </div>
   );
 };

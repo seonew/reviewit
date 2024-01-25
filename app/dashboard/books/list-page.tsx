@@ -6,6 +6,7 @@ import { useBoundStore as useStore } from "@/store";
 import CardList from "@/app/components/CardList";
 import BookInfo from "@/app/components/BookInfo";
 import Pagination from "@/app/components/Pagination";
+import Skeleton from "./../components/Skeleton";
 
 type Props = {
   total: number;
@@ -13,7 +14,8 @@ type Props = {
 };
 
 const List = ({ total, limit }: Props) => {
-  const { dashboardBooks, updateDashboardBooks } = useStore();
+  const { dashboardBooks, updateDashboardBooks, clearDashboardBooks, loading } =
+    useStore();
   const [page, setPage] = useState<number>(1);
 
   const handleClickPage = (current: number) => {
@@ -33,24 +35,34 @@ const List = ({ total, limit }: Props) => {
 
   useEffect(() => {
     updateDashboardBooks(1);
-  }, [updateDashboardBooks]);
+
+    return () => {
+      clearDashboardBooks();
+    };
+  }, [clearDashboardBooks, updateDashboardBooks]);
 
   return (
     <div className="contents-container">
-      <CardList title={"Book List"}>
-        {dashboardBooks &&
-          dashboardBooks.map((item: BookProps) => {
-            return <BookInfo key={item.isbn} book={item} />;
-          })}
-      </CardList>
-      <Pagination
-        total={total}
-        limit={limit}
-        currentPage={page}
-        onClickPage={handleClickPage}
-        onClickPrev={handleClickPrevButton}
-        onClickNext={handleClickNextButton}
-      />
+      {loading ? (
+        <Skeleton arrayRows={[0, 1, 2, 3]} />
+      ) : (
+        <>
+          <CardList title={"Book List"}>
+            {dashboardBooks &&
+              dashboardBooks.map((item: BookProps) => {
+                return <BookInfo key={item.isbn} book={item} />;
+              })}
+          </CardList>
+          <Pagination
+            total={total}
+            limit={limit}
+            currentPage={page}
+            onClickPage={handleClickPage}
+            onClickPrev={handleClickPrevButton}
+            onClickNext={handleClickNextButton}
+          />
+        </>
+      )}
     </div>
   );
 };
