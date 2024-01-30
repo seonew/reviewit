@@ -35,7 +35,7 @@ const createReviewSlice: StateCreator<
 > = (set, get) => ({
   ...initialState,
   fetchMyReviews: async (page: number) => {
-    const res = await fetch(`/mypage/reviews/api?page=${page}`);
+    const res = await fetch(`/api/mypage/reviews?page=${page}`);
     const data = await res.json();
 
     set((state) => ({
@@ -43,7 +43,7 @@ const createReviewSlice: StateCreator<
     }));
   },
   fetchContetLikes: async (page: number) => {
-    const res = await fetch(`/mypage/reviews/likes/api?page=${page}`);
+    const res = await fetch(`/api/mypage/reviews/likes?page=${page}`);
     const data = await res.json();
 
     set((state) => ({

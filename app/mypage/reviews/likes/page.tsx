@@ -1,6 +1,6 @@
+import { getLikesForReviews } from "@/app/api/mypage/reviews/likes/route";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
-import { getLikesForReviews } from "./api/route";
 
 export default async function Page() {
   const data = await getData();

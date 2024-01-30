@@ -1,5 +1,5 @@
+import { getProducts } from "@/app/api/dashboard/products/route";
 import dynamic from "next/dynamic";
-import { getProducts } from "./api/route";
 
 export default async function Page() {
   const { total, limit } = await getData();

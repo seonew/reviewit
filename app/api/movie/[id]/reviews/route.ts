@@ -1,4 +1,4 @@
-import { getStatsText, getUserId, loadUsersForService } from "@/app/api/common";
+import { getStatsText, getUserId, loadUsers } from "@/app/api/common";
 import dbConnect from "@/utils/db/mongodb";
 import { NotFoundContentError } from "@/utils/error";
 import { NextResponse } from "next/server";
@@ -81,7 +81,7 @@ const getMovieReviews = async (contentId: string, offset: number) => {
     offset
   );
 
-  const userData = await loadUsersForService();
+  const userData = await loadUsers();
   const reviews = movieReviewData.map((review: ReviewProps) => {
     const author = userData.find((user) => user.id === review.userId);
     const like = likeData?.find((like) => like.reviewId === review.id);

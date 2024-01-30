@@ -1,11 +1,7 @@
 import dbConnect from "@/utils/db/mongodb";
 import { replaceDateFormat } from "@/utils/common";
 import { NextResponse } from "next/server";
-import {
-  getUserId,
-  loadLikesForReview,
-  loadUsersForService,
-} from "@/app/api/common";
+import { getUserId, loadLikesForReview, loadUsers } from "@/app/api/common";
 import { ReviewDataProps, ReviewProps } from "@/types";
 import BookReviewModel from "@/models/review/book";
 import { LIMIT } from "@/utils/constants";
@@ -34,7 +30,7 @@ export async function GET(request: Request) {
 export const getLikesForReviews = async (offset: number) => {
   const userId = await getUserId();
   const { data: likeData, total } = await loadLikesForReview(userId, offset);
-  const userData = await loadUsersForService();
+  const userData = await loadUsers();
 
   const reviews: ReviewProps[] = await Promise.all(
     likeData.map(async (like: { reviewId: string }) => {

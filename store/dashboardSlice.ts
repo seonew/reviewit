@@ -92,7 +92,7 @@ const createDashboardSlice: StateCreator<
 > = (set, get) => ({
   ...initialState,
   fetchBookReview: async (id: string, page: number) => {
-    const res = await fetch(`/dashboard/books/${id}/reviews/api?page=${page}`);
+    const res = await fetch(`/api/dashboard/books/${id}/reviews?page=${page}`);
     const data = await res.json();
 
     set({
@@ -102,7 +102,7 @@ const createDashboardSlice: StateCreator<
   insertBookReview: async (contentInfo, like) => {
     const { contentId } = contentInfo;
     const params = { contentInfo, like };
-    const response = await fetch(`/dashboard/books/${contentId}/reviews/api`, {
+    const response = await fetch(`/api/dashboard/books/${contentId}/reviews`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -129,7 +129,7 @@ const createDashboardSlice: StateCreator<
   updateDashboardBooks: async (page, displayCount = 20) => {
     try {
       const res = await fetch(
-        `/dashboard/books/api?page=${page}&displayCount=${displayCount}`
+        `/api/dashboard/books?page=${page}&displayCount=${displayCount}`
       );
       const data = await res.json();
       set({ dashboardBooks: data.books, loading: false });
@@ -205,7 +205,7 @@ const createDashboardSlice: StateCreator<
   updateDashboardProducts: async (page, displayCount = 20) => {
     try {
       const res = await fetch(
-        `/dashboard/products/api?page=${page}&displayCount=${displayCount}`
+        `/api/dashboard/products?page=${page}&displayCount=${displayCount}`
       );
       const data = await res.json();
       set({ dashboardProducts: data.products, loading: false });

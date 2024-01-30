@@ -44,7 +44,7 @@ const createMovieSlice: StateCreator<
   fetchMovieReviews: async (contentId, page) => {
     try {
       const response = await fetch(
-        `/movie/${contentId}/reviews/api?page=${page}`
+        `/api/movie/${contentId}/reviews?page=${page}`
       );
       const data = await response.json();
       set({ movieReviews: data });
@@ -55,7 +55,7 @@ const createMovieSlice: StateCreator<
   insertMovieReview: async (contentInfo) => {
     try {
       const { contentId } = contentInfo;
-      const response = await fetch(`/movie/${contentId}/reviews/api`, {
+      const response = await fetch(`/api/movie/${contentId}/reviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
-import { loadMovieInfo } from "./api/route";
-import { loadMovieContents } from "./contents/api/route";
+import { loadMovieContents, loadMovieInfo } from "@/app/api/movie/route";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;

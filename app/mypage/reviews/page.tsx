@@ -1,6 +1,6 @@
+import { getMyReviews } from "@/app/api/mypage/reviews/route";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
-import { getMyReviews } from "./api/route";
 
 export default async function Page() {
   const data = await getData();

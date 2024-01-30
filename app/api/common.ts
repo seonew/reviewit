@@ -69,7 +69,7 @@ export const getBookReviews = async (contentId: string, offset: number) => {
     offset
   );
 
-  const userData = await loadUsersForService();
+  const userData = await loadUsers();
   const reviews = bookReviewData.map((review: ReviewProps) => {
     const author = userData.find((user) => user.id === review.userId);
     const like = likeData?.find((like) => like.reviewId === review.id);
@@ -241,7 +241,7 @@ export const loadLikesForReview = async (userId: string, offset: number) => {
   return result;
 };
 
-export const loadUsersForService = async (): Promise<User[]> => {
+export const loadUsers = async (): Promise<User[]> => {
   const userData = await UserModel.find();
   return userData;
 };

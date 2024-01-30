@@ -4,10 +4,9 @@ import createCommonSlice, { CommonSlice } from "./commonSlice";
 import createDashboardSlice, { DashboardSlice } from "./dashboardSlice";
 import createMovieSlice, { MovieSlice } from "./movieSlice";
 import createReviewSlice, { ReviewSlice } from "./reviewSlice";
-import createMapSlice, { MapSlice } from "./mapSlice";
 
 export const useBoundStore = create<
-  CommonSlice & DashboardSlice & MovieSlice & ReviewSlice & MapSlice
+  CommonSlice & DashboardSlice & MovieSlice & ReviewSlice
 >()(
   devtools(
     persist(
@@ -16,7 +15,6 @@ export const useBoundStore = create<
         ...createDashboardSlice(...items),
         ...createMovieSlice(...items),
         ...createReviewSlice(...items),
-        ...createMapSlice(...items),
       }),
       {
         name: "item-storage",
