@@ -1,6 +1,10 @@
 import { signIn } from "coco-people-client";
 import jwt from "jsonwebtoken";
 
+export const removeSpaces = (str: string): string => {
+  return str.replace(/\s/g, "");
+};
+
 export const generateId = (): string => {
   return Date.now().toString();
 };

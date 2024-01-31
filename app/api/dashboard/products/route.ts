@@ -36,7 +36,7 @@ export const getProducts = async (
     "X-Naver-Client-Id": client_id,
     "X-Naver-Client-Secret": client_secret,
   };
-  const query = "사람";
+  const query = "블루보틀";
   const display = `&display=${displayCount}`;
   const start = `&start=${startNumber}`;
 

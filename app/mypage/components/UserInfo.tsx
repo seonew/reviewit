@@ -44,8 +44,17 @@ const UserInfo = ({ user, onClickSignOut }: Props) => {
             </div>
             <div className="float-left">
               <div>
-                <div className="text-xl	font-bold	break-words break-all mb-1">
-                  {user.name}
+                <div className="flex items-center">
+                  <div className="text-xl font-bold break-words break-all mb-1">
+                    {user.name}
+                  </div>
+                  <div className="flex items-center pt-2 pb-2">
+                    <Link href={"/mypage/users/edit"} className="ml-2">
+                      <div className="basic-border rounded px-2.5 py-1.5 text-xs text-gray-500 hover:bg-gray-50 flex items-center">
+                        <span>설정</span>
+                      </div>
+                    </Link>
+                  </div>
                 </div>
                 <div className="flex items-center">
                   <span className="mr-2 text-sm text-gray-500">
