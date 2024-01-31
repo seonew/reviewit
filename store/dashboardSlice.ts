@@ -58,6 +58,7 @@ type Actions = {
   ) => void;
   updateBookReview: (item: ReviewDataProps) => void;
   initializeBookReview: () => void;
+  resetDashboardData: () => void;
 };
 
 const initialState: State = {
@@ -330,7 +331,7 @@ const createDashboardSlice: StateCreator<
       return { currentBook: nextCurrentBook };
     });
   },
-  reset: () => {
+  resetDashboardData: () => {
     set(initialState);
   },
 });

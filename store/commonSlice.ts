@@ -12,6 +12,7 @@ type State = {
 
 type Actions = {
   fetchUserInfo: (token: string) => void;
+  updateUser: (name: string) => void;
   setIsOpen: (item: boolean) => void;
   setIsSignedIn: (item: boolean) => void;
   signOut: () => void;
@@ -36,6 +37,24 @@ const createCommonSlice: StateCreator<
   CommonSlice
 > = (set, get, api) => ({
   ...initialState,
+  updateUser: async (name) => {
+    try {
+      const params = { name };
+      const res = await fetch(`/api/mypage/users`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+      const data = await res.json();
+
+      set((state) => {
+        const nextUser = { ...state.user, name: data.name };
+        return { user: nextUser };
+      });
+    } catch (error) {}
+  },
   fetchUserInfo: async (token: string) => {
     try {
       const res = await fetch(`/api/user?token=${token}`);
@@ -50,10 +69,8 @@ const createCommonSlice: StateCreator<
     document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
     get().resetReviewData();
     get().resetCommonData();
-
-    set((state) => {
-      return { isSignedIn: false, user: initialState.user };
-    });
+    get().resetDashboardData();
+    get().resetMovieData();
   },
   resetCommonData: () => {
     set(initialState);

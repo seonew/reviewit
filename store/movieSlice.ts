@@ -23,6 +23,7 @@ type Actions = {
     contentTitle: string;
     like: boolean;
   }) => void;
+  resetMovieData: () => void;
 };
 
 const initialState: State = {
@@ -77,7 +78,7 @@ const createMovieSlice: StateCreator<
     set({
       dashboardMovies: movies,
     }),
-  reset: () => {
+  resetMovieData: () => {
     set(initialState);
   },
 });
