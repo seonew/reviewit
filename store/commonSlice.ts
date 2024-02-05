@@ -12,7 +12,7 @@ type State = {
 
 type Actions = {
   fetchUserInfo: (token: string) => void;
-  updateUser: (name: string) => void;
+  updateUser: (name?: string, imageUrl?: string) => void;
   setIsOpen: (item: boolean) => void;
   setIsSignedIn: (item: boolean) => void;
   signOut: () => void;
@@ -37,9 +37,9 @@ const createCommonSlice: StateCreator<
   CommonSlice
 > = (set, get, api) => ({
   ...initialState,
-  updateUser: async (name) => {
+  updateUser: async (name, avatarUrl) => {
     try {
-      const params = { name };
+      const params = { name, avatarUrl };
       const res = await fetch(`/api/mypage/users`, {
         method: "PATCH",
         headers: {
@@ -50,7 +50,14 @@ const createCommonSlice: StateCreator<
       const data = await res.json();
 
       set((state) => {
-        const nextUser = { ...state.user, name: data.name };
+        let nextUser = { ...state.user };
+        if (data.hasOwnProperty("name")) {
+          nextUser = { ...nextUser, name: data.name };
+        }
+        if (data.hasOwnProperty("avatarUrl")) {
+          nextUser = { ...nextUser, avatarUrl: data.avatarUrl };
+        }
+
         return { user: nextUser };
       });
     } catch (error) {}

@@ -33,6 +33,7 @@ const CardInfo = ({ content }: Props) => {
             style={{
               objectFit: "contain",
             }}
+            priority
           />
           <BookmarkButton onClick={handleClickItem} checked={true} />
         </Card>
