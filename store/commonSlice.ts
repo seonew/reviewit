@@ -67,7 +67,16 @@ const createCommonSlice: StateCreator<
       const res = await fetch(`/api/user?token=${token}`);
       const data = await res.json();
 
-      set({ user: data });
+      const userRes = await fetch(`/api/user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const userData = await userRes.json();
+
+      set({ user: userData });
     } catch (error) {
       console.log(error);
     }
