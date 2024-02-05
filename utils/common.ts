@@ -1,5 +1,22 @@
 import { signIn } from "coco-people-client";
 import jwt from "jsonwebtoken";
+import Resizer from "react-image-file-resizer";
+
+export const resizeFile = (file: File) =>
+  new Promise<string | File | Blob | ProgressEvent<FileReader>>((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      200,
+      200,
+      "JPEG",
+      100,
+      0,
+      (uri) => {
+        resolve(uri);
+      },
+      "base64"
+    );
+  });
 
 export const removeSpaces = (str: string): string => {
   return str.replace(/\s/g, "");
