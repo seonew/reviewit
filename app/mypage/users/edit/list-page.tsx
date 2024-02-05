@@ -1,20 +1,24 @@
 "use client";
 
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useBoundStore as useStore } from "@/store";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
-import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
+import { ExclamationCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import DefaultImage from "@/app/components/DefaultImage";
-import { removeSpaces } from "@/utils/common";
+import { removeSpaces, resizeFile } from "@/utils/common";
 
 const List = () => {
   const { user, updateUser } = useStore();
   const router = useRouter();
   const [name, setName] = useState<string>("");
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [base64Image, setBase64Image] = useState<string>("");
+
   const [message, setMessage] = useState<string>("");
+  const [imgMessage, setImgMessage] = useState<string>("");
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const show = isValid === false && message !== "";
 
@@ -23,6 +27,35 @@ const List = () => {
     setName(value);
     setMessage("");
     setIsValid(value.trim() !== "");
+  };
+
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    setImgMessage("");
+    setMessage("");
+
+    const selectedImage = e.target.files?.[0];
+    if (!selectedImage) return;
+
+    const maxSizeMB = 1;
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+    if (selectedImage.size > maxSizeBytes) {
+      setImgMessage("파일 용량은 1MB 이하로 업로드해 주세요.");
+      return;
+    }
+
+    if (selectedImage) {
+      const resizedImage = await resizeFile(selectedImage);
+      setBase64Image(resizedImage.toString());
+    }
+  };
+
+  const handleImageRemove = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+
+    setBase64Image("");
   };
 
   const handleClickCancel = () => {
@@ -34,22 +67,27 @@ const List = () => {
     setIsValid(false);
 
     const nextName = removeSpaces(name);
-    const length = nextName.length;
-    if (length === 0) {
-      setMessage("내용을 입력해 주세요.");
-      return;
-    } else if (user.name === nextName) {
-      setMessage("변경 사항이 없어요.");
-      return;
-    } else if (length < 4) {
-      setMessage("최소 4글자 이상 입력해주세요.");
-      return;
-    } else if (length > 10) {
-      setMessage("최대 10글자 이하로 입력해주세요.");
-      return;
+    if (base64Image === "") {
+      const length = nextName.length;
+      if (length === 0) {
+        setMessage("내용을 입력해 주세요.");
+        return;
+      } else if (user.name === nextName) {
+        setMessage("변경 사항이 없어요.");
+        return;
+      } else if (length < 4) {
+        setMessage("최소 4글자 이상 입력해주세요.");
+        return;
+      } else if (length > 10) {
+        setMessage("최대 10글자 이하로 입력해주세요.");
+        return;
+      }
     }
-    updateUser(nextName);
-    router.push("/mypage");
+
+    updateUser(nextName, base64Image);
+    setTimeout(() => {
+      router.push("/mypage");
+    }, 500);
   };
 
   return (
@@ -104,27 +142,58 @@ const List = () => {
                     이미지
                   </label>
                   <div className="col-span-7">
-                    <div className="flex items-center gap-x-5">
-                      {user.avatarUrl ? (
-                        <Image
-                          src={user.avatarUrl}
-                          alt={user.name}
-                          className="rounded-full"
-                          width={60}
-                          height={60}
-                          priority
+                    <div className="flex items-start gap-x-5">
+                      <div className="relative flex">
+                        {base64Image !== "" ? (
+                          <>
+                            <Image
+                              src={base64Image}
+                              alt="Uploaded Preview"
+                              className="rounded-full"
+                              width={60}
+                              height={60}
+                              style={{ width: "60", height: "auto" }}
+                              priority
+                            />
+                            <button
+                              type="button"
+                              className="absolute top-0 right-0"
+                              onClick={handleImageRemove}
+                            >
+                              <XCircleIcon className="w-5 h-5 text-ozip-blue" />
+                            </button>
+                          </>
+                        ) : user.avatarUrl ? (
+                          <Image
+                            src={user.avatarUrl}
+                            alt={user.name}
+                            className="rounded-full"
+                            width={60}
+                            height={60}
+                            priority
+                          />
+                        ) : (
+                          <DefaultImage size="w-16 h-16">
+                            <UserCircleIcon className="w-12 h-12" />
+                          </DefaultImage>
+                        )}
+                      </div>
+                      <label className="rounded-md bg-white px-2.5 py-1.5 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 cursor-pointer">
+                        <span>Change</span>
+                        <input
+                          name="file-upload"
+                          type="file"
+                          accept="image/*"
+                          className="sr-only"
+                          onChange={handleImageChange}
+                          ref={fileInputRef}
                         />
-                      ) : (
-                        <DefaultImage size="w-16 h-16">
-                          <UserCircleIcon className="w-12 h-12" />
-                        </DefaultImage>
+                      </label>
+                      {imgMessage && (
+                        <p className="text-sm mt-2 text-red-600">
+                          {imgMessage}
+                        </p>
                       )}
-                      {/* <button
-                        type="button"
-                        className="rounded-md bg-white px-2.5 py-1.5 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                      >
-                        Change
-                      </button> */}
                     </div>
                   </div>
                 </div>
