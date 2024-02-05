@@ -87,7 +87,7 @@ const List = () => {
     updateUser(nextName, base64Image);
     setTimeout(() => {
       router.push("/mypage");
-    }, 500);
+    }, 1000);
   };
 
   return (
