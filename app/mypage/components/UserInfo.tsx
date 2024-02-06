@@ -17,9 +17,9 @@ const UserInfo = ({ user, onClickSignOut }: Props) => {
   return (
     <div className="relative pt-12 pb-6 w-full">
       <div className="relative">
-        <div className="basic-border rounded pt-10 px-9 pb-6">
-          <div className="relative flex w-full">
-            <div className="absolute top-0 right-0">
+        <div className="basic-border rounded pt-10 px-9 pb-6 shadow-sm">
+          <div className="relative flex flex-col w-full ">
+            <div className="absolute -top-6 -right-6">
               <button
                 className="basic-border rounded px-2 py-1 text-xs"
                 onClick={onClickSignOut}
@@ -27,7 +27,7 @@ const UserInfo = ({ user, onClickSignOut }: Props) => {
                 로그아웃
               </button>
             </div>
-            <div className="mr-5">
+            <div className="flex justify-center mx-2 mb-4">
               {user.avatarUrl ? (
                 <Image
                   src={user.avatarUrl}
@@ -43,21 +43,21 @@ const UserInfo = ({ user, onClickSignOut }: Props) => {
               )}
             </div>
             <div className="float-left">
-              <div>
-                <div className="flex items-center">
+              <div className="flex flex-col">
+                <div className="flex flex-col items-center">
                   <div className="text-xl font-bold break-words break-all mb-1">
                     {user.name}
                   </div>
                   <div className="flex items-center pt-2 pb-2">
-                    <Link href={"/mypage/users/edit"} className="ml-2">
+                    <Link href={"/mypage/users/edit"}>
                       <div className="basic-border rounded px-2.5 py-1.5 text-xs text-gray-500 hover:bg-gray-50 flex items-center">
                         <span>설정</span>
                       </div>
                     </Link>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <span className="mr-2 text-sm text-gray-500">
+                <div className="flex items-center justify-center">
+                  <span className="mr-2 text-xs text-gray-500">
                     연동된 SNS:
                   </span>
                   <Image
@@ -74,14 +74,14 @@ const UserInfo = ({ user, onClickSignOut }: Props) => {
                     className="rounded-full"
                   />
                 </div>
-              </div>
-              <div className="flex items-center pt-5 pb-2">
-                <Link href={"/mypage/reviews"} className="mr-2">
-                  <div className="button-xs-blue flex items-center">
-                    <PencilSquareIcon className="w-3.5 h-3.5 mr-1" />
-                    <span>내가 작성한 리뷰</span>
-                  </div>
-                </Link>
+                <div className="flex items-center justify-center pt-5 pb-2">
+                  <Link href={"/mypage/reviews"}>
+                    <div className="button-xs-blue flex items-center">
+                      <PencilSquareIcon className="w-3.5 h-3.5 mr-1" />
+                      <span>내가 작성한 리뷰</span>
+                    </div>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

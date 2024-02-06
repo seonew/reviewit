@@ -7,9 +7,16 @@ type Props = {
   color?: string;
   children: ReactNode;
   targetUrl?: string;
+  gridColsCSS?: string;
 };
 
-const CardList = ({ title, color, children, targetUrl }: Props) => {
+const CardList = ({
+  title,
+  color,
+  children,
+  targetUrl,
+  gridColsCSS = "grid-cols-5",
+}: Props) => {
   return (
     <div className="card-list">
       {Children.count(children) > 0 ? (
@@ -27,7 +34,7 @@ const CardList = ({ title, color, children, targetUrl }: Props) => {
             )}
           </div>
           <div className="m-0 p-0">
-            <div className="grid grid-cols-5 gap-18-px">{children}</div>
+            <div className={`grid ${gridColsCSS} gap-18-px`}>{children}</div>
           </div>
         </>
       ) : (
