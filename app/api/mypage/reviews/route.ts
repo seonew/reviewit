@@ -27,6 +27,8 @@ export async function GET(request: Request) {
 }
 
 export const getMyReviews = async (offset: number) => {
+  await dbConnect();
+
   const userId = await getUserId();
   const { data: reviewData, total } = await loadMyReviews(userId, offset);
   const reviews = reviewData.map((review: ReviewProps) => {
