@@ -21,21 +21,36 @@ const List = () => {
 
   return (
     <div className="contents-container">
-      {user.name && (
-        <UserInfo user={user} onClickSignOut={handleClickSignOut} />
-      )}
-      <CardList title={"My Book List"}>
-        {likedBooks &&
-          likedBooks.map((item: LikedContent) => {
-            return <CardInfo key={item.id} content={item} />;
-          })}
-      </CardList>
-      <CardList title={"My Product List"}>
-        {likedProducts &&
-          likedProducts.map((item: LikedContent) => {
-            return <CardInfo key={item.id} content={item} />;
-          })}
-      </CardList>
+      <div className="flex items-start">
+        <div className="w-1/4 min-w-200">
+          {user.name && (
+            <UserInfo user={user} onClickSignOut={handleClickSignOut} />
+          )}
+        </div>
+        <div className="w-12"></div>
+        <div className="w-10/12 pt-6 pl-2 overflow-hidden">
+          <CardList
+            title={"My Book List"}
+            color={"text-gray-900"}
+            gridColsCSS={"grid-cols-4"}
+          >
+            {likedBooks &&
+              likedBooks.map((item: LikedContent) => {
+                return <CardInfo key={item.id} content={item} />;
+              })}
+          </CardList>
+          <CardList
+            title={"My Product List"}
+            color={"text-gray-900"}
+            gridColsCSS={"grid-cols-4"}
+          >
+            {likedProducts &&
+              likedProducts.map((item: LikedContent) => {
+                return <CardInfo key={item.id} content={item} />;
+              })}
+          </CardList>
+        </div>
+      </div>
     </div>
   );
 };

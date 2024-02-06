@@ -40,7 +40,7 @@
     @apply absolute bg-black opacity-10 w-full h-full bottom-0 rounded;
   }
   .card-list {
-    @apply pb-10 min-w-1024;
+    @apply pb-10 min-w-800;
   }
   .movie-info-description {
     @apply mr-2 text-gray-300;
