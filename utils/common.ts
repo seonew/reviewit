@@ -79,7 +79,7 @@ export const handleClickSignIn = () => {
 };
 
 export const verifyData = (token: string) => {
-  const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY!;
+  const secretKey = process.env.SECRET_KEY!;
 
   return jwt.verify(token, secretKey);
 };
