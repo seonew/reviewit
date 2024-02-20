@@ -8,6 +8,7 @@ type State = {
   user: User;
   isSignedIn: boolean;
   isOpen: boolean;
+  spinner: boolean;
 };
 
 type Actions = {
@@ -15,6 +16,7 @@ type Actions = {
   updateUser: (name?: string, imageUrl?: string) => void;
   setIsOpen: (item: boolean) => void;
   setIsSignedIn: (item: boolean) => void;
+  setSpinner: (item: boolean) => void;
   signOut: () => void;
   resetCommonData: () => void;
 };
@@ -28,6 +30,7 @@ const initialState: State = {
   },
   isSignedIn: false,
   isOpen: false,
+  spinner: false,
 };
 
 const createCommonSlice: StateCreator<
@@ -93,6 +96,7 @@ const createCommonSlice: StateCreator<
   },
   setIsOpen: (item) => set({ isOpen: item }),
   setIsSignedIn: (item: boolean) => set((state) => ({ isSignedIn: item })),
+  setSpinner: (item) => set({ spinner: item }),
 });
 
 export type CommonSlice = State & Actions;

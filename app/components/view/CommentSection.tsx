@@ -7,6 +7,8 @@ import CommentTextEditor from "./CommentTextEditor";
 import PreferenceSection from "./PreferenceSection";
 import PreferenceStatSection from "./PreferenceStatSection";
 import { HandThumbUpIcon, HandThumbDownIcon } from "@heroicons/react/24/solid";
+import Spinner from "../Spinner";
+import { useBoundStore as useStore } from "@/store";
 
 type Props = {
   reviewData: {
@@ -24,6 +26,7 @@ const CommentSection = ({
 }: Props) => {
   const { reviews, count, stats } = reviewData;
   const [like, setLike] = useState(true);
+  const { spinner } = useStore();
 
   const handleSubmitReview = (item: string) => {
     onSubmit(item, like);
@@ -39,6 +42,7 @@ const CommentSection = ({
 
   return (
     <div className="content-detail-section">
+      {spinner && <Spinner />}
       {stats && <PreferenceStatSection stats={stats} />}
       <section>
         <p className="content-detail-title-p">
