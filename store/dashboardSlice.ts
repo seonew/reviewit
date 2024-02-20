@@ -19,7 +19,7 @@ type State = {
   likedProducts: LikedContent[];
   dashboardBooks: LikedBook[];
   dashboardProducts: LikedProduct[];
-  currentBookReview: ReviewDataProps;
+  bookReviews: ReviewDataProps;
   currentBook: LikedBook;
   loading: boolean;
 };
@@ -56,7 +56,6 @@ type Actions = {
     },
     like: boolean
   ) => void;
-  updateBookReview: (item: ReviewDataProps) => void;
   initializeBookReview: () => void;
   resetDashboardData: () => void;
 };
@@ -66,7 +65,7 @@ const initialState: State = {
   likedProducts: [],
   dashboardBooks: [],
   dashboardProducts: [],
-  currentBookReview: {
+  bookReviews: {
     reviews: [],
     count: 0,
     stats: [],
@@ -97,10 +96,12 @@ const createDashboardSlice: StateCreator<
     const data = await res.json();
 
     set({
-      currentBookReview: data,
+      bookReviews: data,
     });
+    get().setSpinner(false);
   },
   insertBookReview: async (contentInfo, like) => {
+    get().setSpinner(true);
     const { contentId } = contentInfo;
     const params = { contentInfo, like };
     const response = await fetch(`/api/dashboard/books/${contentId}/reviews`, {
@@ -118,11 +119,6 @@ const createDashboardSlice: StateCreator<
     }
 
     get().fetchBookReview(contentId, 1);
-  },
-  updateBookReview: (item: ReviewDataProps) => {
-    set((state) => ({
-      currentBookReview: { ...state.currentBookReview, ...item },
-    }));
   },
   clearDashboardBooks: () => {
     set({ dashboardBooks: [], loading: true });
@@ -295,7 +291,7 @@ const createDashboardSlice: StateCreator<
   },
   initializeBookReview: () => {
     set({
-      currentBookReview: initialState.currentBookReview,
+      bookReviews: initialState.bookReviews,
     });
   },
   setDashboardProducts: (id, checked) => {

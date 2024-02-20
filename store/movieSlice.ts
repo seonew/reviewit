@@ -49,12 +49,14 @@ const createMovieSlice: StateCreator<
       );
       const data = await response.json();
       set({ movieReviews: data });
+      get().setSpinner(false);
     } catch (error) {
       console.log(error);
     }
   },
   insertMovieReview: async (contentInfo) => {
     try {
+      get().setSpinner(true);
       const { contentId } = contentInfo;
       const response = await fetch(`/api/movie/${contentId}/reviews`, {
         method: "POST",

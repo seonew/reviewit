@@ -19,7 +19,7 @@ type Props = {
 
 export default function List({ id, book }: Props) {
   const {
-    currentBookReview: reviewData,
+    bookReviews: reviewData,
     user,
     insertBookReview,
     fetchBookReview,
