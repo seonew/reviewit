@@ -46,7 +46,7 @@ type Actions = {
   deleteLikeContent: (contentType: string, id: string) => Promise<boolean>;
   fetchBookmarkedContent: (type: string, id: string) => Promise<boolean>;
 
-  fetchBookReview: (contentId: string, page: number) => void;
+  fetchBookReviews: (contentId: string, page: number) => void;
   insertBookReview: (
     contentInfo: {
       contentId: string;
@@ -91,14 +91,20 @@ const createDashboardSlice: StateCreator<
   DashboardSlice
 > = (set, get) => ({
   ...initialState,
-  fetchBookReview: async (id: string, page: number) => {
-    const res = await fetch(`/api/dashboard/books/${id}/reviews?page=${page}`);
-    const data = await res.json();
+  fetchBookReviews: async (id: string, page: number) => {
+    try {
+      const res = await fetch(
+        `/api/dashboard/books/${id}/reviews?page=${page}`
+      );
+      const data = await res.json();
 
-    set({
-      bookReviews: data,
-    });
-    get().setSpinner(false);
+      set({
+        bookReviews: data,
+      });
+      get().setSpinner(false);
+    } catch (e) {
+      console.error(e);
+    }
   },
   insertBookReview: async (contentInfo, like) => {
     get().setSpinner(true);
@@ -118,7 +124,7 @@ const createDashboardSlice: StateCreator<
       return;
     }
 
-    get().fetchBookReview(contentId, 1);
+    get().fetchBookReviews(contentId, 1);
   },
   clearDashboardBooks: () => {
     set({ dashboardBooks: [], loading: true });

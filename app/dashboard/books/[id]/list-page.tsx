@@ -22,7 +22,7 @@ export default function List({ id, book }: Props) {
     bookReviews: reviewData,
     user,
     insertBookReview,
-    fetchBookReview,
+    fetchBookReviews,
     insertReviewLike,
     deleteReviewLike,
     initializeBookReview,
@@ -35,17 +35,17 @@ export default function List({ id, book }: Props) {
 
   const handleClickPage = (current: number) => {
     setPage(current);
-    fetchBookReview(id, current);
+    fetchBookReviews(id, current);
   };
 
   const handleClickPrevButton = () => {
     setPage(page - 1);
-    fetchBookReview(id, page - 1);
+    fetchBookReviews(id, page - 1);
   };
 
   const handleClickNextButton = () => {
     setPage(page + 1);
-    fetchBookReview(id, page + 1);
+    fetchBookReviews(id, page + 1);
   };
 
   const handleSubmitReview = (content: string, like: boolean) => {
@@ -78,7 +78,7 @@ export default function List({ id, book }: Props) {
     } else {
       await deleteReviewLike(reviewId, page);
     }
-    await fetchBookReview(id, page);
+    await fetchBookReviews(id, page);
   };
 
   const handleClickBookmark = () => {
@@ -98,14 +98,14 @@ export default function List({ id, book }: Props) {
   useEffect(() => {
     if (id === book.isbn) {
       setCurrentBook(book);
-      fetchBookReview(id, 1);
+      fetchBookReviews(id, 1);
     } else {
       initializeBookReview();
     }
   }, [
     book,
     book.isbn,
-    fetchBookReview,
+    fetchBookReviews,
     id,
     initializeBookReview,
     setCurrentBook,
