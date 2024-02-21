@@ -38,17 +38,17 @@ const createReviewSlice: StateCreator<
     const res = await fetch(`/api/mypage/reviews?page=${page}`);
     const data = await res.json();
 
-    set((state) => ({
-      myReviews: data,
-    }));
+    set({ myReviews: data });
   },
   fetchContetLikes: async (page: number) => {
-    const res = await fetch(`/api/mypage/reviews/likes?page=${page}`);
-    const data = await res.json();
+    try {
+      const res = await fetch(`/api/mypage/reviews/likes?page=${page}`);
+      const data = await res.json();
 
-    set((state) => ({
-      contentLikes: data,
-    }));
+      set({ contentLikes: data });
+    } catch (e) {
+      console.error(e);
+    }
   },
   insertReviewLike: async (reviewId, contentId, page) => {
     try {

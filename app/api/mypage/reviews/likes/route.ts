@@ -13,6 +13,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page") ?? "1";
     const offset = (parseInt(page) - 1) * LIMIT;
+    console.log(`/route [fetchContetLikes] > ${page}, ${offset}`);
 
     const { reviews, count } = await getLikesForReviews(offset);
     const result: ReviewDataProps = {
@@ -34,6 +35,7 @@ export const getLikesForReviews = async (offset: number) => {
   const { data: likeData, total } = await loadLikesForReview(userId, offset);
   const userData = await loadUsers();
 
+  console.log("/route [getLikesForReviews]");
   const reviews: ReviewProps[] = await Promise.all(
     likeData.map(async (like: { reviewId: string }) => {
       const bookReview: ReviewProps | null = await BookReviewModel.findOne({
