@@ -42,6 +42,7 @@ const createReviewSlice: StateCreator<
   },
   fetchContetLikes: async (page: number) => {
     try {
+      console.log("[fetchContetLikes]");
       const res = await fetch(`/api/mypage/reviews/likes?page=${page}`);
       const data = await res.json();
 

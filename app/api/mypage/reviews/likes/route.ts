@@ -10,6 +10,7 @@ export async function GET(request: Request) {
   try {
     await dbConnect();
 
+    console.log(`/route [fetchContetLikes]`);
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page") ?? "1";
     const offset = (parseInt(page) - 1) * LIMIT;
