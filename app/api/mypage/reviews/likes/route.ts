@@ -26,7 +26,7 @@ export async function GET(request: Request) {
   } catch (e) {
     console.error(e);
   }
-  return NextResponse.json({ error: "Internal Server Error", status: 500 });
+  return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
 }
 
 export const getLikesForReviews = async (offset: number) => {
@@ -36,7 +36,6 @@ export const getLikesForReviews = async (offset: number) => {
   const { data: likeData, total } = await loadLikesForReview(userId, offset);
   const userData = await loadUsers();
 
-  console.log("/route [getLikesForReviews]");
   const reviews: ReviewProps[] = await Promise.all(
     likeData.map(async (like: { reviewId: string }) => {
       const bookReview: ReviewProps | null = await BookReviewModel.findOne({
