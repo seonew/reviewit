@@ -32,23 +32,27 @@ const createReviewSlice: StateCreator<
   [],
   [],
   ReviewSlice
-> = (set, get) => ({
+> = (set) => ({
   ...initialState,
   fetchMyReviews: async (page: number) => {
-    const res = await fetch(`/api/mypage/reviews?page=${page}`);
-    const data = await res.json();
+    try {
+      const res = await fetch(`/api/mypage/reviews?page=${page}`);
+      const data = await res.json();
 
-    set((state) => ({
-      myReviews: data,
-    }));
+      set({ myReviews: data });
+    } catch (e) {
+      console.error(e);
+    }
   },
   fetchContetLikes: async (page: number) => {
-    const res = await fetch(`/api/mypage/reviews/likes?page=${page}`);
-    const data = await res.json();
+    try {
+      const res = await fetch(`/api/mypage/reviews/likes?page=${page}`);
+      const data = await res.json();
 
-    set((state) => ({
-      contentLikes: data,
-    }));
+      set({ contentLikes: data });
+    } catch (e) {
+      console.error(e);
+    }
   },
   insertReviewLike: async (reviewId, contentId, page) => {
     try {
@@ -69,8 +73,8 @@ const createReviewSlice: StateCreator<
         alert(data.error);
         return;
       }
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      console.error(e);
     }
   },
   deleteReviewLike: async (reviewId, page) => {
@@ -90,8 +94,8 @@ const createReviewSlice: StateCreator<
         alert(data.error);
         return;
       }
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      console.error(e);
     }
   },
   resetReviewData: () => {
