@@ -9,7 +9,6 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const page = searchParams.get("page") ?? "1";
   const offset = (parseInt(page) - 1) * LIMIT;
-  console.log(`/route [fetchMyReviews] > ${page}, ${offset}`);
 
   await dbConnect();
 
@@ -32,7 +31,6 @@ export const getMyReviews = async (offset: number) => {
 
   const userId = await getUserId();
   const { data: reviewData, total } = await loadMyReviews(userId, offset);
-  console.log(`/route [getMyReviews]`);
   const reviews = reviewData.map((review: ReviewProps) => {
     return {
       id: review.id,
