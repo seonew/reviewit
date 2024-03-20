@@ -6,14 +6,16 @@ import LikeList from "../components/LikeList";
 import Empty from "@/app/components/Empty";
 import Pagination from "@/app/components/Pagination";
 import Tab from "../components/Tab";
-import { ReviewDataProps } from "@/types";
+import { ReviewDataProps, ReviewProps } from "@/types";
+import ReviewList from "../components/ReviewList";
 
 type Props = {
   myReiviewsApiData: ReviewDataProps;
 };
 
 const List = ({ myReiviewsApiData }: Props) => {
-  const { fetchMyReviews, setMyReviews, myReviews } = useStore();
+  const { fetchMyReviews, setMyReviews, editReview, deleteReview, myReviews } =
+    useStore();
   const [page, setPage] = useState<number>(1);
 
   const handleClickPage = (current: number) => {
@@ -31,6 +33,15 @@ const List = ({ myReiviewsApiData }: Props) => {
     fetchMyReviews(page + 1);
   };
 
+  const handleClickDelete = async (id: string) => {
+    await deleteReview(id);
+    await fetchMyReviews(page);
+  };
+
+  const handleClickEdit = (modifiedReview: ReviewProps) => {
+    editReview(modifiedReview);
+  };
+
   useEffect(() => {
     setMyReviews(myReiviewsApiData);
   }, [myReiviewsApiData, setMyReviews]);
@@ -40,7 +51,12 @@ const List = ({ myReiviewsApiData }: Props) => {
       <Tab />
       {myReviews.count > 0 ? (
         <>
-          <LikeList title={"My Reviews"} reviews={myReviews.reviews} />
+          <ReviewList
+            title={"My Reviews"}
+            reviews={myReviews.reviews}
+            onDelete={handleClickDelete}
+            onEdit={handleClickEdit}
+          />
           <Pagination
             total={myReviews.count}
             limit={5}

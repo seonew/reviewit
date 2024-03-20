@@ -9,6 +9,8 @@ type State = {
   isSignedIn: boolean;
   isOpen: boolean;
   spinner: boolean;
+  isConfirmModalOpen: boolean;
+  isCommentModalOpen: boolean;
 };
 
 type Actions = {
@@ -17,6 +19,8 @@ type Actions = {
   setIsOpen: (item: boolean) => void;
   setIsSignedIn: (item: boolean) => void;
   setSpinner: (item: boolean) => void;
+  setIsConfirmModalOpen: (item: boolean) => void;
+  setIsCommentModalOpen: (item: boolean) => void;
   signOut: () => void;
   resetCommonData: () => void;
 };
@@ -31,6 +35,8 @@ const initialState: State = {
   isSignedIn: false,
   isOpen: false,
   spinner: false,
+  isConfirmModalOpen: false,
+  isCommentModalOpen: false,
 };
 
 const createCommonSlice: StateCreator<
@@ -95,8 +101,10 @@ const createCommonSlice: StateCreator<
     set(initialState);
   },
   setIsOpen: (item) => set({ isOpen: item }),
-  setIsSignedIn: (item: boolean) => set((state) => ({ isSignedIn: item })),
+  setIsSignedIn: (item: boolean) => set({ isSignedIn: item }),
   setSpinner: (item) => set({ spinner: item }),
+  setIsConfirmModalOpen: (item) => set({ isConfirmModalOpen: item }),
+  setIsCommentModalOpen: (item) => set({ isCommentModalOpen: item }),
 });
 
 export type CommonSlice = State & Actions;

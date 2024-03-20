@@ -82,9 +82,8 @@ const CommentSection = ({
                         {review.updateDate}
                       </span>
                       <span className="divide-span">|</span>
-                      <a
+                      <button
                         onClick={handleLikeReview(review.id, review.like)}
-                        className="cursor-pointer"
                       >
                         <span
                           className={`content-detail-comment-text-span ${
@@ -94,7 +93,7 @@ const CommentSection = ({
                           <HeartIcon className="w-3 h-3 mr-0.5" />
                           <span>좋아요</span>
                         </span>
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </li>

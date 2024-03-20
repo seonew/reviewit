@@ -1,7 +1,7 @@
 import { StateCreator } from "zustand";
 import { CommonSlice } from "./commonSlice";
 import { DashboardSlice } from "@/store/dashboardSlice";
-import { ReviewDataProps } from "@/types";
+import { ReviewDataProps, ReviewProps } from "@/types";
 
 type State = {
   contentLikes: ReviewDataProps;
@@ -11,6 +11,8 @@ type State = {
 type Actions = {
   fetchMyReviews: (page: number) => void;
   fetchContetLikes: (page: number) => void;
+  editReview: (modifiedReview: ReviewProps) => void;
+  deleteReview: (reviewId: string) => void;
 
   insertReviewLike: (reviewId: string, contentId: string, page: number) => void;
   deleteReviewLike: (reviewId: string, page: number) => void;
@@ -88,6 +90,43 @@ const createReviewSlice: StateCreator<
           },
         }
       );
+      const data = await response.json();
+
+      if (data.status === 500) {
+        alert(data.error);
+        return;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  editReview: async (modifiedReview) => {
+    try {
+      const response = await fetch(`/api/mypage/reviews/${modifiedReview.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(modifiedReview),
+      });
+      const data = await response.json();
+
+      if (data.status === 500) {
+        alert(data.error);
+        return;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  deleteReview: async (reviewId) => {
+    try {
+      const response = await fetch(`/api/mypage/reviews/${reviewId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const data = await response.json();
 
       if (data.status === 500) {

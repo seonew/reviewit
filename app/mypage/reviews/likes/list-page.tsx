@@ -13,7 +13,8 @@ type Props = {
 };
 
 const List = ({ contentLikesApiData }: Props) => {
-  const { fetchContetLikes, setContentLikes, contentLikes } = useStore();
+  const { fetchContetLikes, setContentLikes, deleteReviewLike, contentLikes } =
+    useStore();
   const [page, setPage] = useState<number>(1);
 
   const handleClickPage = (current: number) => {
@@ -31,6 +32,11 @@ const List = ({ contentLikesApiData }: Props) => {
     fetchContetLikes(page + 1);
   };
 
+  const handleClickLikeReview = async (reviewId: string) => {
+    await deleteReviewLike(reviewId, page);
+    await fetchContetLikes(page);
+  };
+
   useEffect(() => {
     setContentLikes(contentLikesApiData);
   }, [contentLikesApiData, setContentLikes]);
@@ -40,7 +46,11 @@ const List = ({ contentLikesApiData }: Props) => {
       <Tab />
       {contentLikes.count > 0 ? (
         <>
-          <LikeList title={"Likes"} reviews={contentLikes.reviews} />
+          <LikeList
+            title={"Likes"}
+            reviews={contentLikes.reviews}
+            onLike={handleClickLikeReview}
+          />
           <Pagination
             total={contentLikes.count}
             limit={5}

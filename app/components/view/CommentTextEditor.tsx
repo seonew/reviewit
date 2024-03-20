@@ -2,16 +2,18 @@ import {
   ChangeEvent,
   ClipboardEvent,
   MouseEvent,
+  useEffect,
   useRef,
   useState,
 } from "react";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 
 type Props = {
+  content?: string;
   onClick?: (item: string) => void;
 };
 
-const CommentTextEditor = ({ onClick }: Props) => {
+const CommentTextEditor = ({ content, onClick }: Props) => {
   const editableDiv = useRef<HTMLDivElement>(null);
   const [isInput, setIsInput] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -72,6 +74,13 @@ const CommentTextEditor = ({ onClick }: Props) => {
       setIsInput(true);
     }
   };
+
+  useEffect(() => {
+    const current = editableDiv.current;
+    if (content !== undefined && current !== null && current !== undefined) {
+      current.innerHTML = content;
+    }
+  }, [content]);
 
   return (
     <div className="comment-editor-container">

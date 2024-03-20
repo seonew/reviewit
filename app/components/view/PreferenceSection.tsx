@@ -1,10 +1,16 @@
+import { useState } from "react";
+
 type Props = {
+  contentLike?: boolean;
   onClick: (item: boolean) => void;
 };
 
-const PreferenceSection = ({ onClick }: Props) => {
+const PreferenceSection = ({ contentLike = true, onClick }: Props) => {
+  const [selectedValue, setSelectedValue] = useState<boolean>(contentLike);
+
   const handleSubmitLike = (e: React.ChangeEvent<HTMLInputElement>) => {
     const result = !!parseInt(e.target.value);
+    setSelectedValue(result);
     onClick(result);
   };
 
@@ -19,8 +25,8 @@ const PreferenceSection = ({ onClick }: Props) => {
             id="like"
             name="like-section"
             type="radio"
-            defaultChecked
             value={1}
+            checked={selectedValue === true}
             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
             onChange={handleSubmitLike}
           />
@@ -37,6 +43,7 @@ const PreferenceSection = ({ onClick }: Props) => {
             name="like-section"
             type="radio"
             value={0}
+            checked={selectedValue === false}
             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
             onChange={handleSubmitLike}
           />
