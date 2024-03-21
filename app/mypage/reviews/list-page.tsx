@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useBoundStore as useStore } from "@/store";
-import LikeList from "../components/LikeList";
 import Empty from "@/app/components/Empty";
 import Pagination from "@/app/components/Pagination";
 import Tab from "../components/Tab";
@@ -38,8 +37,9 @@ const List = ({ myReiviewsApiData }: Props) => {
     await fetchMyReviews(page);
   };
 
-  const handleClickEdit = (modifiedReview: ReviewProps) => {
-    editReview(modifiedReview);
+  const handleClickEdit = async (modifiedReview: ReviewProps) => {
+    await editReview(modifiedReview);
+    await fetchMyReviews(page);
   };
 
   useEffect(() => {

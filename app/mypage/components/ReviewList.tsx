@@ -2,8 +2,7 @@ import { ReviewProps } from "@/types";
 import { useState } from "react";
 import { useBoundStore as useStore } from "@/store";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import ConfirmModal from "@/app/components/ConfirmModal";
-import CommentModal from "@/app/components/CommentModal";
+import CommentModal from "@/app/components/modal/CommentModal";
 import LinkedImage from "./list/LinkedImage";
 import LinkedContent from "./list/LinkedContent";
 
@@ -17,42 +16,31 @@ type Props = {
 const ReviewList = ({ title, reviews, onEdit, onDelete }: Props) => {
   const {
     user,
-    isConfirmModalOpen,
     isCommentModalOpen,
-    setIsConfirmModalOpen,
     setIsCommentModalOpen,
+    setConfirmModalData,
   } = useStore();
-  const [targetId, setTargetId] = useState("");
   const [targetReview, setTargetReview] = useState<ReviewProps>();
 
   const handleClickEdit = (review: ReviewProps) => () => {
     setIsCommentModalOpen(true);
-    setTargetId(review.id);
     setTargetReview(review);
   };
 
   const handleClickDelete = (id: string) => () => {
-    setIsConfirmModalOpen(true);
-    setTargetId(id);
-  };
-
-  const handleClickConfirmModalClose = () => {
-    setIsConfirmModalOpen(false);
-    setTargetId("");
-  };
-
-  const handleClickConfirmModalConfirm = () => {
-    setIsConfirmModalOpen(false);
-    onDelete?.(targetId);
+    setConfirmModalData(true, "해당 리뷰를 삭제하시겠습니까?", confirmFunc(id));
   };
 
   const handleClickCommentModalClose = () => {
     setIsCommentModalOpen(false);
-    setTargetId("");
   };
 
   const handleClickSubmit = (modifiedReview: ReviewProps) => {
     onEdit?.(modifiedReview);
+  };
+
+  const confirmFunc = (id: string) => () => {
+    onDelete?.(id);
   };
 
   return (
@@ -93,12 +81,6 @@ const ReviewList = ({ title, reviews, onEdit, onDelete }: Props) => {
         review={targetReview}
         onSubmit={handleClickSubmit}
         onClose={handleClickCommentModalClose}
-      />
-      <ConfirmModal
-        message={"해당 리뷰를 삭제하시겠습니까?"}
-        open={isConfirmModalOpen}
-        onConfirm={handleClickConfirmModalConfirm}
-        onCancel={handleClickConfirmModalClose}
       />
     </>
   );
