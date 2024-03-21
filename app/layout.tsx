@@ -36,8 +36,10 @@ export default function RootLayout({
       <body>
         <Header />
         <div className="layout">{children}</div>
-        <AlertModal />
-        <ConfirmModal />
+        <div id="modal">
+          <AlertModal />
+          <ConfirmModal />
+        </div>
         <SpeedInsights />
       </body>
     </html>
