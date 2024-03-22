@@ -9,6 +9,15 @@ type State = {
   isSignedIn: boolean;
   isOpen: boolean;
   spinner: boolean;
+  isCommentModalOpen: boolean;
+  modalMessage: string;
+
+  isConfirmModalOpen: boolean;
+  confirmCallback: (() => void) | null;
+  cancelCallback: (() => void) | null;
+
+  isAlertModalOpen: boolean;
+  alertCallback: (() => void) | null;
 };
 
 type Actions = {
@@ -17,6 +26,23 @@ type Actions = {
   setIsOpen: (item: boolean) => void;
   setIsSignedIn: (item: boolean) => void;
   setSpinner: (item: boolean) => void;
+  setIsCommentModalOpen: (item: boolean) => void;
+
+  setAlertModalData: (
+    open: boolean,
+    message: string,
+    confirmCallback?: (() => void) | null
+  ) => void;
+  initializeAlertModalData: () => void;
+
+  setConfirmModalData: (
+    open: boolean,
+    message: string,
+    confirmCallback?: (() => void) | null,
+    cancelCallback?: (() => void) | null
+  ) => void;
+  initializeConfirmModalData: () => void;
+
   signOut: () => void;
   resetCommonData: () => void;
 };
@@ -31,6 +57,16 @@ const initialState: State = {
   isSignedIn: false,
   isOpen: false,
   spinner: false,
+
+  isAlertModalOpen: false,
+  alertCallback: null,
+
+  modalMessage: "",
+
+  isConfirmModalOpen: false,
+  isCommentModalOpen: false,
+  confirmCallback: null,
+  cancelCallback: null,
 };
 
 const createCommonSlice: StateCreator<
@@ -95,8 +131,42 @@ const createCommonSlice: StateCreator<
     set(initialState);
   },
   setIsOpen: (item) => set({ isOpen: item }),
-  setIsSignedIn: (item: boolean) => set((state) => ({ isSignedIn: item })),
+  setIsSignedIn: (item: boolean) => set({ isSignedIn: item }),
   setSpinner: (item) => set({ spinner: item }),
+  setIsCommentModalOpen: (item) => set({ isCommentModalOpen: item }),
+
+  setAlertModalData: (isAlertModalOpen, modalMessage, alertCallback) =>
+    set({
+      isAlertModalOpen,
+      modalMessage,
+      alertCallback,
+    }),
+  initializeAlertModalData: () =>
+    set({
+      isAlertModalOpen: false,
+      modalMessage: "",
+      alertCallback: null,
+    }),
+
+  setConfirmModalData: (
+    isConfirmModalOpen,
+    modalMessage,
+    confirmCallback,
+    cancelCallback
+  ) =>
+    set({
+      isConfirmModalOpen,
+      modalMessage,
+      confirmCallback,
+      cancelCallback,
+    }),
+  initializeConfirmModalData: () =>
+    set({
+      isConfirmModalOpen: false,
+      modalMessage: "",
+      confirmCallback: null,
+      cancelCallback: null,
+    }),
 });
 
 export type CommonSlice = State & Actions;

@@ -1,70 +1,56 @@
 import { ReviewProps } from "@/types";
-import Image from "next/image";
-import Link from "next/link";
-import DefaultImage from "@/app/components/DefaultImage";
-import { PhotoIcon } from "@heroicons/react/24/outline";
+import { HeartIcon } from "@heroicons/react/24/outline";
+import LinkedImage from "./list/LinkedImage";
+import LinkedContent from "./list/LinkedContent";
 
 type Props = {
   title: string;
   reviews: ReviewProps[];
+  onLike: (id: string) => void;
 };
 
-const LikeList = ({ title, reviews }: Props) => {
-  return (
-    <div className="pb-10">
-      <div className="py-5 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-black">{title}</h2>
-      </div>
-      <ul role="list" className="divide-y divide-gray-100 break-words">
-        {reviews.map((like: ReviewProps) => {
-          return (
-            <li key={like.id} className="flex justify-between py-4">
-              <div className="flex gap-x-6">
-                <div className="h-20 w-14 flex-shrink-0 overflow-hidden">
-                  <Link href={`/dashboard/books/${like.contentId}`}>
-                    {like.contentImgUrl ? (
-                      <Image
-                        className="rounded"
-                        src={like.contentImgUrl}
-                        alt={like.contentId}
-                        quality={75}
-                        width={60}
-                        height={80}
-                      />
-                    ) : (
-                      <DefaultImage size="h-20 w-14">
-                        <PhotoIcon className="w-8 h-8" />
-                      </DefaultImage>
-                    )}
-                  </Link>
-                </div>
+const LikeList = ({ title, reviews, onLike }: Props) => {
+  const handleLikeReview = (id: string) => () => {
+    onLike(id);
+  };
 
-                <div className="flex-auto ">
-                  {like.contentTitle && (
-                    <Link href={`/dashboard/books/${like.contentId}`}>
-                      <p className="pb-2 text-md font-semibold leading-6 text-gray-900">
-                        {like.contentTitle}
-                      </p>
-                    </Link>
-                  )}
-                  <p className="text-sm leading-6 text-gray-600">
-                    {like.content}
-                  </p>
-                  <div className="text-xs leading-5">
-                    {like.userName && (
-                      <p className="font-semibold text-gray-900">
-                        {like.userName}
-                      </p>
-                    )}
-                    <p className="text-gray-400">{like.updateDate}</p>
+  return (
+    <>
+      <div className="pb-2">
+        <div className="py-5 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-black">{title}</h2>
+        </div>
+        <ul role="list" className="divide-y divide-gray-100 break-words">
+          {reviews.map((review: ReviewProps) => {
+            if (!review) return null;
+            return (
+              <li key={review.id} className="flex justify-between py-4">
+                <div className="flex gap-x-6 w-full">
+                  <LinkedImage review={review} />
+                  <LinkedContent review={review} />
+
+                  <div className="-mt-2">
+                    <button
+                      onClick={handleLikeReview(review.id)}
+                      className="p-2"
+                    >
+                      <span
+                        className={`content-detail-comment-text-span ${
+                          review.like && "text-ozip-blue"
+                        }`}
+                      >
+                        <HeartIcon className="w-3 h-3 mr-0.5" />
+                        <span>좋아요</span>
+                      </span>
+                    </button>
                   </div>
                 </div>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </>
   );
 };
 

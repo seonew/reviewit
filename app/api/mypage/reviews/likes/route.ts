@@ -50,6 +50,7 @@ export const getLikesForReviews = async (offset: number) => {
           contentId: bookReview.contentId,
           contentImgUrl: bookReview.contentImgUrl,
           contentTitle: bookReview.contentTitle,
+          like: true,
           userId: bookReview.userId,
           userName,
           updateDate: replaceDateFormat(bookReview.updateDate),

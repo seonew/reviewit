@@ -36,6 +36,7 @@ export const getMyReviews = async (offset: number) => {
       id: review.id,
       content: review.content,
       contentId: review.contentId,
+      contentLike: review.contentLike ?? false,
       contentImgUrl: review.contentImgUrl,
       contentTitle: review.contentTitle,
       userId: review.userId,

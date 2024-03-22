@@ -1,8 +1,17 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import Header from "@/app/components/Header";
+
+const AlertModal = dynamic(() => import("@/app/components/modal/AlertModal"), {
+  ssr: false,
+});
+const ConfirmModal = dynamic(
+  () => import("@/app/components/modal/ConfirmModal"),
+  { ssr: false }
+);
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -27,6 +36,9 @@ export default function RootLayout({
       <body>
         <Header />
         <div className="layout">{children}</div>
+        <div id="portal"></div>
+        <AlertModal />
+        <ConfirmModal />
         <SpeedInsights />
       </body>
     </html>

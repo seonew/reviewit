@@ -2,6 +2,18 @@ import { signIn } from "coco-people-client";
 import jwt from "jsonwebtoken";
 import Resizer from "react-image-file-resizer";
 
+export const validateContentEditable = (text: string) => {
+  if (text.length < 10) {
+    return "입력 내용은 최소 10글자 이상이어야 합니다.";
+  }
+
+  if (text.length > 400) {
+    return "입력 내용은 최대 400글자 이하여야 합니다.";
+  }
+
+  return null;
+};
+
 export const resizeFile = (file: File) =>
   new Promise<string | File | Blob | ProgressEvent<FileReader>>((resolve) => {
     Resizer.imageFileResizer(
