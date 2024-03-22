@@ -22,6 +22,7 @@ const LikeList = ({ title, reviews, onLike }: Props) => {
         </div>
         <ul role="list" className="divide-y divide-gray-100 break-words">
           {reviews.map((review: ReviewProps) => {
+            if (!review) return null;
             return (
               <li key={review.id} className="flex justify-between py-4">
                 <div className="flex gap-x-6 w-full">

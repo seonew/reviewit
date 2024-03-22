@@ -1,5 +1,6 @@
 import { ReviewProps } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useBoundStore as useStore } from "@/store";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import CommentModal from "@/app/components/modal/CommentModal";
@@ -21,6 +22,7 @@ const ReviewList = ({ title, reviews, onEdit, onDelete }: Props) => {
     setConfirmModalData,
   } = useStore();
   const [targetReview, setTargetReview] = useState<ReviewProps>();
+  const [portalElement, setPortalElement] = useState<Element | null>(null);
 
   const handleClickEdit = (review: ReviewProps) => () => {
     setIsCommentModalOpen(true);
@@ -42,6 +44,10 @@ const ReviewList = ({ title, reviews, onEdit, onDelete }: Props) => {
   const confirmFunc = (id: string) => () => {
     onDelete?.(id);
   };
+
+  useEffect(() => {
+    setPortalElement(document.getElementById("portal"));
+  }, [isCommentModalOpen]);
 
   return (
     <>
@@ -76,12 +82,17 @@ const ReviewList = ({ title, reviews, onEdit, onDelete }: Props) => {
           })}
         </ul>
       </div>
-      <CommentModal
-        open={isCommentModalOpen}
-        review={targetReview}
-        onSubmit={handleClickSubmit}
-        onClose={handleClickCommentModalClose}
-      />
+      {isCommentModalOpen && portalElement
+        ? createPortal(
+            <CommentModal
+              open={isCommentModalOpen}
+              review={targetReview}
+              onSubmit={handleClickSubmit}
+              onClose={handleClickCommentModalClose}
+            />,
+            portalElement
+          )
+        : null}
     </>
   );
 };
