@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { loadMovieContents, loadMovieInfo } from "@/app/api/movie/route";
+import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -12,7 +13,10 @@ export default async function Page({ params }: { params: { id: string } }) {
 
 async function getData(id: string) {
   const movie = await loadMovieInfo(id);
-  const data = await loadMovieContents(id);
+  if (!movie) {
+    notFound();
+  }
 
+  const data = await loadMovieContents(id);
   return { ...data, movie };
 }
