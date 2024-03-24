@@ -4,3 +4,6 @@ export const MOVIE_IMAGE_URL = "https://image.tmdb.org";
 
 export const LIMIT = 5;
 export const DOTTS = "...";
+
+export const DETAIL_BOOK_PATH = "/books";
+export const DETAIL_MOVIE_PATH = "/movies";

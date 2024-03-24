@@ -7,6 +7,7 @@ import {
 import { BookProps, LikedBook, LikedContent } from "@/types";
 import { NextResponse } from "next/server";
 import { getUserBookmarks, getUserId } from "@/app/api/common";
+import { DETAIL_BOOK_PATH } from "@/utils/constants";
 
 export async function GET(request: Request) {
   try {
@@ -25,7 +26,11 @@ export async function GET(request: Request) {
   return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
 }
 
-export const getBooks = async (startNumber: number, displayCount: number) => {
+const getBooks = async (
+  startNumber: number,
+  displayCount: number,
+  query?: string
+) => {
   const client_id = process.env.CLIENT_ID ?? "";
   const client_secret = process.env.CLIENT_SECRET ?? "";
   const bookRequestUrl = "https://openapi.naver.com/v1/search/book?query=";
@@ -33,7 +38,10 @@ export const getBooks = async (startNumber: number, displayCount: number) => {
     "X-Naver-Client-Id": client_id,
     "X-Naver-Client-Secret": client_secret,
   };
-  const query = "사람";
+  // const query = "사람";
+  if (!query) {
+    query = "사람";
+  }
   const display = `&display=${displayCount}`;
   const start = `&start=${startNumber}`;
 
@@ -62,7 +70,7 @@ export const getBooks = async (startNumber: number, displayCount: number) => {
       author: replaceCaretWithComma(book.author),
       discount: numberWithCommas(parseInt(book.discount)),
       image: book.image,
-      link: `/dashboard/books/${book.isbn}`,
+      link: `${DETAIL_BOOK_PATH}/${book.isbn}`,
       isbn: book.isbn,
       publisher: book.publisher,
       description: book.description,

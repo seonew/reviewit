@@ -1,4 +1,5 @@
 import {
+  DETAIL_MOVIE_PATH,
   MOVIE_API_URL,
   MOVIE_BASE_URL,
   MOVIE_IMAGE_URL,
@@ -9,7 +10,6 @@ import {
   MovieApiResponse,
   MovieProps,
 } from "@/types";
-// import { NextResponse } from "next/server";
 
 const movieApiKey = process.env.MOVIE_READONLY_API_KEY;
 const options = {
@@ -22,13 +22,6 @@ const options = {
 
 export const loadMovieInfo = async (movieId: string) => {
   const url = `${MOVIE_API_URL}/movie/${movieId}?language=ko-KR`;
-  // const options = {
-  //   method: "GET",
-  //   headers: {
-  //     accept: "application/json",
-  //     Authorization: `Bearer ${movieApiKey}`,
-  //   },
-  // };
   const response = await fetch(url, options);
   const data = await response.json();
   const movie: DetailMovieProps = {
@@ -58,15 +51,6 @@ export const loadMovieInfo = async (movieId: string) => {
 };
 
 export const loadMovieContents = async (movieId: string) => {
-  // const movieApiKey = process.env.MOVIE_READONLY_API_KEY;
-  // const options = {
-  //   method: "GET",
-  //   headers: {
-  //     accept: "application/json",
-  //     Authorization: `Bearer ${movieApiKey}`,
-  //   },
-  // };
-
   const keywordsUrl = `${MOVIE_API_URL}/movie/${movieId}/keywords`;
   const keywordsResponse = await fetch(keywordsUrl, options);
   const keywordsData = await keywordsResponse.json();
@@ -88,7 +72,7 @@ export const loadMovieContents = async (movieId: string) => {
             recommendation.poster_path !== null
               ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${recommendation.poster_path}`
               : undefined,
-          link: `/movie/${recommendation.id}`,
+          link: `${DETAIL_MOVIE_PATH}/${recommendation.id}`,
           average: recommendation.vote_average,
           adult: recommendation.adult,
         };
@@ -111,7 +95,7 @@ export const loadMovieContents = async (movieId: string) => {
             similar.poster_path !== null
               ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${similar.poster_path}`
               : undefined,
-          link: `/movie/${similar.id}`,
+          link: `${DETAIL_MOVIE_PATH}/${similar.id}`,
           average: similar.vote_average,
           adult: similar.adult,
         };

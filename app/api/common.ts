@@ -5,7 +5,7 @@ import UserModel from "@/models/user";
 import LikeModel from "@/models/review/like";
 import BookmarkModel from "@/models/bookmark";
 import { LikedContent, ReviewProps, StatsProps, User } from "@/types";
-import { LIMIT } from "@/utils/constants";
+import { DETAIL_BOOK_PATH, LIMIT } from "@/utils/constants";
 import { NotFoundUserError } from "@/utils/error";
 import dbConnect from "@/utils/db/mongodb";
 
@@ -30,7 +30,7 @@ export const getUserBookmarks = async (contentType: string) => {
   const result: LikedContent[] | undefined = bookmarks?.map((bookmark) => {
     const { contentId, contentImgUrl, contentTitle, contentType } = bookmark;
 
-    let link = `/dashboard/books/${contentId}`;
+    let link = `${DETAIL_BOOK_PATH}/${contentId}`;
     if (contentType === "product") {
       link = `https://search.shopping.naver.com/product/${contentId}`;
     }

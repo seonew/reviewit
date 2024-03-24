@@ -1,4 +1,8 @@
-import { MOVIE_API_URL, MOVIE_BASE_URL } from "@/utils/constants";
+import {
+  DETAIL_MOVIE_PATH,
+  MOVIE_API_URL,
+  MOVIE_BASE_URL,
+} from "@/utils/constants";
 import { MovieApiResponse, MovieProps } from "@/types";
 import dynamic from "next/dynamic";
 
@@ -33,7 +37,7 @@ async function getData(keywordId: string) {
             keywordMovie.poster_path !== null
               ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${keywordMovie.poster_path}`
               : undefined,
-          link: `/movie/${keywordMovie.id}`,
+          link: `${DETAIL_MOVIE_PATH}/${keywordMovie.id}`,
           average: keywordMovie.vote_average,
         };
       }

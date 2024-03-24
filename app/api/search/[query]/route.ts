@@ -4,7 +4,12 @@ import {
   replaceCaretWithComma,
   replaceDateFormat8Digits,
 } from "@/utils/common";
-import { MOVIE_API_URL, MOVIE_BASE_URL } from "@/utils/constants";
+import {
+  DETAIL_BOOK_PATH,
+  DETAIL_MOVIE_PATH,
+  MOVIE_API_URL,
+  MOVIE_BASE_URL,
+} from "@/utils/constants";
 import {
   BookProps,
   LikedBook,
@@ -73,7 +78,7 @@ export const getMovies = async (
           searchMoviesResult[i].poster_path !== null
             ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${searchMoviesResult[i].poster_path}`
             : undefined,
-        link: `/movie/${searchMoviesResult[i].id}`,
+        link: `${DETAIL_MOVIE_PATH}/${searchMoviesResult[i].id}`,
         average: searchMoviesResult[i].vote_average,
         adult: false,
       };
@@ -90,7 +95,7 @@ export const getMovies = async (
           movie.poster_path !== null
             ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${movie.poster_path}`
             : undefined,
-        link: `/movie/${movie.id}`,
+        link: `${DETAIL_MOVIE_PATH}/${movie.id}`,
         average: movie.vote_average,
       };
     });
@@ -139,7 +144,7 @@ export const getBooks = async (
       author: replaceCaretWithComma(book.author),
       discount: numberWithCommas(parseInt(book.discount)),
       image: book.image,
-      link: `/dashboard/books/${book.isbn}`,
+      link: `${DETAIL_BOOK_PATH}/${book.isbn}`,
       isbn: book.isbn,
       publisher: book.publisher,
       description: book.description,
