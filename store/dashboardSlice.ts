@@ -97,9 +97,7 @@ const createDashboardSlice: StateCreator<
   ...initialState,
   fetchBookReviews: async (id: string, page: number) => {
     try {
-      const res = await fetch(
-        `/api/dashboard/books/${id}/reviews?page=${page}`
-      );
+      const res = await fetch(`/api/books/${id}/reviews?page=${page}`);
       const data = await res.json();
 
       set({
@@ -114,7 +112,7 @@ const createDashboardSlice: StateCreator<
     get().setSpinner(true);
     const { contentId } = contentInfo;
     const params = { contentInfo, like };
-    const response = await fetch(`/api/dashboard/books/${contentId}/reviews`, {
+    const response = await fetch(`/api/books/${contentId}/reviews`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -182,7 +180,7 @@ const createDashboardSlice: StateCreator<
   },
 
   fetchLikedContents: async (type: string) => {
-    const res = await fetch(`/api/bookmarks/${type}`);
+    const res = await fetch(`/api/mypage/bookmarks/${type}`);
     const data: LikedContent[] = await res.json();
 
     if (type === "book") {
@@ -244,7 +242,7 @@ const createDashboardSlice: StateCreator<
 
   insertLikedContent: async (contentType, params) => {
     const id = params.contentId;
-    const res = await fetch(`/api/bookmarks/${contentType}/${id}`, {
+    const res = await fetch(`/api/mypage/bookmarks/${contentType}/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -256,7 +254,7 @@ const createDashboardSlice: StateCreator<
     return data.checked;
   },
   deleteLikeContent: async (contentType, id) => {
-    const res = await fetch(`/api/bookmarks/${contentType}/${id}`, {
+    const res = await fetch(`/api/mypage/bookmarks/${contentType}/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -266,7 +264,7 @@ const createDashboardSlice: StateCreator<
     return data.checked;
   },
   fetchBookmarkedContent: async (contentType, id) => {
-    const res = await fetch(`/api/bookmarks/${contentType}/${id}`);
+    const res = await fetch(`/api/mypage/bookmarks/${contentType}/${id}`);
     const checked = await res.json();
     return checked;
   },
