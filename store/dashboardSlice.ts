@@ -32,6 +32,15 @@ type Actions = {
   setSearchedBooksAndCurrentBook: (id: string, checked: boolean) => void;
   setCurrentBook: (book: LikedBook) => void;
 
+  fetchSearchResults: (
+    query: string,
+    page: number,
+    displayCount?: number
+  ) => void;
+  initializeSearchedMovies: (movies: MovieProps[]) => void;
+  updateSearchedMovies: (page: number, displayCount?: number) => void;
+  clearSearchedMovies: () => void;
+
   fetchLikedContents: (type: string) => void;
   insertLikedContent: (
     contentType: string,
@@ -121,6 +130,18 @@ const createDashboardSlice: StateCreator<
 
     get().fetchBookReviews(contentId, 1);
   },
+  fetchSearchResults: async (query, page, displayCount = 20) => {
+    const res = await fetch(
+      `/api/search/${query}?page=${page}&displayCount=${displayCount}`
+    );
+    const data = await res.json();
+
+    set({
+      searchedBooks: data.booksResult.books,
+      searchedMovies: data.moviesResult.movies,
+      query,
+    });
+  },
 
   updateSearchedBooks: async (page, displayCount = 20) => {
     try {
@@ -138,6 +159,25 @@ const createDashboardSlice: StateCreator<
     set({ searchedBooks: books, loading: false });
   },
   clearSearchedBooks: () => {
+    set({ searchedBooks: [], loading: true });
+  },
+
+  updateSearchedMovies: async (page, displayCount = 20) => {
+    try {
+      const query = get().query;
+      const res = await fetch(
+        `/api/search/movies/${query}?page=${page}&displayCount=${displayCount}`
+      );
+      const data = await res.json();
+      set({ searchedMovies: data.movies, loading: false });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  initializeSearchedMovies: (movies) => {
+    set({ searchedMovies: movies, loading: false });
+  },
+  clearSearchedMovies: () => {
     set({ searchedBooks: [], loading: true });
   },
 
