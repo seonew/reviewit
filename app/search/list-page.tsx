@@ -43,20 +43,6 @@ const List = () => {
         <Skeleton arrayRows={[0, 1]} />
       ) : (
         <CardList
-          title={"Book List"}
-          targetUrl={`/search/books?query=${query}`}
-          color="text-black"
-        >
-          {searchedBooks &&
-            searchedBooks.map((item: BookProps) => {
-              return <BookInfo key={item.isbn} book={item} />;
-            })}
-        </CardList>
-      )}
-      {loading ? (
-        <Skeleton arrayRows={[0, 1]} />
-      ) : (
-        <CardList
           title={"Movie List"}
           targetUrl={`/search/movies?query=${query}`}
           color="text-black"
@@ -64,6 +50,20 @@ const List = () => {
           {searchedMovies &&
             searchedMovies.map((item: MovieProps) => {
               return <MovieInfo key={item.id} movie={item} />;
+            })}
+        </CardList>
+      )}
+      {loading ? (
+        <Skeleton arrayRows={[0, 1]} />
+      ) : (
+        <CardList
+          title={"Book List"}
+          targetUrl={`/search/books?query=${query}`}
+          color="text-black"
+        >
+          {searchedBooks &&
+            searchedBooks.map((item: BookProps) => {
+              return <BookInfo key={item.isbn} book={item} />;
             })}
         </CardList>
       )}

@@ -68,7 +68,10 @@ export const getMovies = async (
 
   let movies: MovieProps[] = [];
   if (displayCount === 10) {
-    for (let i = 0; i < displayCount; i++) {
+    const count =
+      searchMoviesResult.length < 10 ? searchMoviesResult.length : displayCount;
+
+    for (let i = 0; i < count; i++) {
       const movie: MovieProps = {
         id: searchMoviesResult[i].id,
         title: searchMoviesResult[i].title,

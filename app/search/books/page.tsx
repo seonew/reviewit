@@ -27,7 +27,7 @@ async function getData(query?: string) {
   } catch (e) {
     console.error(e);
     return {
-      books: null,
+      books: [],
       total: 0,
       limit: displayCount,
     };

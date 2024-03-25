@@ -9,14 +9,15 @@ import Pagination from "@/app/components/Pagination";
 import Skeleton from "../components/Skeleton";
 
 type Props = {
-  books: LikedBook[] | null;
+  books: LikedBook[];
   total: number;
   limit: number;
 };
 
-const List = ({ total, limit }: Props) => {
+const List = ({ books, total, limit }: Props) => {
   const {
     searchedBooks,
+    initializeSearchedBooks,
     updateSearchedBooks,
     clearSearchedBooks,
     loading,
@@ -40,12 +41,12 @@ const List = ({ total, limit }: Props) => {
   };
 
   useEffect(() => {
-    updateSearchedBooks(1);
+    initializeSearchedBooks(books);
 
     return () => {
       clearSearchedBooks();
     };
-  }, [clearSearchedBooks, updateSearchedBooks]);
+  }, [books, clearSearchedBooks, initializeSearchedBooks]);
 
   return (
     <div className="contents-container">
