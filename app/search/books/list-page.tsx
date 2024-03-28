@@ -7,6 +7,7 @@ import CardList from "@/app/components/CardList";
 import BookInfo from "@/app/components/BookInfo";
 import Pagination from "@/app/components/Pagination";
 import Skeleton from "../components/Skeleton";
+import { useSearchParams } from "next/navigation";
 
 type Props = {
   books: LikedBook[];
@@ -20,10 +21,13 @@ const List = ({ books, total, limit }: Props) => {
     initializeSearchedBooks,
     updateSearchedBooks,
     clearSearchedBooks,
+    setQuery,
     loading,
     query,
   } = useStore();
   const [page, setPage] = useState<number>(1);
+  const searchPamams = useSearchParams();
+  const urlQuery = searchPamams.get("query");
 
   const handleClickPage = (current: number) => {
     setPage(current);
@@ -43,10 +47,14 @@ const List = ({ books, total, limit }: Props) => {
   useEffect(() => {
     initializeSearchedBooks(books);
 
+    if (urlQuery) {
+      setQuery(urlQuery);
+    }
+
     return () => {
       clearSearchedBooks();
     };
-  }, [books, clearSearchedBooks, initializeSearchedBooks]);
+  }, [books, clearSearchedBooks, initializeSearchedBooks, setQuery, urlQuery]);
 
   return (
     <div className="contents-container">

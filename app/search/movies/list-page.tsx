@@ -7,6 +7,7 @@ import MovieInfo from "@/app/components/MovieInfo";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/Pagination";
 import Skeleton from "../components/Skeleton";
+import { useSearchParams } from "next/navigation";
 
 type Props = {
   movies: MovieProps[];
@@ -19,11 +20,14 @@ const List = ({ movies, total, limit }: Props) => {
     initializeSearchedMovies,
     updateSearchedMovies,
     clearSearchedMovies,
+    setQuery,
     query,
     loading,
     searchedMovies,
   } = useStore();
   const [page, setPage] = useState<number>(1);
+  const searchPamams = useSearchParams();
+  const urlQuery = searchPamams.get("query");
 
   const handleClickPage = (current: number) => {
     setPage(current);
@@ -43,10 +47,20 @@ const List = ({ movies, total, limit }: Props) => {
   useEffect(() => {
     initializeSearchedMovies(movies);
 
+    if (urlQuery) {
+      setQuery(urlQuery);
+    }
+
     return () => {
       clearSearchedMovies();
     };
-  }, [clearSearchedMovies, initializeSearchedMovies, movies]);
+  }, [
+    clearSearchedMovies,
+    initializeSearchedMovies,
+    movies,
+    setQuery,
+    urlQuery,
+  ]);
 
   return (
     <div className="contents-container">
