@@ -63,8 +63,11 @@ export const getMovies = async (
   const response = await fetch(url, options);
   const data = await response.json();
 
-  const searchMoviesResult = data.results;
-  const total = data.total_results;
+  const dataResult: MovieApiResponse[] = data.results;
+  const searchMoviesResult: MovieApiResponse[] = dataResult.filter(
+    (item) => item.release_date !== undefined
+  );
+  const total = searchMoviesResult.length;
 
   let movies: MovieProps[] = [];
   if (displayCount === 10) {
@@ -100,6 +103,7 @@ export const getMovies = async (
             : undefined,
         link: `${DETAIL_MOVIE_PATH}/${movie.id}`,
         average: movie.vote_average,
+        adult: movie.adult ?? false,
       };
     });
   }
