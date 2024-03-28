@@ -67,7 +67,7 @@ test.describe(() => {
     ).toHaveText(TEST_CONTENT_TEXT);
   });
 
-  test("editing a review", async ({ page }) => {
+  test("editing a review", async ({ page }, testInfo) => {
     await page.goto("/mypage/reviews");
     await expect(page.locator("li").first().getByRole("button")).toHaveCount(2);
 
@@ -94,16 +94,20 @@ test.describe(() => {
       .locator(".comment-editor-contents-editable")
       .fill(EDITED_CONTENT_TEXT);
     await page.getByRole("button", { name: "입력" }).click();
+
+    testInfo.setTimeout(5000);
+    await page.goto("/mypage/reviews");
+    await expect(
+      page.locator("li").first().locator(".text-sm.leading-6")
+    ).toHaveText(EDITED_CONTENT_TEXT);
   });
 
   test("deleting a review", async ({ page }, testInfo) => {
     await page.goto("/mypage/reviews");
 
-    testInfo.setTimeout(5000);
     await expect(
       page.locator("li").first().locator(".text-sm.leading-6")
     ).toHaveText(EDITED_CONTENT_TEXT);
-
     await page.locator("li").first().getByRole("button").nth(1).click();
 
     await expect(

@@ -9,7 +9,7 @@ test("has title", async ({ page }) => {
 
 test("get started link", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator(".header-contents > .header-link")).toHaveCount(3);
+  await expect(page.locator(".header-link")).toHaveCount(2);
 
   await expect(
     page.locator(".banner-container > a.initialize-absolute")
@@ -19,9 +19,23 @@ test("get started link", async ({ page }) => {
 });
 
 test("go to /search", async ({ page }) => {
-  await page.goto("/search");
-  await page.getByRole("textbox").fill(QUERY);
-  await page.locator(".bg-ozip-blue.text-white").getByRole("button").click();
+  await page.goto("/");
+
+  await page.locator(".header-contents > div").getByRole("textbox").fill(QUERY);
+  await page
+    .locator(".header-contents > div")
+    .getByRole("button")
+    .nth(1)
+    .click();
+  await expect(
+    page.locator(".header-contents > div").getByRole("textbox")
+  ).toBeEmpty();
+  await page.locator(".header-contents > div").getByRole("textbox").fill(QUERY);
+  await page
+    .locator(".header-contents > div")
+    .getByRole("button")
+    .nth(0)
+    .click();
 
   await expect(page.getByRole("heading", { name: "Movie List" })).toBeVisible();
   await expect(
