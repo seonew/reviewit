@@ -85,18 +85,12 @@ export const getUserBookmarks = async (contentType: string) => {
 
   const result: LikedContent[] | undefined = bookmarks?.map((bookmark) => {
     const { contentId, contentImgUrl, contentTitle, contentType } = bookmark;
-
-    let link = `${DETAIL_BOOK_PATH}/${contentId}`;
-    if (contentType === "product") {
-      link = `https://search.shopping.naver.com/product/${contentId}`;
-    }
-
     return {
       id: contentId,
       imgUrl: contentImgUrl,
       title: contentTitle,
       type: contentType,
-      link,
+      link: `${DETAIL_BOOK_PATH}/${contentId}`,
     };
   });
   return result === undefined ? null : result;
