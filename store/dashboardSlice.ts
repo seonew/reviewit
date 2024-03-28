@@ -31,6 +31,7 @@ type Actions = {
 
   setSearchedBooksAndCurrentBook: (id: string, checked: boolean) => void;
   setCurrentBook: (book: LikedBook) => void;
+  setQuery: (item: string) => void;
 
   fetchSearchResults: (
     query: string,
@@ -296,6 +297,7 @@ const createDashboardSlice: StateCreator<
       return { currentBook: nextCurrentBook };
     });
   },
+  setQuery: (item) => set({ query: item }),
   resetDashboardData: () => {
     set(initialState);
   },
