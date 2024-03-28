@@ -7,11 +7,41 @@ import {
 import { LikedBook } from "@/types";
 import { loadBookInfo } from "@/app/api/common";
 import { notFound } from "next/navigation";
-import { DETAIL_BOOK_PATH } from "@/utils/constants";
+import {
+  DETAIL_BOOK_PATH,
+  ERROR_PAGE_404_MESSAGE,
+  LOGO,
+} from "@/utils/constants";
+import { Metadata } from "next";
+
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = params;
+  const book = await getData(id);
+  let title = "";
+
+  if (!book) {
+    title = `${ERROR_PAGE_404_MESSAGE}`;
+  } else {
+    title = `${book.title} | ${LOGO}`;
+  }
+
+  return {
+    title,
+  };
+}
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;
   const book = await getData(id);
+
+  if (!book) {
+    notFound();
+  }
 
   const DynamicListPage = dynamic(() => import("./list-page"), {
     ssr: false,
@@ -24,7 +54,7 @@ const getData = async (id: string) => {
   const book = bookData.items[0];
 
   if (!book) {
-    notFound();
+    return null;
   }
 
   const result: LikedBook = {

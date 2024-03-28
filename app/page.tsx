@@ -1,11 +1,17 @@
 import {
   DETAIL_MOVIE_PATH,
+  LOGO,
   MOVIE_API_URL,
   MOVIE_BASE_URL,
   MOVIE_IMAGE_URL,
 } from "@/utils/constants";
 import { VideoImageBannerProps, MovieProps, MovieApiResponse } from "@/types";
 import dynamic from "next/dynamic";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `${LOGO}`,
+};
 
 export default async function Home() {
   const { movies, imageBannerInfo } = await getData();

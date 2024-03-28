@@ -1,10 +1,37 @@
 import dynamic from "next/dynamic";
-import { loadMovieContents, loadMovieInfo } from "@/app/api/movies/route";
+import { loadMovieContents, loadMovieInfo } from "@/app/api/movies/common";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import { ERROR_PAGE_404_MESSAGE, LOGO } from "@/utils/constants";
 
-export default async function Page({ params }: { params: { id: string } }) {
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = params;
   const currentMovie = await getData(id);
+  let title = "";
+
+  if (!currentMovie) {
+    title = `${ERROR_PAGE_404_MESSAGE}`;
+  } else {
+    title = `${currentMovie.movie.title} | ${LOGO}`;
+  }
+
+  return {
+    title,
+  };
+}
+
+export default async function Page({ params }: Props) {
+  const { id } = params;
+  const currentMovie = await getData(id);
+  if (!currentMovie) {
+    notFound();
+  }
+
   const DynamicListPage = dynamic(() => import("./list-page"), {
     ssr: false,
   });
@@ -14,7 +41,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 async function getData(id: string) {
   const movie = await loadMovieInfo(id);
   if (!movie) {
-    notFound();
+    return null;
   }
 
   const data = await loadMovieContents(id);

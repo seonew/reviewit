@@ -1,11 +1,25 @@
 import { getBooks } from "@/app/api/search/[query]/route";
+import { LOGO } from "@/utils/constants";
+import { Metadata } from "next";
 import dynamic from "next/dynamic";
 
-export default async function Page({
-  searchParams,
-}: {
+type Props = {
+  params: { id: string };
   searchParams: { [key: string]: string };
-}) {
+};
+
+export async function generateMetadata({
+  searchParams,
+}: Props): Promise<Metadata> {
+  const { query } = searchParams;
+  const { total } = await getData(query);
+
+  return {
+    title: `${query}의 도서 검색결과 ${total}개 | ${LOGO}`,
+  };
+}
+
+export default async function Page({ searchParams }: Props) {
   const { query } = searchParams;
   const { books, total, limit } = await getData(query);
 

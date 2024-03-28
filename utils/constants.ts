@@ -7,3 +7,6 @@ export const DOTTS = "...";
 
 export const DETAIL_BOOK_PATH = "/books";
 export const DETAIL_MOVIE_PATH = "/movies";
+
+export const LOGO = "Review-it";
+export const ERROR_PAGE_404_MESSAGE = "요청하신 페이지를 찾을 수 없습니다.";

@@ -1,13 +1,43 @@
 import {
   DETAIL_MOVIE_PATH,
+  ERROR_PAGE_404_MESSAGE,
+  LOGO,
   MOVIE_API_URL,
   MOVIE_BASE_URL,
 } from "@/utils/constants";
 import { MovieApiResponse, MovieProps } from "@/types";
 import dynamic from "next/dynamic";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const { movies, keyword } = await getData(params.id);
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = params;
+  const { keyword } = await getData(id);
+  let title = "";
+
+  if (!id) {
+    title = `${ERROR_PAGE_404_MESSAGE}`;
+  } else {
+    title = `${keyword}의 키워드 검색 결과 | ${LOGO}`;
+  }
+
+  return {
+    title,
+  };
+}
+
+export default async function Page({ params }: Props) {
+  const { id } = params;
+  if (!id) {
+    notFound();
+  }
+
+  const { movies, keyword } = await getData(id);
   const DynamicListPage = dynamic(() => import("./list-page"));
   return <DynamicListPage movies={movies} keyword={keyword} />;
 }
