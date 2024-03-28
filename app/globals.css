@@ -10,13 +10,13 @@
     @apply fixed left-0 right-0 top-0 min-w-1024 z-[101];
   }
   .header-container {
-    @apply relative bg-black text-white border-b border-gray-600;
+    @apply relative bg-black text-white border-b border-gray-600 flex;
   }
   .header-contents {
-    @apply h-20 w-[1024px] px-16 m-auto flex items-center justify-center;
+    @apply h-20 m-auto flex items-center max-w-7xl flex-auto justify-between;
   }
   .header-link {
-    @apply px-8 py-4 mx-5;
+    @apply px-8 py-4 mx-2;
   }
   .header-link .icon {
     @apply h-6 w-6;
