@@ -2,9 +2,10 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="contents-container">
+    <div className="contents-container top-0">
       <main className="grid min-h-full place-items-center bg-white px-8">
         <div className="text-center">
+          <p className="text-base font-semibold text-ozip-blue">404</p>
           <h1 className="mt-4 font-bold tracking-tight text-gray-900 text-5xl">
             Page not found
           </h1>

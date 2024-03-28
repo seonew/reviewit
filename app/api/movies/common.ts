@@ -23,6 +23,11 @@ const options = {
 export const loadMovieInfo = async (movieId: string) => {
   const url = `${MOVIE_API_URL}/movie/${movieId}?language=ko-KR`;
   const response = await fetch(url, options);
+
+  if (response.status !== 200) {
+    return null;
+  }
+
   const data = await response.json();
   const movie: DetailMovieProps = {
     id: data.id,

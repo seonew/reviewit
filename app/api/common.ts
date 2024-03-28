@@ -16,6 +16,62 @@ type bookmarkType = {
   contentType: string;
 };
 
+export const getLikesForReviews = async (offset: number) => {
+  await dbConnect();
+
+  const userId = await getUserId();
+  const { data: likeData, total } = await loadLikesForReview(userId, offset);
+  const userData = await loadUsers();
+
+  const reviews: ReviewProps[] = await Promise.all(
+    likeData.map(async (like: { reviewId: string }) => {
+      const bookReview: ReviewProps | null = await BookReviewModel.findOne({
+        id: like.reviewId,
+      });
+
+      if (bookReview !== null) {
+        const author = userData.find((user) => user.id === bookReview.userId);
+        const userName = !author ? "홍길동" : author.name;
+
+        return {
+          id: bookReview.id,
+          content: bookReview.content,
+          contentId: bookReview.contentId,
+          contentImgUrl: bookReview.contentImgUrl,
+          contentTitle: bookReview.contentTitle,
+          like: true,
+          userId: bookReview.userId,
+          userName,
+          updateDate: replaceDateFormat(bookReview.updateDate),
+        };
+      }
+    })
+  );
+
+  return { reviews, count: total };
+};
+
+export const getMyReviews = async (offset: number) => {
+  await dbConnect();
+
+  const userId = await getUserId();
+  const { data: reviewData, total } = await loadMyReviews(userId, offset);
+  const reviews = reviewData.map((review: ReviewProps) => {
+    return {
+      id: review.id,
+      content: review.content,
+      contentId: review.contentId,
+      contentLike: review.contentLike ?? false,
+      contentImgUrl: review.contentImgUrl,
+      contentTitle: review.contentTitle,
+      userId: review.userId,
+      updateDate: replaceDateFormat(review.updateDate),
+    };
+  });
+
+  return { reviews, count: total };
+};
+
 export const getUserBookmarks = async (contentType: string) => {
   let bookmarks: bookmarkType[] | null = null;
   try {
