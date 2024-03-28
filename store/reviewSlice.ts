@@ -60,7 +60,7 @@ const createReviewSlice: StateCreator<
     try {
       const params = { reviewId, contentId };
       const response = await fetch(
-        `/api/review/like/${reviewId}?page=${page}`,
+        `/api/mypage/reviews/likes/${reviewId}?page=${page}`,
         {
           method: "POST",
           headers: {
@@ -82,7 +82,7 @@ const createReviewSlice: StateCreator<
   deleteReviewLike: async (reviewId, page) => {
     try {
       const response = await fetch(
-        `/api/review/like/${reviewId}?page=${page}`,
+        `/api/mypage/reviews/likes/${reviewId}?page=${page}`,
         {
           method: "DELETE",
           headers: {

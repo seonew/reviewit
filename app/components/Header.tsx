@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { HomeIcon, BookOpenIcon, UserIcon } from "@heroicons/react/20/solid";
+import { UserIcon } from "@heroicons/react/20/solid";
+import HeaderSearchSection from "./HeaderSearchSection";
+import Image from "next/image";
+import logo from "@/public/assets/logo.png";
 
 const Header = () => {
   return (
@@ -9,14 +12,14 @@ const Header = () => {
       <div className="header-container">
         <div className="header-contents">
           <Link href="/" className="header-link">
-            <HomeIcon className="icon" />
+            <Image src={logo} alt={"logo"} width={100} height={40} />
           </Link>
-          <Link href="/dashboard" className="header-link">
-            <BookOpenIcon className="icon" />
-          </Link>
-          <Link href="/mypage" className="header-link">
-            <UserIcon className="icon" />
-          </Link>
+          <div className="inline-block flex items-center">
+            <HeaderSearchSection />
+            <Link href="/mypage" className="header-link">
+              <UserIcon className="icon" />
+            </Link>
+          </div>
         </div>
       </div>
     </div>

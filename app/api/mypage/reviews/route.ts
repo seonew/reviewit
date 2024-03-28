@@ -1,8 +1,6 @@
 import dbConnect from "@/utils/db/mongodb";
-import { replaceDateFormat } from "@/utils/common";
 import { NextResponse } from "next/server";
-import { getUserId, loadMyReviews } from "@/app/api/common";
-import { ReviewProps } from "@/types";
+import { getMyReviews } from "@/app/api/common";
 import { LIMIT } from "@/utils/constants";
 
 export async function GET(request: Request) {
@@ -25,24 +23,3 @@ export async function GET(request: Request) {
   }
   return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
 }
-
-export const getMyReviews = async (offset: number) => {
-  await dbConnect();
-
-  const userId = await getUserId();
-  const { data: reviewData, total } = await loadMyReviews(userId, offset);
-  const reviews = reviewData.map((review: ReviewProps) => {
-    return {
-      id: review.id,
-      content: review.content,
-      contentId: review.contentId,
-      contentLike: review.contentLike ?? false,
-      contentImgUrl: review.contentImgUrl,
-      contentTitle: review.contentTitle,
-      userId: review.userId,
-      updateDate: replaceDateFormat(review.updateDate),
-    };
-  });
-
-  return { reviews, count: total };
-};

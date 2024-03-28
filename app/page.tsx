@@ -1,10 +1,17 @@
 import {
+  DETAIL_MOVIE_PATH,
+  LOGO,
   MOVIE_API_URL,
   MOVIE_BASE_URL,
   MOVIE_IMAGE_URL,
 } from "@/utils/constants";
 import { VideoImageBannerProps, MovieProps, MovieApiResponse } from "@/types";
 import dynamic from "next/dynamic";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `${LOGO}`,
+};
 
 export default async function Home() {
   const { movies, imageBannerInfo } = await getData();
@@ -35,7 +42,7 @@ async function getData() {
         title: movie.title,
         posterImage: `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${movie.poster_path}`,
         releaseDate: movie.release_date,
-        link: `/movie/${movie.id}`,
+        link: `${DETAIL_MOVIE_PATH}/${movie.id}`,
         description: movie.overview,
         average: movie.vote_average,
       };
@@ -57,7 +64,7 @@ async function getData() {
       posterImage: `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${movieDetailData.poster_path}`,
       backdropImage: `${MOVIE_IMAGE_URL}/t/p/original${movieDetailData.backdrop_path}`,
       releaseDate: movieDetailData.release_date,
-      link: `/movie/${movieDetailData.id}`,
+      link: `${DETAIL_MOVIE_PATH}/${movieDetailData.id}`,
       description: movieDetailData.overview,
     };
 

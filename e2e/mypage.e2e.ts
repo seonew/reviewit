@@ -1,8 +1,8 @@
 import { test, expect } from "@/playwright/fixtures";
 
-const baseUrl = process.env.BASE_URL;
-const testContentText = "review e2e test";
-const editedContentText = `${testContentText} edit`;
+const BASE_URL = process.env.BASE_URL;
+const TEST_CONTENT_TEXT = "review e2e test";
+const EDITED_CONTENT_TEXT = `${TEST_CONTENT_TEXT} edit`;
 
 test.describe(() => {
   test("go to mypage", async ({ page }, testInfo) => {
@@ -17,7 +17,7 @@ test.describe(() => {
     await expect(reviewButton).toBeVisible();
     await page.getByRole("link", { name: "내가 작성한 리뷰" }).click();
 
-    await expect(page).toHaveURL(`${baseUrl}/mypage/reviews`);
+    await expect(page).toHaveURL(`${BASE_URL}/mypage/reviews`);
     testInfo.setTimeout(5000);
     await expect(
       page.locator(".tab-active").getByText("내가 작성한 리뷰")
@@ -30,7 +30,7 @@ test.describe(() => {
     ).toBeVisible();
 
     await page.getByRole("link", { name: "좋아요 누른 리뷰" }).click();
-    await expect(page).toHaveURL(`${baseUrl}/mypage/reviews/likes`);
+    await expect(page).toHaveURL(`${BASE_URL}/mypage/reviews/likes`);
     testInfo.setTimeout(5000);
     await expect(
       page.locator(".tab-active").getByText("좋아요 누른 리뷰")
@@ -41,7 +41,7 @@ test.describe(() => {
 
 test.describe(() => {
   test("adding a review", async ({ page }, testInfo) => {
-    await page.goto("/dashboard/books/9791190061322");
+    await page.goto("/books/9791190061322");
 
     await page.locator(".comment-editor-contents-editable").fill("test");
     await page.getByRole("button", { name: "입력" }).click();
@@ -58,16 +58,16 @@ test.describe(() => {
 
     await page
       .locator(".comment-editor-contents-editable")
-      .fill(testContentText);
+      .fill(TEST_CONTENT_TEXT);
     await page.getByRole("button", { name: "입력" }).click();
 
     testInfo.setTimeout(5000);
     await expect(
       page.locator("li").first().locator(".content-detail-comment-user-p")
-    ).toHaveText(testContentText);
+    ).toHaveText(TEST_CONTENT_TEXT);
   });
 
-  test("editing a review", async ({ page }) => {
+  test("editing a review", async ({ page }, testInfo) => {
     await page.goto("/mypage/reviews");
     await expect(page.locator("li").first().getByRole("button")).toHaveCount(2);
 
@@ -86,24 +86,28 @@ test.describe(() => {
     await expect(
       page
         .locator(".comment-editor-contents-editable")
-        .filter({ hasText: testContentText })
+        .filter({ hasText: TEST_CONTENT_TEXT })
     ).toBeVisible();
     await expect(page.getByRole("button", { name: "입력" })).toBeVisible();
 
     await page
       .locator(".comment-editor-contents-editable")
-      .fill(editedContentText);
+      .fill(EDITED_CONTENT_TEXT);
     await page.getByRole("button", { name: "입력" }).click();
+
+    testInfo.setTimeout(5000);
+    await page.goto("/mypage/reviews");
+    await expect(
+      page.locator("li").first().locator(".text-sm.leading-6")
+    ).toHaveText(EDITED_CONTENT_TEXT);
   });
 
   test("deleting a review", async ({ page }, testInfo) => {
     await page.goto("/mypage/reviews");
 
-    testInfo.setTimeout(5000);
     await expect(
       page.locator("li").first().locator(".text-sm.leading-6")
-    ).toHaveText(editedContentText);
-
+    ).toHaveText(EDITED_CONTENT_TEXT);
     await page.locator("li").first().getByRole("button").nth(1).click();
 
     await expect(
@@ -123,7 +127,7 @@ test.describe(() => {
         .locator("li")
         .first()
         .locator(".text-sm.leading-6")
-        .getByText(editedContentText)
+        .getByText(EDITED_CONTENT_TEXT)
     ).not.toBeVisible();
   });
 });

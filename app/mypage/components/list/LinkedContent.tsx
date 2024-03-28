@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ReviewProps } from "@/types";
+import { DETAIL_BOOK_PATH } from "@/utils/constants";
 
 type Props = {
   review: ReviewProps;
@@ -9,7 +10,7 @@ const LinkedContent = ({ review }: Props) => {
   return (
     <div className="flex-grow shrink-0 basis-0 w-full">
       {review.contentTitle && (
-        <Link href={`/dashboard/books/${review.contentId}`}>
+        <Link href={`${DETAIL_BOOK_PATH}/${review.contentId}`}>
           <p className="pb-2 text-md font-semibold leading-6 text-gray-900">
             {review.contentTitle}
           </p>

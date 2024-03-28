@@ -8,15 +8,13 @@ import UserInfo from "./components/UserInfo";
 import CardInfo from "./components/CardInfo";
 
 const List = () => {
-  const { user, signOut, likedBooks, likedProducts, fetchLikedContents } =
-    useStore();
+  const { user, signOut, likedBooks, fetchLikedContents } = useStore();
   const handleClickSignOut = () => {
     signOut();
   };
 
   useEffect(() => {
     fetchLikedContents("book");
-    fetchLikedContents("product");
   }, [fetchLikedContents]);
 
   const LikeList = () => {
@@ -29,16 +27,6 @@ const List = () => {
         >
           {likedBooks &&
             likedBooks.map((item: LikedContent) => {
-              return <CardInfo key={item.id} content={item} />;
-            })}
-        </CardList>
-        <CardList
-          title={"My Product List"}
-          color={"text-gray-900"}
-          gridColsCSS={"grid-cols-4"}
-        >
-          {likedProducts &&
-            likedProducts.map((item: LikedContent) => {
               return <CardInfo key={item.id} content={item} />;
             })}
         </CardList>

@@ -1,10 +1,5 @@
 import { StateCreator } from "zustand";
-import {
-  LikedBook,
-  LikedContent,
-  LikedProduct,
-  ReviewDataProps,
-} from "@/types";
+import { LikedBook, LikedContent, MovieProps, ReviewDataProps } from "@/types";
 import { CommonSlice } from "./commonSlice";
 
 type bookmarkParams = {
@@ -16,27 +11,36 @@ type bookmarkParams = {
 
 type State = {
   likedBooks: LikedContent[];
-  likedProducts: LikedContent[];
-  dashboardBooks: LikedBook[];
-  dashboardProducts: LikedProduct[];
+
+  searchedBooks: LikedBook[];
+  searchedMovies: MovieProps[];
+
   bookReviews: ReviewDataProps;
   currentBook: LikedBook;
   loading: boolean;
+  query: string;
 };
 
 type Actions = {
   addLikedBook: (book: LikedBook) => void;
   deleteLikedBook: (id: string) => void;
-  updateDashboardBooks: (page: number, displayCount?: number) => void;
-  setDashboardBooksAndCurrentBook: (id: string, checked: boolean) => void;
-  setCurrentBook: (book: LikedBook) => void;
-  clearDashboardBooks: () => void;
 
-  addLikedProduct: (product: LikedProduct) => void;
-  deleteLikedProduct: (id: string) => void;
-  updateDashboardProducts: (page: number, displayCount?: number) => void;
-  setDashboardProducts: (id: string, checked: boolean) => void;
-  clearDashboardProducts: () => void;
+  initializeSearchedBooks: (books: LikedBook[]) => void;
+  updateSearchedBooks: (page: number, displayCount?: number) => void;
+  clearSearchedBooks: () => void;
+
+  setSearchedBooksAndCurrentBook: (id: string, checked: boolean) => void;
+  setCurrentBook: (book: LikedBook) => void;
+  setQuery: (item: string) => void;
+
+  fetchSearchResults: (
+    query: string,
+    page: number,
+    displayCount?: number
+  ) => void;
+  initializeSearchedMovies: (movies: MovieProps[]) => void;
+  updateSearchedMovies: (page: number, displayCount?: number) => void;
+  clearSearchedMovies: () => void;
 
   fetchLikedContents: (type: string) => void;
   insertLikedContent: (
@@ -62,9 +66,6 @@ type Actions = {
 
 const initialState: State = {
   likedBooks: [],
-  likedProducts: [],
-  dashboardBooks: [],
-  dashboardProducts: [],
   bookReviews: {
     reviews: [],
     count: 0,
@@ -82,6 +83,10 @@ const initialState: State = {
     checked: false,
   },
   loading: true,
+
+  query: "",
+  searchedBooks: [],
+  searchedMovies: [],
 };
 
 const createDashboardSlice: StateCreator<
@@ -93,9 +98,7 @@ const createDashboardSlice: StateCreator<
   ...initialState,
   fetchBookReviews: async (id: string, page: number) => {
     try {
-      const res = await fetch(
-        `/api/dashboard/books/${id}/reviews?page=${page}`
-      );
+      const res = await fetch(`/api/books/${id}/reviews?page=${page}`);
       const data = await res.json();
 
       set({
@@ -110,7 +113,7 @@ const createDashboardSlice: StateCreator<
     get().setSpinner(true);
     const { contentId } = contentInfo;
     const params = { contentInfo, like };
-    const response = await fetch(`/api/dashboard/books/${contentId}/reviews`, {
+    const response = await fetch(`/api/books/${contentId}/reviews`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -126,28 +129,63 @@ const createDashboardSlice: StateCreator<
 
     get().fetchBookReviews(contentId, 1);
   },
-  clearDashboardBooks: () => {
-    set({ dashboardBooks: [], loading: true });
+  fetchSearchResults: async (query, page, displayCount = 20) => {
+    const res = await fetch(
+      `/api/search/${query}?page=${page}&displayCount=${displayCount}`
+    );
+    const data = await res.json();
+
+    set({
+      searchedBooks: data.booksResult.books,
+      searchedMovies: data.moviesResult.movies,
+      query,
+    });
   },
-  updateDashboardBooks: async (page, displayCount = 20) => {
+
+  updateSearchedBooks: async (page, displayCount = 20) => {
     try {
+      const query = get().query;
       const res = await fetch(
-        `/api/dashboard/books?page=${page}&displayCount=${displayCount}`
+        `/api/search/books/${query}?page=${page}&displayCount=${displayCount}`
       );
       const data = await res.json();
-      set({ dashboardBooks: data.books, loading: false });
+      set({ searchedBooks: data.books, loading: false });
     } catch (e) {
       console.error(e);
     }
   },
+  initializeSearchedBooks: (books) => {
+    set({ searchedBooks: books, loading: false });
+  },
+  clearSearchedBooks: () => {
+    set({ searchedBooks: [], loading: true });
+  },
+
+  updateSearchedMovies: async (page, displayCount = 20) => {
+    try {
+      const query = get().query;
+      const res = await fetch(
+        `/api/search/movies/${query}?page=${page}&displayCount=${displayCount}`
+      );
+      const data = await res.json();
+      set({ searchedMovies: data.movies, loading: false });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  initializeSearchedMovies: (movies) => {
+    set({ searchedMovies: movies, loading: false });
+  },
+  clearSearchedMovies: () => {
+    set({ searchedBooks: [], loading: true });
+  },
+
   fetchLikedContents: async (type: string) => {
-    const res = await fetch(`/api/bookmarks/${type}`);
+    const res = await fetch(`/api/mypage/bookmarks/${type}`);
     const data: LikedContent[] = await res.json();
 
     if (type === "book") {
       set({ likedBooks: data });
-    } else if (type === "product") {
-      set({ likedProducts: data });
     }
   },
   addLikedBook: async (book) => {
@@ -161,7 +199,7 @@ const createDashboardSlice: StateCreator<
       };
       const nextChecked = await get().insertLikedContent(contentType, params);
 
-      get().setDashboardBooksAndCurrentBook(book.isbn, nextChecked);
+      get().setSearchedBooksAndCurrentBook(book.isbn, nextChecked);
       set((state) => {
         const nextLikedBooks: LikedContent[] = [
           ...state.likedBooks,
@@ -188,7 +226,7 @@ const createDashboardSlice: StateCreator<
         contentType,
         id
       );
-      get().setDashboardBooksAndCurrentBook(id, nextChecked);
+      get().setSearchedBooksAndCurrentBook(id, nextChecked);
 
       set((state) => {
         const nextLikedBooks: LikedContent[] = state.likedBooks.filter(
@@ -202,74 +240,10 @@ const createDashboardSlice: StateCreator<
       console.error(e);
     }
   },
-  clearDashboardProducts: () => {
-    set({ dashboardProducts: [], loading: true });
-  },
-  updateDashboardProducts: async (page, displayCount = 20) => {
-    try {
-      const res = await fetch(
-        `/api/dashboard/products?page=${page}&displayCount=${displayCount}`
-      );
-      const data = await res.json();
-      set({ dashboardProducts: data.products, loading: false });
-    } catch (e) {
-      console.error(e);
-    }
-  },
-  addLikedProduct: async (product) => {
-    try {
-      const contentType = "product";
-      const params = {
-        contentId: product.productId,
-        contentTitle: product.title,
-        contentImgUrl: product.image,
-        contentType,
-      };
-      const nextChecked = await get().insertLikedContent(contentType, params);
 
-      get().setDashboardProducts(product.productId, nextChecked);
-      set((state) => {
-        const nextLikedProducts: LikedContent[] = [
-          ...state.likedProducts,
-          {
-            id: product.productId,
-            imgUrl: product.image,
-            title: product.title,
-            link: product.link,
-            type: contentType,
-          },
-        ];
-        return {
-          likedProducts: nextLikedProducts,
-        };
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  },
-  deleteLikedProduct: async (id) => {
-    try {
-      const contentType = "product";
-      const nextChecked: boolean = await get().deleteLikeContent(
-        contentType,
-        id
-      );
-      get().setDashboardProducts(id, nextChecked);
-      set((state) => {
-        const nextLikedProducts: LikedContent[] = state.likedProducts.filter(
-          (current) => current.id !== id
-        );
-        return {
-          likedProducts: nextLikedProducts,
-        };
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  },
   insertLikedContent: async (contentType, params) => {
     const id = params.contentId;
-    const res = await fetch(`/api/bookmarks/${contentType}/${id}`, {
+    const res = await fetch(`/api/mypage/bookmarks/${contentType}/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -281,7 +255,7 @@ const createDashboardSlice: StateCreator<
     return data.checked;
   },
   deleteLikeContent: async (contentType, id) => {
-    const res = await fetch(`/api/bookmarks/${contentType}/${id}`, {
+    const res = await fetch(`/api/mypage/bookmarks/${contentType}/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -291,7 +265,7 @@ const createDashboardSlice: StateCreator<
     return data.checked;
   },
   fetchBookmarkedContent: async (contentType, id) => {
-    const res = await fetch(`/api/bookmarks/${contentType}/${id}`);
+    const res = await fetch(`/api/mypage/bookmarks/${contentType}/${id}`);
     const checked = await res.json();
     return checked;
   },
@@ -300,25 +274,15 @@ const createDashboardSlice: StateCreator<
       bookReviews: initialState.bookReviews,
     });
   },
-  setDashboardProducts: (id, checked) => {
-    set((state) => {
-      const modifiedProducts = state.dashboardProducts.map((item) => {
-        return id === item.productId ? { ...item, checked } : item;
-      });
 
-      return {
-        dashboardProducts: modifiedProducts,
-      };
-    });
-  },
-  setDashboardBooksAndCurrentBook: (id, checked) => {
+  setSearchedBooksAndCurrentBook: (id, checked) => {
     set((state) => {
-      const modifiedBooks = state.dashboardBooks.map((item) => {
+      const modifiedBooks = state.searchedBooks.map((item) => {
         return id === item.isbn ? { ...item, checked } : item;
       });
 
       return {
-        dashboardBooks: modifiedBooks,
+        searchedBooks: modifiedBooks,
         currentBook: { ...state.currentBook, checked },
       };
     });
@@ -333,6 +297,7 @@ const createDashboardSlice: StateCreator<
       return { currentBook: nextCurrentBook };
     });
   },
+  setQuery: (item) => set({ query: item }),
   resetDashboardData: () => {
     set(initialState);
   },

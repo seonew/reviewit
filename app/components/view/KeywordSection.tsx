@@ -16,7 +16,7 @@ const KeywordSection = ({ keywords }: Props) => {
             <li key={keyword.id} className="m-1">
               <Link
                 className="tag-item cursor-pointer"
-                href={`/keyword/${keyword.id}`}
+                href={`/movies/keyword/${keyword.id}`}
               >
                 {keyword.name}
               </Link>

@@ -9,13 +9,11 @@ type Props = { content: LikedContent };
 
 const CardInfo = ({ content }: Props) => {
   const { imgUrl: image, title, id, link, type } = content;
-  const { deleteLikedBook, deleteLikedProduct } = useStore();
+  const { deleteLikedBook } = useStore();
 
   const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (type === "book") {
       deleteLikedBook(id);
-    } else if (type === "product") {
-      deleteLikedProduct(id);
     }
     e.stopPropagation();
   };
