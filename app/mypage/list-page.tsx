@@ -15,7 +15,6 @@ const List = () => {
 
   useEffect(() => {
     fetchLikedContents("book");
-    fetchLikedContents("product");
   }, [fetchLikedContents]);
 
   const LikeList = () => {
