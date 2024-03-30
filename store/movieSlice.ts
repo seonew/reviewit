@@ -1,13 +1,19 @@
 import { StateCreator } from "zustand";
-import { MovieProps, ReviewDataProps } from "@/types";
+import { LikedContent, LikedMovie, MovieProps, ReviewDataProps } from "@/types";
 import { CommonSlice } from "./commonSlice";
+import { DashboardSlice } from "./dashboardSlice";
 
 type State = {
   dashboardMovies: MovieProps[];
   movieReviews: ReviewDataProps;
+
+  likedMovies: LikedContent[];
 };
 
 type Actions = {
+  addLikedMovie: (movie: LikedMovie) => void;
+  deleteLikedMovie: (id: string) => void;
+
   setDashboardMovies: (movies: MovieProps[]) => void;
   fetchMovieReviews: (id: string, page: number) => void;
   insertMovieReview: ({
@@ -33,15 +39,64 @@ const initialState: State = {
     count: 0,
     stats: [],
   },
+  likedMovies: [],
 };
 
 const createMovieSlice: StateCreator<
-  CommonSlice & MovieSlice,
+  CommonSlice & MovieSlice & DashboardSlice,
   [],
   [],
   MovieSlice
 > = (set, get) => ({
   ...initialState,
+  addLikedMovie: async (movie) => {
+    try {
+      const contentType = "movie";
+      const params = {
+        contentId: movie.id,
+        contentTitle: movie.title,
+        contentImgUrl: movie.posterImage ?? "",
+        contentType,
+      };
+      await get().insertLikedContent(contentType, params);
+
+      set((state) => {
+        const nextLikedMovies: LikedContent[] = [
+          ...state.likedMovies,
+          {
+            id: movie.id,
+            imgUrl: movie.posterImage ?? "",
+            title: movie.title,
+            link: movie.link ?? "",
+            type: contentType,
+          },
+        ];
+        return {
+          likedMovies: nextLikedMovies,
+        };
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  deleteLikedMovie: async (id) => {
+    try {
+      const contentType = "movie";
+      await get().deleteLikeContent(contentType, id);
+
+      set((state) => {
+        const nextLikedMovies: LikedContent[] = state.likedMovies.filter(
+          (current) => current.id !== id
+        );
+        return {
+          likedMovies: nextLikedMovies,
+        };
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+
   fetchMovieReviews: async (contentId, page) => {
     try {
       const response = await fetch(

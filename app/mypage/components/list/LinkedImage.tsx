@@ -3,7 +3,7 @@ import Image from "next/image";
 import DefaultImage from "@/app/components/DefaultImage";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { ReviewProps } from "@/types";
-import { DETAIL_BOOK_PATH } from "@/utils/constants";
+import { DETAIL_BOOK_PATH, DETAIL_MOVIE_PATH } from "@/utils/constants";
 
 type Props = {
   review: ReviewProps;
@@ -12,7 +12,11 @@ type Props = {
 const LinkedImage = ({ review }: Props) => {
   return (
     <div className="h-20 w-14 flex-shrink-0 overflow-hidden">
-      <Link href={`${DETAIL_BOOK_PATH}/${review.contentId}`}>
+      <Link
+        href={`${
+          review.type === "book" ? DETAIL_BOOK_PATH : DETAIL_MOVIE_PATH
+        }/${review.contentId}`}
+      >
         {review.contentImgUrl ? (
           <Image
             className="rounded"

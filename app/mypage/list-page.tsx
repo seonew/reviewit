@@ -8,18 +8,30 @@ import UserInfo from "./components/UserInfo";
 import CardInfo from "./components/CardInfo";
 
 const List = () => {
-  const { user, signOut, likedBooks, fetchLikedContents } = useStore();
+  const { user, signOut, likedBooks, likedMovies, fetchLikedContents } =
+    useStore();
   const handleClickSignOut = () => {
     signOut();
   };
 
   useEffect(() => {
     fetchLikedContents("book");
+    fetchLikedContents("movie");
   }, [fetchLikedContents]);
 
   const LikeList = () => {
     return (
       <>
+        <CardList
+          title={"My Movie List"}
+          color={"text-gray-900"}
+          gridColsCSS={"grid-cols-4"}
+        >
+          {likedMovies &&
+            likedMovies.map((item: LikedContent) => {
+              return <CardInfo key={item.id} content={item} />;
+            })}
+        </CardList>
         <CardList
           title={"My Book List"}
           color={"text-gray-900"}
@@ -36,19 +48,15 @@ const List = () => {
 
   return (
     <div className="contents-container">
-      {user.name ? (
-        <div className="flex items-start">
-          <div className="w-1/4 min-w-200">
-            <UserInfo user={user} onClickSignOut={handleClickSignOut} />
-          </div>
-          <div className="w-12"></div>
-          <div className="w-10/12 pt-6 pl-2 overflow-hidden">
-            <LikeList />
-          </div>
+      <div className="flex items-start">
+        <div className="w-1/4 min-w-200">
+          <UserInfo user={user} onClickSignOut={handleClickSignOut} />
         </div>
-      ) : (
-        <LikeList />
-      )}
+        <div className="w-12"></div>
+        <div className="w-10/12 pt-6 pl-2 overflow-hidden">
+          <LikeList />
+        </div>
+      </div>
     </div>
   );
 };

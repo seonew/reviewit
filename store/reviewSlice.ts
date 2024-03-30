@@ -12,7 +12,7 @@ type Actions = {
   fetchMyReviews: (page: number) => void;
   fetchContetLikes: (page: number) => void;
   editReview: (modifiedReview: ReviewProps) => void;
-  deleteReview: (reviewId: string) => void;
+  deleteReview: (reviewId: string, type: string) => void;
 
   insertReviewLike: (reviewId: string, contentId: string, page: number) => void;
   deleteReviewLike: (reviewId: string, page: number) => void;
@@ -102,13 +102,16 @@ const createReviewSlice: StateCreator<
   },
   editReview: async (modifiedReview) => {
     try {
-      const response = await fetch(`/api/mypage/reviews/${modifiedReview.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(modifiedReview),
-      });
+      const response = await fetch(
+        `/api/mypage/reviews/${modifiedReview.type}/${modifiedReview.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(modifiedReview),
+        }
+      );
       const data = await response.json();
 
       if (data.status === 500) {
@@ -119,9 +122,9 @@ const createReviewSlice: StateCreator<
       console.error(e);
     }
   },
-  deleteReview: async (reviewId) => {
+  deleteReview: async (reviewId, type) => {
     try {
-      const response = await fetch(`/api/mypage/reviews/${reviewId}`, {
+      const response = await fetch(`/api/mypage/reviews/${type}/${reviewId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

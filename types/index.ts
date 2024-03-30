@@ -44,6 +44,10 @@ export type LikedProduct = ProductProps & {
   checked?: boolean;
 };
 
+export type LikedMovie = MovieProps & {
+  checked?: boolean;
+};
+
 export type LikedContent = {
   id: string;
   imgUrl: string;
@@ -136,6 +140,7 @@ export type ReviewProps = {
   contentLike?: boolean;
   contentImgUrl?: string;
   contentTitle?: string;
+  type: string;
   userName?: string;
   userId: string;
   updateDate: string;

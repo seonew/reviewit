@@ -11,7 +11,7 @@ type Props = {
   title: string;
   reviews: ReviewProps[];
   onEdit: (modifiedReview: ReviewProps) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: string, type: string) => void;
 };
 
 const ReviewList = ({ title, reviews, onEdit, onDelete }: Props) => {
@@ -29,8 +29,12 @@ const ReviewList = ({ title, reviews, onEdit, onDelete }: Props) => {
     setTargetReview(review);
   };
 
-  const handleClickDelete = (id: string) => () => {
-    setConfirmModalData(true, "해당 리뷰를 삭제하시겠습니까?", confirmFunc(id));
+  const handleClickDelete = (id: string, type: string) => () => {
+    setConfirmModalData(
+      true,
+      "해당 리뷰를 삭제하시겠습니까?",
+      confirmFunc(id, type)
+    );
   };
 
   const handleClickCommentModalClose = () => {
@@ -41,8 +45,8 @@ const ReviewList = ({ title, reviews, onEdit, onDelete }: Props) => {
     onEdit?.(modifiedReview);
   };
 
-  const confirmFunc = (id: string) => () => {
-    onDelete?.(id);
+  const confirmFunc = (id: string, type: string) => () => {
+    onDelete?.(id, type);
   };
 
   useEffect(() => {
@@ -70,7 +74,7 @@ const ReviewList = ({ title, reviews, onEdit, onDelete }: Props) => {
                       </button>
                       <button
                         className="p-2"
-                        onClick={handleClickDelete(review.id)}
+                        onClick={handleClickDelete(review.id, review.type)}
                       >
                         <TrashIcon className="w-4 h-4" />
                       </button>

@@ -32,8 +32,8 @@ const List = ({ myReiviewsApiData }: Props) => {
     fetchMyReviews(page + 1);
   };
 
-  const handleClickDelete = async (id: string) => {
-    await deleteReview(id);
+  const handleClickDelete = async (id: string, type: string) => {
+    await deleteReview(id, type);
     await fetchMyReviews(page);
   };
 
