@@ -22,7 +22,7 @@ export default async function Page() {
 
 async function getData() {
   try {
-    const { reviews, count } = await getMyReviews(0);
+    const { reviews, count } = await getMyReviews(1);
     return { reviews, count };
   } catch (error) {
     console.log(error);

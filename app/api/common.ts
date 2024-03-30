@@ -4,6 +4,7 @@ import BookReviewModel from "@/models/review/book";
 import UserModel from "@/models/user";
 import LikeModel from "@/models/review/like";
 import BookmarkModel from "@/models/bookmark";
+import MovieReviewModel from "@/models/review/movie";
 import { LikedContent, ReviewProps, StatsProps, User } from "@/types";
 import { DETAIL_BOOK_PATH, LIMIT } from "@/utils/constants";
 import { NotFoundUserError } from "@/utils/error";
@@ -51,12 +52,41 @@ export const getLikesForReviews = async (offset: number) => {
   return { reviews, count: total };
 };
 
-export const getMyReviews = async (offset: number) => {
+export const getMyReviews = async (page: number) => {
   await dbConnect();
 
   const userId = await getUserId();
-  const { data: reviewData, total } = await loadMyReviews(userId, offset);
-  const reviews = reviewData.map((review: ReviewProps) => {
+  const bookReviews: ReviewProps[] = await BookReviewModel.find({
+    userId,
+  }).lean();
+  const movieReviews: ReviewProps[] = await MovieReviewModel.find({
+    userId,
+  }).lean();
+
+  const bookReviewsWithType = bookReviews.map((review: ReviewProps) => ({
+    ...review,
+    type: "book",
+  }));
+  const movieReviewsWithType = movieReviews.map((review: ReviewProps) => ({
+    ...review,
+    type: "movie",
+  }));
+
+  const combinedResults: ReviewProps[] = [
+    ...bookReviewsWithType,
+    ...movieReviewsWithType,
+  ];
+  const sortedReviews = combinedResults.sort(
+    (a, b) =>
+      new Date(b.updateDate).getTime() - new Date(a.updateDate).getTime()
+  );
+  const total = combinedResults.length;
+
+  const startIndex = (page - 1) * LIMIT;
+  const endIndex = startIndex + LIMIT;
+  const paginatedResults = sortedReviews.slice(startIndex, endIndex);
+
+  const reviews = paginatedResults.map((review: ReviewProps) => {
     return {
       id: review.id,
       content: review.content,
@@ -64,6 +94,7 @@ export const getMyReviews = async (offset: number) => {
       contentLike: review.contentLike ?? false,
       contentImgUrl: review.contentImgUrl,
       contentTitle: review.contentTitle,
+      type: review.type,
       userId: review.userId,
       updateDate: replaceDateFormat(review.updateDate),
     };
@@ -250,29 +281,6 @@ export const loadBookInfo = async (id: string) => {
   });
   const bookData = await bookResponse.json();
   return bookData;
-};
-
-export const loadMyReviews = async (
-  userId: string,
-  offset: number
-): Promise<{ data: any; total: any }> => {
-  const rowData = await BookReviewModel.aggregate([
-    { $match: { userId } },
-    { $sort: { updateDate: -1 } },
-    {
-      $facet: {
-        metadata: [{ $count: "total" }],
-        data: [{ $skip: offset }, { $limit: LIMIT }],
-      },
-    },
-  ]);
-
-  const result = {
-    data: rowData[0].data,
-    total: rowData[0].metadata[0] ? rowData[0].metadata[0].total : 0,
-  };
-
-  return result;
 };
 
 export const loadLikesForReview = async (userId: string, offset: number) => {

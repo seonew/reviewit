@@ -1,15 +1,34 @@
 import Image from "next/image";
 import Link from "next/link";
+import { LikedMovie } from "@/types";
+import { useBoundStore as useStore } from "@/store";
+import { handleClickSignIn } from "@/utils/common";
 import Card from "@/app/components/Card";
-import { MovieProps } from "@/types";
+import BookmarkButton from "./BookmarkButton";
 
 type Props = {
-  movie: MovieProps;
+  movie: LikedMovie;
 };
 
-const MovieInfo = ({
-  movie: { title, posterImage, link, releaseDate },
-}: Props) => {
+const MovieInfo = ({ movie }: Props) => {
+  const { id, title, posterImage, link, releaseDate, checked } = movie;
+  const { addLikedMovie, deleteLikedMovie, user } = useStore();
+
+  const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!user.id && !user.name) {
+      handleClickSignIn();
+      return;
+    }
+
+    const isChecked = checked;
+    if (isChecked) {
+      deleteLikedMovie(id);
+    } else {
+      addLikedMovie(movie);
+    }
+    e.stopPropagation();
+  };
+
   return (
     <div className="flex flex-col w-full min-w-0">
       {link && (
@@ -26,6 +45,7 @@ const MovieInfo = ({
                 }}
               />
             )}
+            <BookmarkButton onClick={handleClickItem} checked={checked} />
           </Card>
           <div className="mt-2.5 text-sm font-normal min-w-0 break-keep break-words">
             <div className="overflow-hidden ">
