@@ -12,7 +12,7 @@ type Props = {
 const List = ({ movies, keyword }: Props) => {
   return (
     <div className="contents-container">
-      <CardList title={`${keyword}`} color={"text-black"}>
+      <CardList title={`${keyword}`}>
         {movies &&
           movies.map((item: MovieProps) => {
             return <MovieInfo key={item.id} movie={item} />;

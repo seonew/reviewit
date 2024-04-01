@@ -8,7 +8,7 @@ const Empty = ({ title, color, message }: Props) => {
   return (
     <div>
       <div className="py-5 flex items-center justify-between">
-        <h2 className={`text-xl font-bold ${color ?? "text-naver-green"}`}>
+        <h2 className={`text-xl font-bold ${color ?? "text-gray-900"}`}>
           {title}
         </h2>
       </div>
