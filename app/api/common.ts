@@ -20,36 +20,52 @@ type bookmarkType = {
 export const getLikesForReviews = async (offset: number) => {
   await dbConnect();
 
-  const userId = await getUserId();
+  const userId: string = await getUserId();
   const { data: likeData, total } = await loadLikesForReview(userId, offset);
-  const userData = await loadUsers();
+  const userData: User[] = await loadUsers();
 
   const reviews: ReviewProps[] = await Promise.all(
     likeData.map(async (like: { reviewId: string }) => {
       const bookReview: ReviewProps | null = await BookReviewModel.findOne({
         id: like.reviewId,
       });
+      const movieReview: ReviewProps | null = await MovieReviewModel.findOne({
+        id: like.reviewId,
+      });
 
-      if (bookReview !== null) {
-        const author = userData.find((user) => user.id === bookReview.userId);
-        const userName = !author ? "홍길동" : author.name;
-
-        return {
-          id: bookReview.id,
-          content: bookReview.content,
-          contentId: bookReview.contentId,
-          contentImgUrl: bookReview.contentImgUrl,
-          contentTitle: bookReview.contentTitle,
-          like: true,
-          userId: bookReview.userId,
-          userName,
-          updateDate: replaceDateFormat(bookReview.updateDate),
-        };
+      if (bookReview) {
+        const type = "book";
+        return getLikedReviewObject(userData, bookReview, type);
+      } else if (movieReview) {
+        const type = "movie";
+        return getLikedReviewObject(userData, movieReview, type);
       }
     })
   );
 
   return { reviews, count: total };
+};
+
+const getLikedReviewObject = (
+  userData: User[],
+  currentReview: ReviewProps,
+  type: string
+) => {
+  const author = userData.find((user) => user.id === currentReview?.userId);
+  const userName = !author ? "홍길동" : author.name;
+
+  return {
+    id: currentReview.id,
+    content: currentReview.content,
+    contentId: currentReview.contentId,
+    contentImgUrl: currentReview.contentImgUrl,
+    contentTitle: currentReview.contentTitle,
+    type,
+    like: true,
+    userId: currentReview.userId,
+    userName,
+    updateDate: replaceDateFormat(currentReview.updateDate),
+  };
 };
 
 export const getMyReviews = async (page: number) => {
