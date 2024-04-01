@@ -69,9 +69,14 @@ test.describe(() => {
 
   test("editing a review", async ({ page }, testInfo) => {
     await page.goto("/mypage/reviews");
-    await expect(page.locator("li").first().getByRole("button")).toHaveCount(2);
+    const firstElement = page.locator("li").first();
 
-    await page.locator("li").first().getByRole("button").first().click();
+    await expect(firstElement.locator("svg").first()).toHaveCSS(
+      "color",
+      "rgb(56, 189, 248)"
+    );
+    await expect(firstElement.getByRole("button")).toHaveCount(2);
+    await firstElement.getByRole("button").first().click();
 
     await expect(page.locator(".relative.bg-white > .bg-white")).toBeVisible();
     await expect(
