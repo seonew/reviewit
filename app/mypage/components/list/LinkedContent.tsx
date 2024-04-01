@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ReviewProps } from "@/types";
-import { DETAIL_BOOK_PATH } from "@/utils/constants";
+import { DETAIL_BOOK_PATH, DETAIL_MOVIE_PATH } from "@/utils/constants";
 import { BookOpenIcon, FilmIcon } from "@heroicons/react/24/solid";
 
 type Props = {
@@ -17,7 +17,11 @@ const LinkedContent = ({ review }: Props) => {
           <BookOpenIcon className="w-4 h-4 text-sky-400 mr-1" />
         )}
         {review.contentTitle && (
-          <Link href={`${DETAIL_BOOK_PATH}/${review.contentId}`}>
+          <Link
+            href={`${
+              review.type === "book" ? DETAIL_BOOK_PATH : DETAIL_MOVIE_PATH
+            }/${review.contentId}`}
+          >
             <p className="text-md font-semibold leading-6 text-gray-900">
               {review.contentTitle}
             </p>
