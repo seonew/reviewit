@@ -63,7 +63,6 @@ const List = ({ keyword }: Props) => {
             <CardList
               title={"Movie List"}
               targetUrl={`/search/movies?query=${query}`}
-              color="text-black"
             >
               {searchedMovies &&
                 searchedMovies.map((item: MovieProps) => {
@@ -74,14 +73,12 @@ const List = ({ keyword }: Props) => {
             <Empty
               title={"Movie List"}
               message={"검색된 결과가 없어요 ㅜ.ㅜ"}
-              color="text-black"
             />
           )}
           {searchedBooks?.length > 0 ? (
             <CardList
               title={"Book List"}
               targetUrl={`/search/books?query=${query}`}
-              color="text-black"
             >
               {searchedBooks &&
                 searchedBooks.map((item: BookProps) => {
@@ -89,11 +86,7 @@ const List = ({ keyword }: Props) => {
                 })}
             </CardList>
           ) : (
-            <Empty
-              title={"Book List"}
-              message={"검색된 결과가 없어요 ㅜ.ㅜ"}
-              color="text-black"
-            />
+            <Empty title={"Book List"} message={"검색된 결과가 없어요 ㅜ.ㅜ"} />
           )}
         </>
       )}

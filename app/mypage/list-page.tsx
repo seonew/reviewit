@@ -22,21 +22,13 @@ const List = () => {
   const LikeList = () => {
     return (
       <>
-        <CardList
-          title={"My Movie List"}
-          color={"text-gray-900"}
-          gridColsCSS={"grid-cols-4"}
-        >
+        <CardList title={"My Movie List"} gridColsCSS={"grid-cols-4"}>
           {likedMovies &&
             likedMovies.map((item: LikedContent) => {
               return <CardInfo key={item.id} content={item} />;
             })}
         </CardList>
-        <CardList
-          title={"My Book List"}
-          color={"text-gray-900"}
-          gridColsCSS={"grid-cols-4"}
-        >
+        <CardList title={"My Book List"} gridColsCSS={"grid-cols-4"}>
           {likedBooks &&
             likedBooks.map((item: LikedContent) => {
               return <CardInfo key={item.id} content={item} />;

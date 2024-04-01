@@ -24,7 +24,7 @@ const List = ({ movies, imageBannerInfo }: Props) => {
   return (
     <div className="contents-container">
       {imageBannerInfo && <Banner info={imageBannerInfo} />}
-      <CardList title={"Movie List"} color={"text-black"}>
+      <CardList title={"Movie List"}>
         {movies &&
           movies.map((item: MovieProps) => {
             return <MovieInfo key={item.title} movie={item} />;
