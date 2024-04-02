@@ -37,7 +37,12 @@ const HeaderSearchBox = ({ onSubmit, keyword }: Props) => {
       <div className="w-full flex justify-cetner">
         <div className="w-full inline-flex items-center px-3.5 h-9 border border-gray-500 rounded-sm">
           <span className="inline-block align-middle pr-1.5 text-gray-400">
-            <button type="submit" onClick={handleSubmit} className="py-2">
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              className="py-2"
+              aria-label="SearchButton"
+            >
               <MagnifyingGlassIcon className="w-6 h-6 stroke-2" />
             </button>
           </span>
@@ -46,6 +51,7 @@ const HeaderSearchBox = ({ onSubmit, keyword }: Props) => {
             className="inline-block align-middle pr-1.5 leading-6 w-full h-8 outline-none bg-black text-white"
             onChange={handleChangeItem}
             value={inputValue}
+            aria-label="SearchInput"
           />
           <div className="flex items-center py-2 w-6 h-6">
             {inputValue !== "" && (
@@ -53,6 +59,7 @@ const HeaderSearchBox = ({ onSubmit, keyword }: Props) => {
                 type="submit"
                 onClick={handleClickReset}
                 className="inline-block align-middle text-gray-400"
+                aria-label="ResetButton"
               >
                 <XCircleIcon className="w-6 h-6 stroke-2" />
               </button>

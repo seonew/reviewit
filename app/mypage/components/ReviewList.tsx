@@ -69,12 +69,17 @@ const ReviewList = ({ title, reviews, onEdit, onDelete }: Props) => {
 
                   {user.id === review.userId && (
                     <div className="-mt-2">
-                      <button className="p-2" onClick={handleClickEdit(review)}>
+                      <button
+                        className="p-2"
+                        onClick={handleClickEdit(review)}
+                        aria-label="EditButton"
+                      >
                         <PencilSquareIcon className="w-4 h-4" />
                       </button>
                       <button
                         className="p-2"
                         onClick={handleClickDelete(review.id, review.type)}
+                        aria-label="DeleteButton"
                       >
                         <TrashIcon className="w-4 h-4" />
                       </button>

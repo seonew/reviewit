@@ -10,6 +10,7 @@ const DefaultImage = ({ size, children, color = "bg-stone-200" }: Props) => {
   return (
     <div
       className={`flex items-center justify-center rounded ${color} ${size}`}
+      aria-label="DefaultImage"
     >
       <span className="text-neutral-400">{children}</span>
     </div>
