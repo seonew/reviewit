@@ -1,12 +1,12 @@
 "use client";
 
-import { initCallbackPage } from "coco-people-client";
+import { initCallbackPage } from "coco-people-auth";
 import { useCallback, useEffect } from "react";
 import { useBoundStore as useStore } from "@/store";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const { fetchUserInfo, setIsSignedIn, user } = useStore();
+  const { fetchUserInfo, setIsSignedIn } = useStore();
   const router = useRouter();
 
   const initialize = useCallback(async () => {

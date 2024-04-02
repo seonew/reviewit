@@ -1,4 +1,5 @@
-import { replaceDateFormat, verifyData } from "@/utils/common";
+import { replaceDateFormat } from "@/utils/common";
+import { verifyAccessToken } from "coco-people-auth/server";
 import { cookies } from "next/headers";
 import BookReviewModel from "@/models/review/book";
 import UserModel from "@/models/user";
@@ -7,7 +8,7 @@ import BookmarkModel from "@/models/bookmark";
 import MovieReviewModel from "@/models/review/movie";
 import { LikedContent, ReviewProps, StatsProps, User } from "@/types";
 import { DETAIL_BOOK_PATH, LIMIT } from "@/utils/constants";
-import { NotFoundUserError } from "@/utils/error";
+import { UnauthorizedError } from "@/utils/error";
 import dbConnect from "@/utils/db/mongodb";
 
 type bookmarkType = {
@@ -324,11 +325,22 @@ export const loadUsers = async (): Promise<User[]> => {
   return userData;
 };
 
+export const getUserId = async () => {
+  const data = await getUserInfo();
+  if (!data) {
+    throw new UnauthorizedError();
+  }
+
+  const userId: string = data.id;
+  return userId;
+};
+
 export const getUserInfo = () => {
   try {
     return getUser();
   } catch (error) {
-    if (error instanceof NotFoundUserError) {
+    if (error instanceof UnauthorizedError) {
+      console.log(error.name);
       return null;
     }
   }
@@ -336,31 +348,29 @@ export const getUserInfo = () => {
   return null;
 };
 
-export const getUserId = () => {
-  const data = getUserInfo();
-  if (!data) {
-    throw new NotFoundUserError();
-  }
-
-  const userId: string = data.id;
-  return userId;
-};
-
-export const getUser = () => {
+export const getUser = async () => {
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
   if (!token) {
-    throw new NotFoundUserError();
+    throw new UnauthorizedError();
   }
 
-  const verifyResult = verifyData(token);
-  if (typeof verifyResult === "string") {
-    throw new NotFoundUserError();
-  }
+  const SECRET_KEY = process.env.SECRET_KEY!;
+  try {
+    const verifyResult: { login: string; id: string; avatarUrl: string } =
+      await verifyAccessToken({
+        accessToken: token,
+        clientSecret: SECRET_KEY,
+      });
 
-  const user = {
-    id: verifyResult.id,
-    name: verifyResult.login,
-  };
-  return user;
+    const user = {
+      id: verifyResult.id,
+      name: verifyResult.login,
+    };
+    return user;
+  } catch (error: any) {
+    if (error.name === "TokenExpiredError") {
+      throw new UnauthorizedError();
+    }
+  }
 };

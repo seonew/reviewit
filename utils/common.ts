@@ -1,5 +1,4 @@
-import { signIn } from "coco-people-client";
-import jwt from "jsonwebtoken";
+import { signIn } from "coco-people-auth";
 import Resizer from "react-image-file-resizer";
 
 export const validateContentEditable = (text: string) => {
@@ -90,8 +89,6 @@ export const handleClickSignIn = () => {
   signIn(signInParams);
 };
 
-export const verifyData = (token: string) => {
-  const secretKey = process.env.SECRET_KEY!;
-
-  return jwt.verify(token, secretKey);
+export const deleteCookie = (name: string) => {
+  document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
 };

@@ -3,6 +3,7 @@ import { User } from "@/types";
 import { DashboardSlice } from "./dashboardSlice";
 import { ReviewSlice } from "./reviewSlice";
 import { MovieSlice } from "./movieSlice";
+import { deleteCookie } from "@/utils/common";
 
 type State = {
   user: User;
@@ -99,7 +100,9 @@ const createCommonSlice: StateCreator<
 
         return { user: nextUser };
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   },
   fetchUserInfo: async (token: string) => {
     try {
@@ -121,7 +124,7 @@ const createCommonSlice: StateCreator<
     }
   },
   signOut: async () => {
-    document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+    deleteCookie("token");
     get().resetReviewData();
     get().resetCommonData();
     get().resetDashboardData();
