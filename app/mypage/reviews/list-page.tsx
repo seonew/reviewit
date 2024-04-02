@@ -7,12 +7,14 @@ import Pagination from "@/app/components/Pagination";
 import Tab from "../components/Tab";
 import { ReviewDataProps, ReviewProps } from "@/types";
 import ReviewList from "../components/ReviewList";
+import UnauthorizedErrorPage from "../components/UnauthorizedErrorPage";
 
 type Props = {
-  myReiviewsApiData: ReviewDataProps;
+  myReiviewsApiData: ReviewDataProps | null;
+  isAuthorized: boolean;
 };
 
-const List = ({ myReiviewsApiData }: Props) => {
+const List = ({ myReiviewsApiData, isAuthorized }: Props) => {
   const { fetchMyReviews, setMyReviews, editReview, deleteReview, myReviews } =
     useStore();
   const [page, setPage] = useState<number>(1);
@@ -43,37 +45,45 @@ const List = ({ myReiviewsApiData }: Props) => {
   };
 
   useEffect(() => {
-    setMyReviews(myReiviewsApiData);
+    if (myReiviewsApiData) {
+      setMyReviews(myReiviewsApiData);
+    }
   }, [myReiviewsApiData, setMyReviews]);
 
   return (
-    <div className="contents-container">
-      <Tab />
-      {myReviews.count > 0 ? (
-        <>
-          <ReviewList
-            title={"My Reviews"}
-            reviews={myReviews.reviews}
-            onDelete={handleClickDelete}
-            onEdit={handleClickEdit}
-          />
-          <Pagination
-            total={myReviews.count}
-            limit={5}
-            currentPage={page}
-            onClickPage={handleClickPage}
-            onClickPrev={handleClickPrevButton}
-            onClickNext={handleClickNextButton}
-          />
-        </>
+    <>
+      {!isAuthorized ? (
+        <UnauthorizedErrorPage />
       ) : (
-        <Empty
-          title={"My Reviews"}
-          color={"text-black"}
-          message={"작성한 리뷰가 없어요 ㅜ.ㅜ"}
-        />
+        <div className="contents-container">
+          <Tab />
+          {myReviews.count > 0 ? (
+            <>
+              <ReviewList
+                title={"My Reviews"}
+                reviews={myReviews.reviews}
+                onDelete={handleClickDelete}
+                onEdit={handleClickEdit}
+              />
+              <Pagination
+                total={myReviews.count}
+                limit={5}
+                currentPage={page}
+                onClickPage={handleClickPage}
+                onClickPrev={handleClickPrevButton}
+                onClickNext={handleClickNextButton}
+              />
+            </>
+          ) : (
+            <Empty
+              title={"My Reviews"}
+              color={"text-black"}
+              message={"작성한 리뷰가 없어요 ㅜ.ㅜ"}
+            />
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 };
 

@@ -6,18 +6,26 @@ import { useBoundStore as useStore } from "@/store";
 import CardList from "@/app/components/CardList";
 import UserInfo from "./components/UserInfo";
 import CardInfo from "./components/CardInfo";
+import UnauthorizedErrorPage from "./components/UnauthorizedErrorPage";
 
-const List = () => {
+type Props = {
+  isAuthorized: boolean;
+};
+
+const List = ({ isAuthorized }: Props) => {
   const { user, signOut, likedBooks, likedMovies, fetchLikedContents } =
     useStore();
   const handleClickSignOut = () => {
     signOut();
+    window.location.href = "/";
   };
 
   useEffect(() => {
-    fetchLikedContents("book");
-    fetchLikedContents("movie");
-  }, [fetchLikedContents]);
+    if (isAuthorized) {
+      fetchLikedContents("book");
+      fetchLikedContents("movie");
+    }
+  }, [fetchLikedContents, isAuthorized]);
 
   const LikeList = () => {
     return (
@@ -39,17 +47,23 @@ const List = () => {
   };
 
   return (
-    <div className="contents-container">
-      <div className="flex items-start">
-        <div className="w-1/4 min-w-200">
-          <UserInfo user={user} onClickSignOut={handleClickSignOut} />
+    <>
+      {!isAuthorized ? (
+        <UnauthorizedErrorPage />
+      ) : (
+        <div className="contents-container">
+          <div className="flex items-start">
+            <div className="w-1/4 min-w-200">
+              <UserInfo user={user} onClickSignOut={handleClickSignOut} />
+            </div>
+            <div className="w-12"></div>
+            <div className="w-10/12 pt-6 pl-2 overflow-hidden">
+              <LikeList />
+            </div>
+          </div>
         </div>
-        <div className="w-12"></div>
-        <div className="w-10/12 pt-6 pl-2 overflow-hidden">
-          <LikeList />
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

@@ -7,12 +7,14 @@ import Pagination from "@/app/components/Pagination";
 import LikeList from "../../components/LikeList";
 import Tab from "../../components/Tab";
 import { ReviewDataProps } from "@/types";
+import UnauthorizedErrorPage from "../../components/UnauthorizedErrorPage";
 
 type Props = {
-  contentLikesApiData: ReviewDataProps;
+  contentLikesApiData: ReviewDataProps | null;
+  isAuthorized: boolean;
 };
 
-const List = ({ contentLikesApiData }: Props) => {
+const List = ({ contentLikesApiData, isAuthorized }: Props) => {
   const { fetchContetLikes, setContentLikes, deleteReviewLike, contentLikes } =
     useStore();
   const [page, setPage] = useState<number>(1);
@@ -38,36 +40,44 @@ const List = ({ contentLikesApiData }: Props) => {
   };
 
   useEffect(() => {
-    setContentLikes(contentLikesApiData);
+    if (contentLikesApiData) {
+      setContentLikes(contentLikesApiData);
+    }
   }, [contentLikesApiData, setContentLikes]);
 
   return (
-    <div className="contents-container">
-      <Tab />
-      {contentLikes.count > 0 ? (
-        <>
-          <LikeList
-            title={"Likes"}
-            reviews={contentLikes.reviews}
-            onLike={handleClickLikeReview}
-          />
-          <Pagination
-            total={contentLikes.count}
-            limit={5}
-            currentPage={page}
-            onClickPage={handleClickPage}
-            onClickPrev={handleClickPrevButton}
-            onClickNext={handleClickNextButton}
-          />
-        </>
+    <>
+      {!isAuthorized ? (
+        <UnauthorizedErrorPage />
       ) : (
-        <Empty
-          title={"Likes"}
-          color={"text-black"}
-          message={"좋아요 리뷰가 없어요 ㅜ.ㅜ"}
-        />
+        <div className="contents-container">
+          <Tab />
+          {contentLikes.count > 0 ? (
+            <>
+              <LikeList
+                title={"Likes"}
+                reviews={contentLikes.reviews}
+                onLike={handleClickLikeReview}
+              />
+              <Pagination
+                total={contentLikes.count}
+                limit={5}
+                currentPage={page}
+                onClickPage={handleClickPage}
+                onClickPrev={handleClickPrevButton}
+                onClickNext={handleClickNextButton}
+              />
+            </>
+          ) : (
+            <Empty
+              title={"Likes"}
+              color={"text-black"}
+              message={"좋아요 리뷰가 없어요 ㅜ.ㅜ"}
+            />
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 };
 

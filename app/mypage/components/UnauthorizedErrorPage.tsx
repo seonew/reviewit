@@ -2,9 +2,10 @@
 
 import { handleClickSignIn } from "@/utils/common";
 import { useBoundStore as useStore } from "@/store";
+import { useEffect } from "react";
 
-export default function NotFound() {
-  const { user } = useStore();
+const UnauthorizedErrorPage = () => {
+  const { user, signOut } = useStore();
 
   const handleClickSignInButton = () => {
     if (!user.id && !user.name) {
@@ -12,6 +13,10 @@ export default function NotFound() {
       return;
     }
   };
+
+  useEffect(() => {
+    signOut();
+  }, [signOut]);
 
   return (
     <div className="contents-container top-0">
@@ -28,6 +33,7 @@ export default function NotFound() {
             <button
               onClick={handleClickSignInButton}
               className="rounded-md bg-ozip-blue px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ozip-blue"
+              aria-label="LoginButton"
             >
               Login
             </button>
@@ -36,4 +42,6 @@ export default function NotFound() {
       </main>
     </div>
   );
-}
+};
+
+export default UnauthorizedErrorPage;

@@ -9,22 +9,31 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
+  let isAuthorized = false;
   const data = await getData();
-  if (!data) {
+  isAuthorized = true;
+
+  if (data === null) {
+    isAuthorized = false;
+  } else if (!data) {
     notFound();
   }
 
   const DynamicListPage = dynamic(() => import("./list-page"), {
     ssr: false,
   });
-  return <DynamicListPage myReiviewsApiData={data} />;
+  return (
+    <DynamicListPage myReiviewsApiData={data} isAuthorized={isAuthorized} />
+  );
 }
 
 async function getData() {
   try {
     const { reviews, count } = await getMyReviews(1);
     return { reviews, count };
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    if (error.name === "UnauthorizedError") {
+      return null;
+    }
   }
 }
