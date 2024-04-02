@@ -18,7 +18,7 @@
     "@types/react-dom": "18.2.4",
     "@vercel/speed-insights": "^1.0.1",
     "axios": "^1.4.0",
-    "coco-people-client": "file:libs/coco-people-client-1.0.0-alpha.3.tgz",
+    "coco-people-auth": "file:libs/coco-people-auth-1.0.0.tgz",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.3",
     "jsonwebtoken": "^9.0.2",
@@ -27,6 +27,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-image-file-resizer": "^0.4.8",
+    "sharp": "^0.33.3",
     "swr": "^2.2.4",
     "zustand": "^4.3.8"
   },
