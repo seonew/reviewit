@@ -5,10 +5,11 @@ import { useBoundStore as useStore } from "@/store";
 import { useEffect } from "react";
 
 const UnauthorizedErrorPage = () => {
-  const { user, signOut } = useStore();
+  const { checkTokenExpiration, signOut } = useStore();
 
-  const handleClickSignInButton = () => {
-    if (!user.id && !user.name) {
+  const handleClickSignInButton = async () => {
+    const isTokenExpired = await checkTokenExpiration();
+    if (!isTokenExpired) {
       handleClickSignIn();
       return;
     }

@@ -44,6 +44,7 @@ type Actions = {
   ) => void;
   initializeConfirmModalData: () => void;
 
+  checkTokenExpiration: () => Promise<boolean>;
   signOut: () => void;
   resetCommonData: () => void;
 };
@@ -121,6 +122,20 @@ const createCommonSlice: StateCreator<
       set({ user: userData });
     } catch (error) {
       console.log(error);
+    }
+  },
+  checkTokenExpiration: async () => {
+    try {
+      const res = await fetch(`/api/auth`);
+      const data = await res.json();
+      if (!data) {
+        await get().signOut();
+      }
+
+      return data;
+    } catch (error) {
+      console.log(error);
+      return false;
     }
   },
   signOut: async () => {

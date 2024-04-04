@@ -12,10 +12,11 @@ type Props = {
 
 const MovieInfo = ({ movie }: Props) => {
   const { id, title, posterImage, link, releaseDate, checked } = movie;
-  const { addLikedMovie, deleteLikedMovie, user } = useStore();
+  const { addLikedMovie, deleteLikedMovie, checkTokenExpiration } = useStore();
 
-  const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!user.id && !user.name) {
+  const handleClickItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const isTokenExpired = await checkTokenExpiration();
+    if (!isTokenExpired) {
       handleClickSignIn();
       return;
     }
