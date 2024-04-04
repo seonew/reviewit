@@ -46,7 +46,7 @@ export async function POST(
 
     await dbConnect();
 
-    const userId = getUserId();
+    const userId = await getUserId();
     const newReview = new BookReviewModel({
       id: generateId(),
       contentId,

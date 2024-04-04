@@ -146,6 +146,8 @@ export const getUserBookmarks = async (contentType: string) => {
 
 export const isBookmarked = async (contentType: string, contentId: string) => {
   const userId = await getUserId();
+
+  await dbConnect();
   const bookmark = await BookmarkModel.findOne({
     contentType,
     contentId,
@@ -326,26 +328,13 @@ export const loadUsers = async (): Promise<User[]> => {
 };
 
 export const getUserId = async () => {
-  const data = await getUserInfo();
+  const data = await getUser();
   if (!data) {
     throw new UnauthorizedError();
   }
 
   const userId: string = data.id;
   return userId;
-};
-
-export const getUserInfo = () => {
-  try {
-    return getUser();
-  } catch (error) {
-    if (error instanceof UnauthorizedError) {
-      console.log(error.name);
-      return null;
-    }
-  }
-
-  return null;
 };
 
 export const getUser = async () => {

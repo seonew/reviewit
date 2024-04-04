@@ -82,7 +82,7 @@ export async function DELETE(
 
     await dbConnect();
 
-    const userId = getUserId();
+    const userId = await getUserId();
     if (type === "book") {
       await BookReviewModel.deleteOne({ id: reviewId, userId });
     } else if (type === "movie") {
