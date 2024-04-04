@@ -12,10 +12,11 @@ type Props = {
 
 const BookInfo = ({ book }: Props) => {
   const { title, author, discount, image, link, checked } = book;
-  const { addLikedBook, deleteLikedBook, user } = useStore();
+  const { addLikedBook, deleteLikedBook, checkTokenExpiration } = useStore();
 
-  const handleClickItem = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!user.id && !user.name) {
+  const handleClickItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const isTokenExpired = await checkTokenExpiration();
+    if (!isTokenExpired) {
       handleClickSignIn();
       return;
     }

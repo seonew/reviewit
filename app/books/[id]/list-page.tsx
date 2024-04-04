@@ -20,7 +20,6 @@ type Props = {
 export default function List({ id, book }: Props) {
   const {
     bookReviews: reviewData,
-    user,
     insertBookReview,
     fetchBookReviews,
     insertReviewLike,
@@ -30,6 +29,7 @@ export default function List({ id, book }: Props) {
     setCurrentBook,
     addLikedBook,
     deleteLikedBook,
+    checkTokenExpiration,
   } = useStore();
   const [page, setPage] = useState<number>(1);
 
@@ -48,8 +48,9 @@ export default function List({ id, book }: Props) {
     fetchBookReviews(id, page + 1);
   };
 
-  const handleSubmitReview = (content: string, like: boolean) => {
-    if (!user.id && !user.name) {
+  const handleSubmitReview = async (content: string, like: boolean) => {
+    const isTokenExpired = await checkTokenExpiration();
+    if (!isTokenExpired) {
       handleClickSignIn();
       return;
     }
@@ -68,7 +69,8 @@ export default function List({ id, book }: Props) {
     reviewId: string,
     isLike: boolean | undefined
   ) => {
-    if (!user.id && !user.name) {
+    const isTokenExpired = await checkTokenExpiration();
+    if (!isTokenExpired) {
       handleClickSignIn();
       return;
     }
@@ -81,8 +83,9 @@ export default function List({ id, book }: Props) {
     await fetchBookReviews(id, page);
   };
 
-  const handleClickBookmark = () => {
-    if (!user.id && !user.name) {
+  const handleClickBookmark = async () => {
+    const isTokenExpired = await checkTokenExpiration();
+    if (!isTokenExpired) {
       handleClickSignIn();
       return;
     }

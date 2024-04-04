@@ -28,7 +28,7 @@ export default function List({ id, currentMovie }: Props) {
     insertReviewLike,
     deleteReviewLike,
     movieReviews,
-    user,
+    checkTokenExpiration,
   } = useStore();
   const { movie, keywords, recommendations, similars, videos } = currentMovie;
   const loaded = !!movie.id;
@@ -49,8 +49,9 @@ export default function List({ id, currentMovie }: Props) {
     fetchMovieReviews(id, page + 1);
   };
 
-  const handleSubmitReview = (review: string, like: boolean) => {
-    if (!user.id && !user.name) {
+  const handleSubmitReview = async (review: string, like: boolean) => {
+    const isTokenExpired = await checkTokenExpiration();
+    if (!isTokenExpired) {
       handleClickSignIn();
       return;
     }
@@ -69,7 +70,8 @@ export default function List({ id, currentMovie }: Props) {
     reviewId: string,
     isLike: boolean | undefined
   ) => {
-    if (!user.id && !user.name) {
+    const isTokenExpired = await checkTokenExpiration();
+    if (!isTokenExpired) {
       handleClickSignIn();
       return;
     }
