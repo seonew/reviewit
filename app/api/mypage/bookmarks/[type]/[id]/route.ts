@@ -19,8 +19,8 @@ export async function GET(
 
     const data = await isBookmarked(contentType, contentId);
     return NextResponse.json(data);
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.log(error.name);
   }
   return NextResponse.json(false);
 }
@@ -30,8 +30,6 @@ export async function POST(
   { params }: { params: { type: string; id: string } }
 ) {
   try {
-    await dbConnect();
-
     const requestData = await request.json();
     const { id: contentId, type: contentType } = params;
     const { contentImgUrl, contentTitle } = requestData;
@@ -41,6 +39,8 @@ export async function POST(
     }
 
     const userId = await getUserId();
+
+    await dbConnect();
     const newBookmark = new BookmarkModel({
       id: generateId(),
       contentId,
@@ -53,10 +53,10 @@ export async function POST(
     await newBookmark.save();
 
     return NextResponse.json({ checked: true });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.log(error.name);
+    return NextResponse.json({ error: error.name, status: 500 });
   }
-  return NextResponse.json({ error: "Internal Server Error", status: 500 });
 }
 
 export async function DELETE(
@@ -75,8 +75,8 @@ export async function DELETE(
     await BookmarkModel.deleteOne({ contentId, contentType, userId });
 
     return NextResponse.json({ checked: false });
-  } catch (e) {
-    console.error(e);
+  } catch (error: any) {
+    console.log(error.name);
+    return NextResponse.json({ error: error.name, status: 500 });
   }
-  return NextResponse.json({ error: "Internal Server Error", status: 500 });
 }

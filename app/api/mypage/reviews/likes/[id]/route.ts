@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
     await dbConnect();
 
-    const userId = getUserId();
+    const userId = await getUserId();
     const newLike = new LikeModel({
       id: generateId(),
       reviewId,
@@ -43,7 +43,7 @@ export async function DELETE(
 
     await dbConnect();
 
-    const userId = getUserId();
+    const userId = await getUserId();
     await LikeModel.deleteOne({ reviewId, userId });
 
     return NextResponse.json({});

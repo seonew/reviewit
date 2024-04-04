@@ -47,7 +47,7 @@ export async function POST(
       throw new NotFoundContentError();
     }
 
-    const userId = getUserId();
+    const userId = await getUserId();
     const newReview = new MovieReviewModel({
       id: generateId(),
       contentId,
