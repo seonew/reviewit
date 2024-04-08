@@ -28,7 +28,9 @@ const LinkedContent = ({ review }: Props) => {
           </Link>
         )}
       </div>
-      <p className="text-sm leading-6 text-gray-600">{review.content}</p>
+      <div className="text-sm leading-6 text-gray-600 whitespace-pre-wrap break-words max-h-80 overflow-y-auto">
+        {review.content}
+      </div>
       <div className="text-xs leading-5">
         {review.userName && (
           <p className="font-semibold text-gray-900">{review.userName}</p>

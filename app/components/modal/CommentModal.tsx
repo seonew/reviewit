@@ -39,7 +39,7 @@ const CommentModal = ({ open, review, onClose, onSubmit }: Props) => {
 
   return (
     <Modal open={open}>
-      <div className="bg-white px-4 pb-4 pt-5">
+      <div className="bg-white px-4 pb-4 pt-5 max-w-6xl">
         <div className="flex items-start">
           <div className="p-4 text-left">
             <div className="text-center ">

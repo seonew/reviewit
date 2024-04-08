@@ -88,11 +88,9 @@ test.describe(() => {
     await expect(
       page.locator(".content-detail-comment-user-icon")
     ).toBeVisible();
-    await expect(
-      page
-        .locator(".comment-editor-contents-editable")
-        .filter({ hasText: TEST_CONTENT_TEXT })
-    ).toBeVisible();
+    await expect(page.locator(".comment-editor-contents-editable")).toHaveValue(
+      TEST_CONTENT_TEXT
+    );
     await expect(page.getByRole("button", { name: "입력" })).toBeVisible();
 
     await page
