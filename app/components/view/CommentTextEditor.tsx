@@ -1,11 +1,4 @@
-import {
-  ChangeEvent,
-  ClipboardEvent,
-  MouseEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { validateContentEditable } from "@/utils/common";
 import { useBoundStore as useStore } from "@/store";
@@ -17,31 +10,10 @@ type Props = {
 
 const CommentTextEditor = ({ content, onClick }: Props) => {
   const { setAlertModalData } = useStore();
-  const editableDiv = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isInput, setIsInput] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-
-  const handlePaste = (e: ClipboardEvent) => {
-    e.preventDefault();
-    const clipboardData = e.clipboardData?.getData("text");
-    if (!clipboardData) {
-      return;
-    }
-
-    const selection = window.getSelection();
-    if (!selection) {
-      return;
-    }
-    if (selection && !selection.rangeCount) {
-      return;
-    }
-    selection.deleteFromDocument();
-    selection.getRangeAt(0).insertNode(document.createTextNode(clipboardData));
-    selection.collapseToEnd();
-
-    const current = e.currentTarget.textContent;
-    changeIsInput(current);
-  };
+  const [charCount, setCharCount] = useState(0);
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -51,14 +23,14 @@ const CommentTextEditor = ({ content, onClick }: Props) => {
     setIsFocused(false);
   };
 
-  const handleChange = (e: ChangeEvent<HTMLDivElement>) => {
-    const current = e.currentTarget.textContent;
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const current = e.target.value;
     changeIsInput(current);
   };
 
   const handleSubmit = (e: MouseEvent) => {
     e.preventDefault();
-    const review = editableDiv.current?.textContent;
+    const review = textareaRef.current?.value;
 
     if (review) {
       const result = validateContentEditable(review);
@@ -69,25 +41,35 @@ const CommentTextEditor = ({ content, onClick }: Props) => {
 
       onClick?.(review);
 
-      editableDiv.current.innerText = "";
+      if (textareaRef.current) {
+        textareaRef.current.value = "";
+      }
       setIsInput(false);
       setIsFocused(false);
+      setCharCount(0);
     }
   };
 
   const changeIsInput = (current: string | null) => {
     const length = current?.trim().length;
-    if (!current ?? length === 0) {
+    if (!current || length === 0) {
       setIsInput(false);
     } else {
       setIsInput(true);
     }
+
+    if (current && length) {
+      setCharCount(current.length);
+    } else {
+      setCharCount(0);
+    }
   };
 
   useEffect(() => {
-    const current = editableDiv.current;
+    const current = textareaRef.current;
     if (content !== undefined && current !== null && current !== undefined) {
-      current.innerHTML = content;
+      current.value = content;
+      setCharCount(content.length);
     }
   }, [content]);
 
@@ -101,12 +83,10 @@ const CommentTextEditor = ({ content, onClick }: Props) => {
           }`}
         >
           <div className="comment-editor-contents">
-            <div
-              ref={editableDiv}
-              contentEditable="true"
+            <textarea
+              ref={textareaRef}
               className="comment-editor-contents-editable"
-              onPaste={handlePaste}
-              onInput={handleChange}
+              onChange={handleChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
             />
@@ -120,6 +100,13 @@ const CommentTextEditor = ({ content, onClick }: Props) => {
                 입력
               </button>
             </div>
+          </div>
+          <div
+            className={`relative bottom-0 right-12 text-right text-xs ${
+              charCount > 400 ? "text-red-600" : "text-gray-600"
+            }`}
+          >
+            <span className="text-right">{charCount}/400</span>
           </div>
         </div>
       </div>

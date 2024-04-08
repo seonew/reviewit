@@ -89,7 +89,7 @@
     @apply inline-flex rounded border-0 items-start px-3.5 text-sm w-full;
   }
   .comment-editor-contents-editable {
-    @apply inline-block p-0 text-black grow shrink-0 basis-0 outline-none break-words box-border min-w-925;
+    @apply inline-block p-0 text-black grow shrink-0 basis-0 outline-none break-words whitespace-pre-wrap box-border min-w-925 h-24 overflow-y-auto resize-none;
   }
   .comment-editor-contents-button-container {
     @apply ml-2 flex items-center py-2 px-0 font-semibold;
