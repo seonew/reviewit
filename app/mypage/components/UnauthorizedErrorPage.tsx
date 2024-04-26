@@ -1,6 +1,6 @@
 "use client";
 
-import { handleClickSignIn } from "@/utils/common";
+import { goToSignIn } from "@/utils/common";
 import { useBoundStore as useStore } from "@/store";
 import { useEffect } from "react";
 
@@ -10,7 +10,7 @@ const UnauthorizedErrorPage = () => {
   const handleClickSignInButton = async () => {
     const isTokenExpired = await checkTokenExpiration();
     if (!isTokenExpired) {
-      handleClickSignIn();
+      goToSignIn();
       return;
     }
   };

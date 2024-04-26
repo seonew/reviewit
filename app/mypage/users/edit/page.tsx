@@ -10,10 +10,11 @@ export const metadata: Metadata = {
 export default async function Page() {
   let userId = null;
   let isAuthorized = false;
+
   try {
     userId = await getUserId();
     isAuthorized = true;
-  } catch (error: any) {
+  } catch (error) {
     console.log(error);
   }
 

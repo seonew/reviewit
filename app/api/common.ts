@@ -7,7 +7,7 @@ import LikeModel from "@/models/review/like";
 import BookmarkModel from "@/models/bookmark";
 import MovieReviewModel from "@/models/review/movie";
 import { LikedContent, ReviewProps, StatsProps, User } from "@/types";
-import { DETAIL_BOOK_PATH, LIMIT } from "@/utils/constants";
+import { DETAIL_BOOK_PATH, LIMIT, DEFAULT_USER_NAME } from "@/utils/constants";
 import { UnauthorizedError } from "@/utils/error";
 import dbConnect from "@/utils/db/mongodb";
 
@@ -53,7 +53,7 @@ const getLikedReviewObject = (
   type: string
 ) => {
   const author = userData.find((user) => user.id === currentReview?.userId);
-  const userName = !author ? "홍길동" : author.name;
+  const userName = !author ? DEFAULT_USER_NAME : author.name;
 
   return {
     id: currentReview.id,
@@ -129,9 +129,17 @@ export const getUserBookmarks = async (contentType: string) => {
     bookmarks = await BookmarkModel.find({ contentType, userId }).sort({
       registerDate: -1,
     });
-  } catch (err) {}
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.name);
+    }
+  }
 
-  const result: LikedContent[] | undefined = bookmarks?.map((bookmark) => {
+  if (!bookmarks) {
+    return null;
+  }
+
+  const result: LikedContent[] = bookmarks.map((bookmark) => {
     const { contentId, contentImgUrl, contentTitle, contentType } = bookmark;
     return {
       id: contentId,
@@ -141,7 +149,7 @@ export const getUserBookmarks = async (contentType: string) => {
       link: `${DETAIL_BOOK_PATH}/${contentId}`,
     };
   });
-  return result === undefined ? null : result;
+  return result;
 };
 
 export const isBookmarked = async (contentType: string, contentId: string) => {
@@ -154,7 +162,7 @@ export const isBookmarked = async (contentType: string, contentId: string) => {
     userId,
   });
 
-  return !bookmark ? false : true;
+  return !!bookmark;
 };
 
 export const getBookReviews = async (contentId: string, offset: number) => {
@@ -179,7 +187,7 @@ export const getBookReviews = async (contentId: string, offset: number) => {
     const like = likeData?.find((like) => like.reviewId === review.id);
     const contentLike =
       review.contentLike === undefined ? false : review.contentLike;
-    const userName = !author ? "홍길동" : author.name;
+    const userName = !author ? DEFAULT_USER_NAME : author.name;
 
     return {
       id: review.id,
@@ -357,9 +365,11 @@ export const getUser = async () => {
       name: verifyResult.login,
     };
     return user;
-  } catch (error: any) {
-    if (error.name === "TokenExpiredError") {
-      throw new UnauthorizedError();
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.name === "TokenExpiredError") {
+        throw new UnauthorizedError();
+      }
     }
   }
 };

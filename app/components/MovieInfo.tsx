@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LikedMovie } from "@/types";
 import { useBoundStore as useStore } from "@/store";
-import { handleClickSignIn } from "@/utils/common";
+import { goToSignIn } from "@/utils/common";
 import Card from "@/app/components/Card";
 import BookmarkButton from "./BookmarkButton";
 
@@ -17,7 +17,7 @@ const MovieInfo = ({ movie }: Props) => {
   const handleClickItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const isTokenExpired = await checkTokenExpiration();
     if (!isTokenExpired) {
-      handleClickSignIn();
+      goToSignIn();
       return;
     }
 

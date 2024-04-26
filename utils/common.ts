@@ -80,7 +80,7 @@ export const replaceDateFormat8Digits = (date: string): string => {
   return `${year}.${month}.${day}`;
 };
 
-export const handleClickSignIn = () => {
+export const goToSignIn = () => {
   const signInParams = {
     clientId: process.env.NEXT_PUBLIC_SERVICE!,
     redirectUri: process.env.NEXT_PUBLIC_REDIRECT_URL!,

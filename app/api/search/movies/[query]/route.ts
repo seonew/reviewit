@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getMovies } from "../../[query]/route";
 import { NotFoundContentError } from "@/utils/error";
+import { ERROR_500_MESSAGE } from "@/utils/constants";
 
 export async function GET(
   request: Request,
@@ -27,5 +28,5 @@ export async function GET(
   } catch (e) {
     console.error(e);
   }
-  return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  return NextResponse.json({ error: ERROR_500_MESSAGE }, { status: 500 });
 }

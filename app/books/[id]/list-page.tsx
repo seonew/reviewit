@@ -3,7 +3,7 @@
 import { useBoundStore as useStore } from "@/store";
 import { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
-import { handleClickSignIn } from "@/utils/common";
+import { goToSignIn } from "@/utils/common";
 import CommentSection from "@/app/components/view/CommentSection";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/app/components/DefaultImage";
@@ -51,7 +51,7 @@ export default function List({ id, book }: Props) {
   const handleSubmitReview = async (content: string, like: boolean) => {
     const isTokenExpired = await checkTokenExpiration();
     if (!isTokenExpired) {
-      handleClickSignIn();
+      goToSignIn();
       return;
     }
 
@@ -71,7 +71,7 @@ export default function List({ id, book }: Props) {
   ) => {
     const isTokenExpired = await checkTokenExpiration();
     if (!isTokenExpired) {
-      handleClickSignIn();
+      goToSignIn();
       return;
     }
 
@@ -86,7 +86,7 @@ export default function List({ id, book }: Props) {
   const handleClickBookmark = async () => {
     const isTokenExpired = await checkTokenExpiration();
     if (!isTokenExpired) {
-      handleClickSignIn();
+      goToSignIn();
       return;
     }
 

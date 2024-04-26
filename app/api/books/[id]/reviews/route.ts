@@ -2,7 +2,7 @@ import dbConnect from "@/utils/db/mongodb";
 import { NextResponse } from "next/server";
 import BookReviewModel from "@/models/review/book";
 import { getBookReviews, getUserId } from "@/app/api/common";
-import { LIMIT } from "@/utils/constants";
+import { ERROR_500_MESSAGE, LIMIT } from "@/utils/constants";
 import { NotFoundContentError } from "@/utils/error";
 import { generateId } from "@/utils/common";
 
@@ -27,7 +27,7 @@ export async function GET(
   } catch (e) {
     console.error(e);
   }
-  return NextResponse.json({ error: "Internal Server Error", status: 500 });
+  return NextResponse.json({ error: ERROR_500_MESSAGE, status: 500 });
 }
 
 export async function POST(
@@ -64,5 +64,5 @@ export async function POST(
   } catch (e) {
     console.error(e);
   }
-  return NextResponse.json({ error: "Internal Server Error", status: 500 });
+  return NextResponse.json({ error: ERROR_500_MESSAGE, status: 500 });
 }

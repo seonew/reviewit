@@ -3,7 +3,7 @@
 import { useBoundStore as useStore } from "@/store";
 import { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
-import { handleClickSignIn, numberWithCommas } from "@/utils/common";
+import { goToSignIn, numberWithCommas } from "@/utils/common";
 import KeywordSection from "@/app/components/view/KeywordSection";
 import SimilarSection from "@/app/components/view/SimilarSection";
 import RecommendationSection from "@/app/components/view/RecommendationSection";
@@ -52,7 +52,7 @@ export default function List({ id, currentMovie }: Props) {
   const handleSubmitReview = async (review: string, like: boolean) => {
     const isTokenExpired = await checkTokenExpiration();
     if (!isTokenExpired) {
-      handleClickSignIn();
+      goToSignIn();
       return;
     }
 
@@ -72,7 +72,7 @@ export default function List({ id, currentMovie }: Props) {
   ) => {
     const isTokenExpired = await checkTokenExpiration();
     if (!isTokenExpired) {
-      handleClickSignIn();
+      goToSignIn();
       return;
     }
 

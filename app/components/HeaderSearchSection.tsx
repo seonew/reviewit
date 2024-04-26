@@ -6,11 +6,9 @@ const HeaderSearchSection = () => {
   const { fetchSearchResults, query } = useStore();
   const router = useRouter();
 
-  const handleClickSubmit = (query: string) => {
-    fetchSearchResults(query, 1);
-    setTimeout(() => {
-      router.push(`/search?query=${query}`);
-    }, 1000);
+  const handleClickSubmit = async (query: string) => {
+    await fetchSearchResults(query, 1);
+    router.push(`/search?query=${query}`);
   };
 
   return (

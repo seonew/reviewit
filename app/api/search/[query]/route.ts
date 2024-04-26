@@ -7,6 +7,7 @@ import {
 import {
   DETAIL_BOOK_PATH,
   DETAIL_MOVIE_PATH,
+  ERROR_500_MESSAGE,
   MOVIE_API_URL,
   MOVIE_BASE_URL,
 } from "@/utils/constants";
@@ -41,7 +42,7 @@ export async function GET(
   } catch (e) {
     console.error(e);
   }
-  return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  return NextResponse.json({ error: ERROR_500_MESSAGE }, { status: 500 });
 }
 
 export const getMovies = async (
@@ -69,44 +70,25 @@ export const getMovies = async (
   );
   const total = searchMoviesResult.length;
 
-  let movies: MovieProps[] = [];
-  if (displayCount === 10) {
-    const count =
-      searchMoviesResult.length < 10 ? searchMoviesResult.length : displayCount;
+  const count =
+    searchMoviesResult.length < 10 ? searchMoviesResult.length : displayCount;
+  const nextSearchMovieResult = searchMoviesResult.slice(0, count);
 
-    for (let i = 0; i < count; i++) {
-      const movie: MovieProps = {
-        id: searchMoviesResult[i].id,
-        title: searchMoviesResult[i].title,
-        description: searchMoviesResult[i].overview,
-        releaseDate: searchMoviesResult[i].release_date,
-        posterImage:
-          searchMoviesResult[i].poster_path !== null
-            ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${searchMoviesResult[i].poster_path}`
-            : undefined,
-        link: `${DETAIL_MOVIE_PATH}/${searchMoviesResult[i].id}`,
-        average: searchMoviesResult[i].vote_average,
-        adult: false,
-      };
-      movies.push(movie);
-    }
-  } else {
-    movies = searchMoviesResult.map((movie: MovieApiResponse) => {
-      return {
-        id: movie.id,
-        title: movie.title,
-        description: movie.overview,
-        releaseDate: movie.release_date,
-        posterImage:
-          movie.poster_path !== null
-            ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${movie.poster_path}`
-            : undefined,
-        link: `${DETAIL_MOVIE_PATH}/${movie.id}`,
-        average: movie.vote_average,
-        adult: movie.adult ?? false,
-      };
-    });
-  }
+  const movies = nextSearchMovieResult.map((movie: MovieApiResponse) => {
+    return {
+      id: movie.id,
+      title: movie.title,
+      description: movie.overview,
+      releaseDate: movie.release_date,
+      posterImage:
+        movie.poster_path !== null
+          ? `${MOVIE_BASE_URL}/t/p/w440_and_h660_face${movie.poster_path}`
+          : undefined,
+      link: `${DETAIL_MOVIE_PATH}/${movie.id}`,
+      average: movie.vote_average,
+      adult: movie.adult ?? false,
+    };
+  });
 
   return { movies, total, limit: displayCount };
 };
@@ -139,12 +121,16 @@ export const getBooks = async (
   try {
     await getUserId();
     bookmarks = await getUserBookmarks("book");
-  } catch (err) {}
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.name);
+    }
+  }
 
   const books = bookData.items;
   const booksResult: LikedBook[] = books.map((book: BookProps) => {
     const bookmark = bookmarks?.find((bookmark) => bookmark.id === book.isbn);
-    const checked = !bookmark ? false : true;
+    const checked = !!bookmark;
 
     const result: LikedBook = {
       title: book.title,

@@ -19,8 +19,10 @@ export async function GET(
 
     const data = await isBookmarked(contentType, contentId);
     return NextResponse.json(data);
-  } catch (error: any) {
-    console.log(error.name);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.name);
+    }
   }
   return NextResponse.json(false);
 }
@@ -53,9 +55,11 @@ export async function POST(
     await newBookmark.save();
 
     return NextResponse.json({ checked: true });
-  } catch (error: any) {
-    console.log(error.name);
-    return NextResponse.json({ error: error.name, status: 500 });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.name);
+      return NextResponse.json({ error: error.name, status: 500 });
+    }
   }
 }
 
@@ -75,8 +79,10 @@ export async function DELETE(
     await BookmarkModel.deleteOne({ contentId, contentType, userId });
 
     return NextResponse.json({ checked: false });
-  } catch (error: any) {
-    console.log(error.name);
-    return NextResponse.json({ error: error.name, status: 500 });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.name);
+      return NextResponse.json({ error: error.name, status: 500 });
+    }
   }
 }

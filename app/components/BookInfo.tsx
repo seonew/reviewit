@@ -4,7 +4,7 @@ import { LikedBook } from "@/types";
 import { useBoundStore as useStore } from "@/store";
 import Card from "@/app/components/Card";
 import BookmarkButton from "./BookmarkButton";
-import { handleClickSignIn } from "@/utils/common";
+import { goToSignIn } from "@/utils/common";
 
 type Props = {
   book: LikedBook;
@@ -17,7 +17,7 @@ const BookInfo = ({ book }: Props) => {
   const handleClickItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const isTokenExpired = await checkTokenExpiration();
     if (!isTokenExpired) {
-      handleClickSignIn();
+      goToSignIn();
       return;
     }
 

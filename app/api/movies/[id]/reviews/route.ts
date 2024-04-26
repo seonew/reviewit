@@ -4,7 +4,7 @@ import { NotFoundContentError } from "@/utils/error";
 import { NextResponse } from "next/server";
 import LikeModel from "@/models/review/like";
 import MovieReviewModel from "@/models/review/movie";
-import { LIMIT } from "@/utils/constants";
+import { ERROR_500_MESSAGE, LIMIT, DEFAULT_USER_NAME } from "@/utils/constants";
 import { ReviewProps, StatsProps } from "@/types";
 import { generateId, replaceDateFormat } from "@/utils/common";
 
@@ -30,7 +30,7 @@ export async function GET(
     console.log(error);
   }
 
-  return NextResponse.json({ error: "Internal Server Error", status: 500 });
+  return NextResponse.json({ error: ERROR_500_MESSAGE, status: 500 });
 }
 
 export async function POST(
@@ -65,7 +65,7 @@ export async function POST(
   } catch (error) {
     console.log(error);
   }
-  return NextResponse.json({ error: "Internal Server Error", status: 500 });
+  return NextResponse.json({ error: ERROR_500_MESSAGE, status: 500 });
 }
 
 const getMovieReviews = async (contentId: string, offset: number) => {
@@ -74,7 +74,11 @@ const getMovieReviews = async (contentId: string, offset: number) => {
     await getUserId();
     const userId = await getUserId();
     likeData = await LikeModel.find({ userId, contentId });
-  } catch (err) {}
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.name);
+    }
+  }
 
   const { data: movieReviewData, total } = await loadMovieReviews(
     contentId,
@@ -87,7 +91,7 @@ const getMovieReviews = async (contentId: string, offset: number) => {
     const like = likeData?.find((like) => like.reviewId === review.id);
     const contentLike =
       review.contentLike === undefined ? false : review.contentLike;
-    const userName = !author ? "홍길동" : author.name;
+    const userName = !author ? DEFAULT_USER_NAME : author.name;
 
     return {
       id: review.id,
@@ -139,7 +143,7 @@ const getStatsForReview = async (contentId: string) => {
   let likeCount = 0;
   let disLikeCount = 0;
 
-  rowData.map((like) => {
+  rowData.forEach((like) => {
     if (like._id === true) {
       likeCount = like.count;
     } else {

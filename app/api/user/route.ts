@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import dbConnect from "@/utils/db/mongodb";
 import UserModel from "@/models/user";
+import { ERROR_500_MESSAGE } from "@/utils/constants";
 
 const SERVICE = process.env.NEXT_PUBLIC_SERVICE ?? "";
 const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL;
@@ -33,7 +34,7 @@ export async function GET(request: Request) {
     console.log(error);
   }
 
-  return NextResponse.json({ error: "Internal Server Error", status: 500 });
+  return NextResponse.json({ error: ERROR_500_MESSAGE, status: 500 });
 }
 
 export async function POST(request: Request) {

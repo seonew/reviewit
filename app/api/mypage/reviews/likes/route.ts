@@ -2,7 +2,7 @@ import dbConnect from "@/utils/db/mongodb";
 import { NextResponse } from "next/server";
 import { ReviewDataProps } from "@/types";
 import { getLikesForReviews } from "@/app/api/common";
-import { LIMIT } from "@/utils/constants";
+import { ERROR_500_MESSAGE, LIMIT } from "@/utils/constants";
 
 export async function GET(request: Request) {
   try {
@@ -22,5 +22,5 @@ export async function GET(request: Request) {
   } catch (e) {
     console.error(e);
   }
-  return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  return NextResponse.json({ error: ERROR_500_MESSAGE }, { status: 500 });
 }

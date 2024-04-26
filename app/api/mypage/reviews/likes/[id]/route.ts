@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import LikeModel from "@/models/review/like";
 import { getUserId } from "@/app/api/common";
 import { generateId } from "@/utils/common";
+import { ERROR_500_MESSAGE } from "@/utils/constants";
 
 export async function POST(request: Request) {
   try {
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
   } catch (e) {
     console.error(e);
   }
-  return NextResponse.json({ error: "Internal Server Error", status: 500 });
+  return NextResponse.json({ error: ERROR_500_MESSAGE, status: 500 });
 }
 
 export async function DELETE(
@@ -50,5 +51,5 @@ export async function DELETE(
   } catch (e) {
     console.error(e);
   }
-  return NextResponse.json({ error: "Internal Server Error", status: 500 });
+  return NextResponse.json({ error: ERROR_500_MESSAGE, status: 500 });
 }

@@ -10,13 +10,21 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   let isAuthorized = false;
-  const data = await getData();
-  isAuthorized = true;
+  let data = null;
 
-  if (data === null) {
-    isAuthorized = false;
-  } else if (!data) {
-    notFound();
+  try {
+    data = await getData();
+    isAuthorized = true;
+  } catch (error) {
+    console.log(error);
+
+    if (error instanceof Error) {
+      if (error.name === "UnauthorizedError") {
+        isAuthorized = false;
+      } else {
+        notFound();
+      }
+    }
   }
 
   const DynamicListPage = dynamic(() => import("./list-page"), {
@@ -28,12 +36,6 @@ export default async function Page() {
 }
 
 async function getData() {
-  try {
-    const { reviews, count } = await getMyReviews(1);
-    return { reviews, count };
-  } catch (error: any) {
-    if (error.name === "UnauthorizedError") {
-      return null;
-    }
-  }
+  const { reviews, count } = await getMyReviews(1);
+  return { reviews, count };
 }

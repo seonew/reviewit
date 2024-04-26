@@ -67,7 +67,7 @@ const List = ({ isAuthorized }: Props) => {
     router.push("/mypage");
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsValid(false);
 
@@ -89,10 +89,8 @@ const List = ({ isAuthorized }: Props) => {
       }
     }
 
-    updateUser(nextName, base64Image);
-    setTimeout(() => {
-      router.push("/mypage");
-    }, 1000);
+    await updateUser(nextName, base64Image);
+    router.push("/mypage");
   };
 
   return (
