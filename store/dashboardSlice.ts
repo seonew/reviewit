@@ -7,6 +7,7 @@ import {
   ReviewDataProps,
 } from "@/types";
 import { CommonSlice } from "./commonSlice";
+import { MovieSlice } from "./movieSlice";
 
 type bookmarkParams = {
   contentId: string;
@@ -96,7 +97,7 @@ const initialState: State = {
 };
 
 const createDashboardSlice: StateCreator<
-  CommonSlice & DashboardSlice,
+  CommonSlice & DashboardSlice & MovieSlice,
   [],
   [],
   DashboardSlice
@@ -192,6 +193,8 @@ const createDashboardSlice: StateCreator<
 
     if (type === "book") {
       set({ likedBooks: data });
+    } else if (type === "movie") {
+      get().setLikedMovies(data);
     }
   },
   addLikedBook: async (book) => {

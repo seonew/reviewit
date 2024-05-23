@@ -7,7 +7,12 @@ import LikeModel from "@/models/review/like";
 import BookmarkModel from "@/models/bookmark";
 import MovieReviewModel from "@/models/review/movie";
 import { LikedContent, ReviewProps, StatsProps, User } from "@/types";
-import { DETAIL_BOOK_PATH, LIMIT, DEFAULT_USER_NAME } from "@/utils/constants";
+import {
+  DETAIL_BOOK_PATH,
+  LIMIT,
+  DEFAULT_USER_NAME,
+  DETAIL_MOVIE_PATH,
+} from "@/utils/constants";
 import { UnauthorizedError } from "@/utils/error";
 import dbConnect from "@/utils/db/mongodb";
 
@@ -141,12 +146,14 @@ export const getUserBookmarks = async (contentType: string) => {
 
   const result: LikedContent[] = bookmarks.map((bookmark) => {
     const { contentId, contentImgUrl, contentTitle, contentType } = bookmark;
+    const contentPath =
+      contentType === "book" ? DETAIL_BOOK_PATH : DETAIL_MOVIE_PATH;
     return {
       id: contentId,
       imgUrl: contentImgUrl,
       title: contentTitle,
       type: contentType,
-      link: `${DETAIL_BOOK_PATH}/${contentId}`,
+      link: `${contentPath}/${contentId}`,
     };
   });
   return result;

@@ -16,6 +16,7 @@ type Actions = {
 
   setSearchedMovies: (id: string, checked: boolean) => void;
   setDashboardMovies: (movies: MovieProps[]) => void;
+  setLikedMovies: (movies: LikedContent[]) => void;
   fetchMovieReviews: (id: string, page: number) => void;
   insertMovieReview: ({
     content,
@@ -139,6 +140,9 @@ const createMovieSlice: StateCreator<
     } catch (error) {
       console.log(error);
     }
+  },
+  setLikedMovies: (movies) => {
+    set({ likedMovies: movies });
   },
   setSearchedMovies: (id, checked) => {
     set((state) => {
