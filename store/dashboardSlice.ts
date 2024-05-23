@@ -1,5 +1,11 @@
 import { StateCreator } from "zustand";
-import { LikedBook, LikedContent, MovieProps, ReviewDataProps } from "@/types";
+import {
+  LikedBook,
+  LikedContent,
+  LikedMovie,
+  MovieProps,
+  ReviewDataProps,
+} from "@/types";
 import { CommonSlice } from "./commonSlice";
 
 type bookmarkParams = {
@@ -13,7 +19,7 @@ type State = {
   likedBooks: LikedContent[];
 
   searchedBooks: LikedBook[];
-  searchedMovies: MovieProps[];
+  searchedMovies: LikedMovie[];
 
   bookReviews: ReviewDataProps;
   currentBook: LikedBook;

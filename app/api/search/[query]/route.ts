@@ -69,12 +69,26 @@ export const getMovies = async (
     (item) => item.release_date !== undefined
   );
   const total = searchMoviesResult.length;
+  let bookmarks: LikedContent[] | null = null;
+  try {
+    await getUserId();
+    bookmarks = await getUserBookmarks("movie");
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.name);
+    }
+  }
 
   const count =
     searchMoviesResult.length < 10 ? searchMoviesResult.length : displayCount;
   const nextSearchMovieResult = searchMoviesResult.slice(0, count);
 
   const movies = nextSearchMovieResult.map((movie: MovieApiResponse) => {
+    const bookmark = bookmarks?.find(
+      (bookmark) => bookmark.id === movie.id.toString()
+    );
+    const checked = !!bookmark;
+
     return {
       id: movie.id,
       title: movie.title,
@@ -87,6 +101,7 @@ export const getMovies = async (
       link: `${DETAIL_MOVIE_PATH}/${movie.id}`,
       average: movie.vote_average,
       adult: movie.adult ?? false,
+      checked,
     };
   });
 

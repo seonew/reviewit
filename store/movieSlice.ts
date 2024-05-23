@@ -14,6 +14,7 @@ type Actions = {
   addLikedMovie: (movie: LikedMovie) => void;
   deleteLikedMovie: (id: string) => void;
 
+  setSearchedMovies: (id: string, checked: boolean) => void;
   setDashboardMovies: (movies: MovieProps[]) => void;
   fetchMovieReviews: (id: string, page: number) => void;
   insertMovieReview: ({
@@ -58,8 +59,12 @@ const createMovieSlice: StateCreator<
         contentImgUrl: movie.posterImage ?? "",
         contentType,
       };
-      await get().insertLikedContent(contentType, params);
+      const nextChecked: boolean = await get().insertLikedContent(
+        contentType,
+        params
+      );
 
+      get().setSearchedMovies(movie.id, nextChecked);
       set((state) => {
         const nextLikedMovies: LikedContent[] = [
           ...state.likedMovies,
@@ -82,7 +87,11 @@ const createMovieSlice: StateCreator<
   deleteLikedMovie: async (id) => {
     try {
       const contentType = "movie";
-      await get().deleteLikeContent(contentType, id);
+      const nextChecked: boolean = await get().deleteLikeContent(
+        contentType,
+        id
+      );
+      get().setSearchedMovies(id, nextChecked);
 
       set((state) => {
         const nextLikedMovies: LikedContent[] = state.likedMovies.filter(
@@ -130,6 +139,17 @@ const createMovieSlice: StateCreator<
     } catch (error) {
       console.log(error);
     }
+  },
+  setSearchedMovies: (id, checked) => {
+    set((state) => {
+      const modifiedMovies = state.searchedMovies.map((item) => {
+        return id === item.id ? { ...item, checked } : item;
+      });
+
+      return {
+        searchedMovies: modifiedMovies,
+      };
+    });
   },
   setDashboardMovies: (movies) =>
     set({
