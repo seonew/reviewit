@@ -7,9 +7,10 @@ import BookmarkButton from "./BookmarkButton";
 
 type Props = {
   movie: LikedMovie;
+  isBookmarked?: boolean;
 };
 
-const MovieInfo = ({ movie }: Props) => {
+const MovieInfo = ({ movie, isBookmarked = true }: Props) => {
   const { id, title, posterImage, link, releaseDate, checked } = movie;
   const { addLikedMovie, deleteLikedMovie, checkLoginStatus } = useStore();
 
@@ -44,7 +45,9 @@ const MovieInfo = ({ movie }: Props) => {
                 }}
               />
             )}
-            <BookmarkButton onClick={handleClickItem} checked={checked} />
+            {isBookmarked && (
+              <BookmarkButton onClick={handleClickItem} checked={checked} />
+            )}
           </Card>
           <div className="mt-2.5 text-sm font-normal min-w-0 break-keep break-words">
             <div className="overflow-hidden ">

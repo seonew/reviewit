@@ -27,7 +27,9 @@ const List = ({ movies, imageBannerInfo }: Props) => {
       <CardList title={"Movie List"}>
         {movies &&
           movies.map((item: MovieProps) => {
-            return <MovieInfo key={item.title} movie={item} />;
+            return (
+              <MovieInfo key={item.title} movie={item} isBookmarked={false} />
+            );
           })}
       </CardList>
     </div>
