@@ -22,7 +22,7 @@ const List = ({ movies, total, limit }: Props) => {
     clearSearchedMovies,
     setQuery,
     query,
-    loading,
+    loadingMovies,
     searchedMovies,
   } = useStore();
   const [page, setPage] = useState<number>(1);
@@ -64,7 +64,7 @@ const List = ({ movies, total, limit }: Props) => {
 
   return (
     <div className="contents-container">
-      {loading ? (
+      {loadingMovies ? (
         <Skeleton arrayRows={[0, 1, 2, 3]} />
       ) : (
         <>

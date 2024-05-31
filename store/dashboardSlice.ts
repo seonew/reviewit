@@ -24,7 +24,8 @@ type State = {
 
   bookReviews: ReviewDataProps;
   currentBook: LikedBook;
-  loading: boolean;
+  loadingMovies: boolean;
+  loadingBooks: boolean;
   query: string;
 };
 
@@ -89,7 +90,8 @@ const initialState: State = {
     catalogLink: "",
     checked: false,
   },
-  loading: true,
+  loadingMovies: true,
+  loadingBooks: true,
 
   query: "",
   searchedBooks: [],
@@ -156,16 +158,16 @@ const createDashboardSlice: StateCreator<
         `/api/search/books/${query}?page=${page}&displayCount=${displayCount}`
       );
       const data = await res.json();
-      set({ searchedBooks: data.books, loading: false });
+      set({ searchedBooks: data.books, loadingBooks: false });
     } catch (e) {
       console.error(e);
     }
   },
   initializeSearchedBooks: (books) => {
-    set({ searchedBooks: books, loading: false });
+    set({ searchedBooks: books, loadingBooks: false });
   },
   clearSearchedBooks: () => {
-    set({ searchedBooks: [], loading: true });
+    set({ searchedBooks: [], loadingBooks: true });
   },
 
   updateSearchedMovies: async (page, displayCount = 20) => {
@@ -175,16 +177,16 @@ const createDashboardSlice: StateCreator<
         `/api/search/movies/${query}?page=${page}&displayCount=${displayCount}`
       );
       const data = await res.json();
-      set({ searchedMovies: data.movies, loading: false });
+      set({ searchedMovies: data.movies, loadingMovies: false });
     } catch (e) {
       console.error(e);
     }
   },
   initializeSearchedMovies: (movies) => {
-    set({ searchedMovies: movies, loading: false });
+    set({ searchedMovies: movies, loadingMovies: false });
   },
   clearSearchedMovies: () => {
-    set({ searchedBooks: [], loading: true });
+    set({ searchedMovies: [], loadingMovies: true });
   },
 
   fetchLikedContents: async (type: string) => {

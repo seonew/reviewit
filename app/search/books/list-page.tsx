@@ -22,7 +22,7 @@ const List = ({ books, total, limit }: Props) => {
     updateSearchedBooks,
     clearSearchedBooks,
     setQuery,
-    loading,
+    loadingBooks,
     query,
   } = useStore();
   const [page, setPage] = useState<number>(1);
@@ -58,7 +58,7 @@ const List = ({ books, total, limit }: Props) => {
 
   return (
     <div className="contents-container">
-      {loading ? (
+      {loadingBooks ? (
         <Skeleton arrayRows={[0, 1, 2, 3]} />
       ) : (
         <>

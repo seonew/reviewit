@@ -19,76 +19,80 @@ const List = ({ keyword }: Props) => {
     searchedBooks,
     updateSearchedBooks,
     clearSearchedBooks,
-    loading,
+    loadingBooks,
     searchedMovies,
     updateSearchedMovies,
     clearSearchedMovies,
+    loadingMovies,
     query,
     setQuery,
   } = useStore();
+
+  useEffect(() => {
+    clearSearchedMovies();
+    clearSearchedBooks();
+  }, [clearSearchedBooks, clearSearchedMovies]);
 
   useEffect(() => {
     if (keyword) {
       setQuery(keyword);
     }
 
-    updateSearchedBooks(1, 10);
     updateSearchedMovies(1, 10);
+    updateSearchedBooks(1, 10);
+  }, [keyword, setQuery, updateSearchedBooks, updateSearchedMovies]);
 
-    return () => {
-      clearSearchedBooks();
-      clearSearchedMovies();
-    };
-  }, [
-    clearSearchedBooks,
-    clearSearchedMovies,
-    keyword,
-    setQuery,
-    updateSearchedBooks,
-    updateSearchedMovies,
-  ]);
+  if (loadingMovies && loadingBooks) {
+    return (
+      <div className="contents-container">
+        <Skeleton arrayRows={[0, 1]} />
+        <Skeleton arrayRows={[0, 1]} />
+      </div>
+    );
+  }
+
+  if (
+    !loadingMovies &&
+    !loadingBooks &&
+    searchedMovies?.length === 0 &&
+    searchedBooks?.length === 0
+  ) {
+    return (
+      <div className="contents-container">
+        <NoSearchResults />
+      </div>
+    );
+  }
 
   return (
     <div className="contents-container">
-      {loading ? (
-        <>
-          <Skeleton arrayRows={[0, 1]} />
-          <Skeleton arrayRows={[0, 1]} />
-        </>
-      ) : searchedMovies?.length === 0 && searchedBooks?.length === 0 ? (
-        <NoSearchResults />
+      {loadingMovies ? (
+        <Skeleton arrayRows={[0, 1]} />
+      ) : searchedMovies?.length > 0 ? (
+        <CardList
+          title={"Movie List"}
+          targetUrl={`/search/movies?query=${query}`}
+        >
+          {searchedMovies.map((item: MovieProps) => {
+            return <MovieInfo key={item.id} movie={item} />;
+          })}
+        </CardList>
       ) : (
-        <>
-          {searchedMovies?.length > 0 ? (
-            <CardList
-              title={"Movie List"}
-              targetUrl={`/search/movies?query=${query}`}
-            >
-              {searchedMovies &&
-                searchedMovies.map((item: MovieProps) => {
-                  return <MovieInfo key={item.id} movie={item} />;
-                })}
-            </CardList>
-          ) : (
-            <Empty
-              title={"Movie List"}
-              message={"검색된 결과가 없어요 ㅜ.ㅜ"}
-            />
-          )}
-          {searchedBooks?.length > 0 ? (
-            <CardList
-              title={"Book List"}
-              targetUrl={`/search/books?query=${query}`}
-            >
-              {searchedBooks &&
-                searchedBooks.map((item: BookProps) => {
-                  return <BookInfo key={item.isbn} book={item} />;
-                })}
-            </CardList>
-          ) : (
-            <Empty title={"Book List"} message={"검색된 결과가 없어요 ㅜ.ㅜ"} />
-          )}
-        </>
+        <Empty title={"Movie List"} message={"검색된 결과가 없어요 ㅜ.ㅜ"} />
+      )}
+      {loadingBooks ? (
+        <Skeleton arrayRows={[0, 1]} />
+      ) : searchedBooks?.length > 0 ? (
+        <CardList
+          title={"Book List"}
+          targetUrl={`/search/books?query=${query}`}
+        >
+          {searchedBooks.map((item: BookProps) => {
+            return <BookInfo key={item.isbn} book={item} />;
+          })}
+        </CardList>
+      ) : (
+        <Empty title={"Book List"} message={"검색된 결과가 없어요 ㅜ.ㅜ"} />
       )}
     </div>
   );
