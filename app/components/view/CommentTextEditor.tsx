@@ -9,13 +9,15 @@ type Props = {
 };
 
 const CommentTextEditor = ({ content, onClick }: Props) => {
-  const { setAlertModalData } = useStore();
+  const { setAlertModalData, checkLoginStatus } = useStore();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isInput, setIsInput] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [charCount, setCharCount] = useState(0);
+  const [isReadOnly, setIsReadOnly] = useState<boolean>(false);
 
   const handleFocus = () => {
+    setIsReadOnly(false);
     setIsFocused(true);
   };
 
@@ -23,7 +25,13 @@ const CommentTextEditor = ({ content, onClick }: Props) => {
     setIsFocused(false);
   };
 
-  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const isLogin = await checkLoginStatus();
+    if (!isLogin) {
+      setIsReadOnly(true);
+      return;
+    }
+
     const current = e.target.value;
     changeIsInput(current);
   };
@@ -89,6 +97,7 @@ const CommentTextEditor = ({ content, onClick }: Props) => {
               onChange={handleChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
+              readOnly={isReadOnly}
             />
             <div className="comment-editor-contents-button-container">
               <button
@@ -101,13 +110,15 @@ const CommentTextEditor = ({ content, onClick }: Props) => {
               </button>
             </div>
           </div>
-          <div
-            className={`relative bottom-0 right-12 text-right text-xs ${
-              charCount > 400 ? "text-red-600" : "text-gray-600"
-            }`}
-          >
-            <span className="text-right">{charCount}/400</span>
-          </div>
+          {charCount > 0 && (
+            <div
+              className={`relative bottom-0 right-12 text-right text-xs ${
+                charCount > 400 ? "text-red-600" : "text-gray-600"
+              }`}
+            >
+              <span className="text-right">{charCount}/400</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
