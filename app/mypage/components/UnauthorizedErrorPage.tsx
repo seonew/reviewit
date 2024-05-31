@@ -1,16 +1,14 @@
 "use client";
 
-import { goToSignIn } from "@/utils/common";
 import { useBoundStore as useStore } from "@/store";
 import { useEffect } from "react";
 
 const UnauthorizedErrorPage = () => {
-  const { checkTokenExpiration, signOut } = useStore();
+  const { checkLoginStatus, signOut } = useStore();
 
   const handleClickSignInButton = async () => {
-    const isTokenExpired = await checkTokenExpiration();
-    if (!isTokenExpired) {
-      goToSignIn();
+    const isLogin = await checkLoginStatus();
+    if (!isLogin) {
       return;
     }
   };

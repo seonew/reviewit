@@ -4,7 +4,6 @@ import { LikedBook } from "@/types";
 import { useBoundStore as useStore } from "@/store";
 import Card from "@/app/components/Card";
 import BookmarkButton from "./BookmarkButton";
-import { goToSignIn } from "@/utils/common";
 
 type Props = {
   book: LikedBook;
@@ -12,12 +11,11 @@ type Props = {
 
 const BookInfo = ({ book }: Props) => {
   const { title, author, discount, image, link, checked } = book;
-  const { addLikedBook, deleteLikedBook, checkTokenExpiration } = useStore();
+  const { addLikedBook, deleteLikedBook, checkLoginStatus } = useStore();
 
   const handleClickItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    const isTokenExpired = await checkTokenExpiration();
-    if (!isTokenExpired) {
-      goToSignIn();
+    const isLogin = await checkLoginStatus();
+    if (!isLogin) {
       return;
     }
 

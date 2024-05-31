@@ -3,7 +3,7 @@ import { User } from "@/types";
 import { DashboardSlice } from "./dashboardSlice";
 import { ReviewSlice } from "./reviewSlice";
 import { MovieSlice } from "./movieSlice";
-import { deleteCookie } from "@/utils/common";
+import { deleteCookie, goToSignIn } from "@/utils/common";
 
 type State = {
   user: User;
@@ -45,6 +45,7 @@ type Actions = {
   initializeConfirmModalData: () => void;
 
   checkTokenExpiration: () => Promise<boolean>;
+  checkLoginStatus: () => Promise<boolean>;
   signOut: () => void;
   resetCommonData: () => void;
 };
@@ -136,6 +137,19 @@ const createCommonSlice: StateCreator<
     } catch (error) {
       console.log(error);
       return false;
+    }
+  },
+  checkLoginStatus: async () => {
+    const isTokenExpired = await get().checkTokenExpiration();
+    if (!isTokenExpired) {
+      get().setConfirmModalData(
+        true,
+        "로그인이 필요한 서비스입니다.\n로그인 하시겠습니까?",
+        goToSignIn
+      );
+      return false;
+    } else {
+      return true;
     }
   },
   signOut: async () => {
