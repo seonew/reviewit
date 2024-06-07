@@ -39,7 +39,7 @@ const initialState: State = {
   movieReviews: {
     reviews: [],
     count: 0,
-    stats: [],
+    stats: undefined,
   },
   likedMovies: [],
 };

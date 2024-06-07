@@ -2,22 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { LikedMovie } from "@/types";
 import { useBoundStore as useStore } from "@/store";
-import { goToSignIn } from "@/utils/common";
 import Card from "@/app/components/Card";
 import BookmarkButton from "./BookmarkButton";
 
 type Props = {
   movie: LikedMovie;
+  isBookmarked?: boolean;
 };
 
-const MovieInfo = ({ movie }: Props) => {
+const MovieInfo = ({ movie, isBookmarked = true }: Props) => {
   const { id, title, posterImage, link, releaseDate, checked } = movie;
-  const { addLikedMovie, deleteLikedMovie, checkTokenExpiration } = useStore();
+  const { addLikedMovie, deleteLikedMovie, checkLoginStatus } = useStore();
 
   const handleClickItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    const isTokenExpired = await checkTokenExpiration();
-    if (!isTokenExpired) {
-      goToSignIn();
+    const isLogin = await checkLoginStatus();
+    if (!isLogin) {
       return;
     }
 
@@ -46,7 +45,9 @@ const MovieInfo = ({ movie }: Props) => {
                 }}
               />
             )}
-            <BookmarkButton onClick={handleClickItem} checked={checked} />
+            {isBookmarked && (
+              <BookmarkButton onClick={handleClickItem} checked={checked} />
+            )}
           </Card>
           <div className="mt-2.5 text-sm font-normal min-w-0 break-keep break-words">
             <div className="overflow-hidden ">

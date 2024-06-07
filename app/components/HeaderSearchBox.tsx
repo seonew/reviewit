@@ -15,6 +15,12 @@ const HeaderSearchBox = ({ onSubmit, keyword }: Props) => {
     setInputValue(newValue);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
   const handleSubmit = () => {
     const value = inputValue.trim();
     if (value.length === 0) {
@@ -50,6 +56,7 @@ const HeaderSearchBox = ({ onSubmit, keyword }: Props) => {
             type="text"
             className="inline-block align-middle pr-1.5 leading-6 w-full h-8 outline-none bg-black text-white"
             onChange={handleChangeItem}
+            onKeyDown={handleKeyDown}
             value={inputValue}
             aria-label="SearchInput"
           />

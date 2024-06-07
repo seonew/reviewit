@@ -3,7 +3,6 @@
 import { useBoundStore as useStore } from "@/store";
 import { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
-import { goToSignIn } from "@/utils/common";
 import CommentSection from "@/app/components/view/CommentSection";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import DefaultImage from "@/app/components/DefaultImage";
@@ -29,7 +28,7 @@ export default function List({ id, book }: Props) {
     setCurrentBook,
     addLikedBook,
     deleteLikedBook,
-    checkTokenExpiration,
+    checkLoginStatus,
   } = useStore();
   const [page, setPage] = useState<number>(1);
 
@@ -49,9 +48,8 @@ export default function List({ id, book }: Props) {
   };
 
   const handleSubmitReview = async (content: string, like: boolean) => {
-    const isTokenExpired = await checkTokenExpiration();
-    if (!isTokenExpired) {
-      goToSignIn();
+    const isLogin = await checkLoginStatus();
+    if (!isLogin) {
       return;
     }
 
@@ -69,9 +67,8 @@ export default function List({ id, book }: Props) {
     reviewId: string,
     isLike: boolean | undefined
   ) => {
-    const isTokenExpired = await checkTokenExpiration();
-    if (!isTokenExpired) {
-      goToSignIn();
+    const isLogin = await checkLoginStatus();
+    if (!isLogin) {
       return;
     }
 
@@ -84,9 +81,8 @@ export default function List({ id, book }: Props) {
   };
 
   const handleClickBookmark = async () => {
-    const isTokenExpired = await checkTokenExpiration();
-    if (!isTokenExpired) {
-      goToSignIn();
+    const isLogin = await checkLoginStatus();
+    if (!isLogin) {
       return;
     }
 
