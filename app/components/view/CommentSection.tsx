@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { HeartIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { HeartIcon as CheckedHeartIcon } from "@heroicons/react/24/solid";
 import { ReviewProps, StatsProps } from "@/types";
 import CommentTextEditor from "./CommentTextEditor";
 import PreferenceSection from "./PreferenceSection";
@@ -90,7 +91,11 @@ const CommentSection = ({
                             review.like && "text-ozip-blue"
                           }`}
                         >
-                          <HeartIcon className="w-3 h-3 mr-0.5" />
+                          {review.like ? (
+                            <CheckedHeartIcon className="w-3 h-3 mr-0.5" />
+                          ) : (
+                            <HeartIcon className="w-3 h-3 mr-0.5" />
+                          )}
                           <span>좋아요</span>
                         </span>
                       </button>

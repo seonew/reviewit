@@ -57,6 +57,7 @@ type Actions = {
   ) => Promise<boolean>;
   deleteLikeContent: (contentType: string, id: string) => Promise<boolean>;
   fetchBookmarkedContent: (type: string, id: string) => Promise<boolean>;
+  setLikedBooks: (books: LikedContent[]) => void;
 
   fetchBookReviews: (contentId: string, page: number) => void;
   insertBookReview: (
@@ -309,6 +310,10 @@ const createDashboardSlice: StateCreator<
     });
   },
   setQuery: (item) => set({ query: item }),
+  setLikedBooks: (books) =>
+    set({
+      likedBooks: books,
+    }),
   resetDashboardData: () => {
     set(initialState);
   },

@@ -52,7 +52,7 @@ const AlertModal = () => {
               className="w-full inline-flex justify-center rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500"
               onClick={handleClickConfirm}
             >
-              Confirm
+              확인
             </button>
           </div>
         </Modal>
