@@ -9,14 +9,22 @@ type Props = {
 };
 
 const CommentTextEditor = ({ content, onClick }: Props) => {
-  const { setAlertModalData, checkLoginStatus } = useStore();
+  const { isSignedIn, setAlertModalData, checkLoginStatus } = useStore();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isInput, setIsInput] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [charCount, setCharCount] = useState(0);
   const [isReadOnly, setIsReadOnly] = useState<boolean>(false);
 
-  const handleFocus = () => {
+  const handleFocus = async () => {
+    if (!isSignedIn) {
+      const isLogin = await checkLoginStatus();
+      if (!isLogin) {
+        setIsReadOnly(true);
+        return;
+      }
+    }
+
     setIsReadOnly(false);
     setIsFocused(true);
   };
@@ -25,13 +33,7 @@ const CommentTextEditor = ({ content, onClick }: Props) => {
     setIsFocused(false);
   };
 
-  const handleChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const isLogin = await checkLoginStatus();
-    if (!isLogin) {
-      setIsReadOnly(true);
-      return;
-    }
-
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const current = e.target.value;
     changeIsInput(current);
   };

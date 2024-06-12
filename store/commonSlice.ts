@@ -129,9 +129,6 @@ const createCommonSlice: StateCreator<
     try {
       const res = await fetch(`/api/auth`);
       const data = await res.json();
-      if (!data) {
-        await get().signOut();
-      }
 
       return data;
     } catch (error) {
@@ -145,7 +142,10 @@ const createCommonSlice: StateCreator<
       get().setConfirmModalData(
         true,
         "로그인이 필요한 서비스입니다.\n로그인 하시겠습니까?",
-        goToSignIn
+        async () => {
+          await get().signOut();
+          await goToSignIn();
+        }
       );
       return false;
     } else {
@@ -156,8 +156,8 @@ const createCommonSlice: StateCreator<
     deleteCookie("token");
     get().resetReviewData();
     get().resetCommonData();
-    get().resetDashboardData();
-    get().resetMovieData();
+    get().setLikedMovies([]);
+    get().setLikedBooks([]);
   },
   resetCommonData: () => {
     set(initialState);
