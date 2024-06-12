@@ -1,5 +1,5 @@
 import { ReviewProps } from "@/types";
-import { HeartIcon } from "@heroicons/react/24/outline";
+import { HeartIcon } from "@heroicons/react/24/solid";
 import LinkedImage from "./list/LinkedImage";
 import LinkedContent from "./list/LinkedContent";
 
