@@ -15,9 +15,9 @@ type Props = {
 const List = ({ isAuthorized }: Props) => {
   const { user, signOut, likedBooks, likedMovies, fetchLikedContents } =
     useStore();
-  const handleClickSignOut = () => {
-    signOut();
+  const handleClickSignOut = async () => {
     window.location.href = "/";
+    await signOut();
   };
 
   useEffect(() => {

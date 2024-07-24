@@ -14,14 +14,15 @@ import VideoSection from "@/app/components/view/VideoSection";
 import LoadingBanner from "@/app/components/LoadingBanner";
 import Pagination from "@/app/components/Pagination";
 import { LIMIT } from "@/utils/constants";
-import { CurrentMovieProps } from "@/types";
+import { MovieContentsProps } from "@/types";
+import BookmarkButton from "@/app/components/BookmarkButton";
 
 type Props = {
   id: string;
-  currentMovie: CurrentMovieProps;
+  movieContents: MovieContentsProps;
 };
 
-export default function List({ id, currentMovie }: Props) {
+export default function List({ id, movieContents }: Props) {
   const {
     fetchMovieReviews,
     insertMovieReview,
@@ -29,8 +30,12 @@ export default function List({ id, currentMovie }: Props) {
     deleteReviewLike,
     movieReviews,
     checkLoginStatus,
+    addLikedMovie,
+    deleteLikedMovie,
+    setCurrentMovie,
+    currentMovie,
   } = useStore();
-  const { movie, keywords, recommendations, similars, videos } = currentMovie;
+  const { movie, keywords, recommendations, similars, videos } = movieContents;
   const loaded = !!movie.id;
   const [page, setPage] = useState<number>(1);
 
@@ -82,12 +87,27 @@ export default function List({ id, currentMovie }: Props) {
     await fetchMovieReviews(id, page);
   };
 
+  const handleClickBookmark = async () => {
+    const isLogin = await checkLoginStatus();
+    if (!isLogin) {
+      return;
+    }
+
+    const isChecked = currentMovie.checked;
+    if (isChecked) {
+      deleteLikedMovie(movie.id);
+    } else {
+      addLikedMovie(movie);
+    }
+  };
+
   useEffect(() => {
     if (!loaded) {
       return;
     }
     fetchMovieReviews(id, 1);
-  }, [fetchMovieReviews, id, loaded]);
+    setCurrentMovie(movie);
+  }, [fetchMovieReviews, id, loaded, movie, setCurrentMovie]);
 
   return (
     <div className="contents-container">
@@ -107,23 +127,36 @@ export default function List({ id, currentMovie }: Props) {
               }}
             />
           )}
-          <div className="relative pt-24 ml-16 z-10 text-white">
-            <div className="float-left mr-10 w-52 h-80">
-              {movie.posterImage ? (
-                <Image
-                  className="rounded"
-                  src={movie.posterImage}
-                  alt={movie.title}
-                  width={200}
-                  height={300}
-                />
-              ) : (
-                <DefaultImage size="w-52 h-80">
-                  <PhotoIcon className="w-40 h-40" />
-                </DefaultImage>
-              )}
+          <div className="relative pt-24 ml-12 z-10">
+            <div className="mx-7 my-3 flex items-center justify-center float-left">
+              <div className="mx-1 flex justify-center z-30">
+                {movie.posterImage ? (
+                  <Image
+                    className="rounded"
+                    src={movie.posterImage}
+                    alt={movie.title}
+                    width={190}
+                    height={285}
+                  />
+                ) : (
+                  <DefaultImage size="w-52 h-80">
+                    <PhotoIcon className="w-40 h-40" />
+                  </DefaultImage>
+                )}
+              </div>
+              <div className="absolute">
+                <div
+                  className={`rounded-lg w-64 h-80 shadow bg-gray-200 opacity-50 relative z-20`}
+                ></div>
+                <div className="relative z-30">
+                  <BookmarkButton
+                    onClick={handleClickBookmark}
+                    checked={currentMovie.checked}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="relative ml-10 float-left w-2/3">
+            <div className="relative ml-14 float-left w-2/3 text-white">
               <div className="break-words">
                 <h3 className="text-3xl leading-10 font-bold text-ellipsis">
                   {movie.title}

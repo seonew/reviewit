@@ -8,15 +8,17 @@ type State = {
   movieReviews: ReviewDataProps;
 
   likedMovies: LikedContent[];
+  currentMovie: LikedMovie;
 };
 
 type Actions = {
   addLikedMovie: (movie: LikedMovie) => void;
   deleteLikedMovie: (id: string) => void;
 
-  setSearchedMovies: (id: string, checked: boolean) => void;
+  setSearchedMoviesAndCurrentMovie: (id: string, checked: boolean) => void;
   setDashboardMovies: (movies: MovieProps[]) => void;
   setLikedMovies: (movies: LikedContent[]) => void;
+  setCurrentMovie: (currentMovie: LikedMovie) => void;
   fetchMovieReviews: (id: string, page: number) => void;
   insertMovieReview: ({
     content,
@@ -42,6 +44,18 @@ const initialState: State = {
     stats: undefined,
   },
   likedMovies: [],
+  currentMovie: {
+    id: "",
+    title: "",
+    posterImage: "",
+    backdropImage: "",
+    link: "",
+    releaseDate: "",
+    description: "",
+    average: 0,
+    adult: false,
+    checked: false,
+  },
 };
 
 const createMovieSlice: StateCreator<
@@ -65,7 +79,7 @@ const createMovieSlice: StateCreator<
         params
       );
 
-      get().setSearchedMovies(movie.id, nextChecked);
+      get().setSearchedMoviesAndCurrentMovie(movie.id, nextChecked);
       set((state) => {
         const nextLikedMovies: LikedContent[] = [
           ...state.likedMovies,
@@ -92,8 +106,8 @@ const createMovieSlice: StateCreator<
         contentType,
         id
       );
-      get().setSearchedMovies(id, nextChecked);
 
+      get().setSearchedMoviesAndCurrentMovie(id, nextChecked);
       set((state) => {
         const nextLikedMovies: LikedContent[] = state.likedMovies.filter(
           (current) => current.id !== id
@@ -144,7 +158,7 @@ const createMovieSlice: StateCreator<
   setLikedMovies: (movies) => {
     set({ likedMovies: movies });
   },
-  setSearchedMovies: (id, checked) => {
+  setSearchedMoviesAndCurrentMovie: (id, checked) => {
     set((state) => {
       const modifiedMovies = state.searchedMovies.map((item) => {
         return id === item.id ? { ...item, checked } : item;
@@ -152,6 +166,7 @@ const createMovieSlice: StateCreator<
 
       return {
         searchedMovies: modifiedMovies,
+        currentMovie: { ...state.currentMovie, checked },
       };
     });
   },
@@ -159,6 +174,15 @@ const createMovieSlice: StateCreator<
     set({
       dashboardMovies: movies,
     }),
+  setCurrentMovie: async (currentMovie) => {
+    const checked = await get().fetchBookmarkedContent(
+      "movie",
+      currentMovie.id
+    );
+    set((state) => {
+      return { currentMovie: { ...state.currentMovie, checked } };
+    });
+  },
   resetMovieData: () => {
     set(initialState);
   },
