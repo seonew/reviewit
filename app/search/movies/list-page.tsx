@@ -6,8 +6,8 @@ import CardList from "@/app/components/CardList";
 import MovieInfo from "@/app/components/MovieInfo";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/Pagination";
-import Skeleton from "../components/Skeleton";
 import { useSearchParams } from "next/navigation";
+import Skeleton from "@/app/components/skeleton/CardSkeleton";
 
 type Props = {
   movies: MovieProps[];
@@ -22,7 +22,7 @@ const List = ({ movies, total, limit }: Props) => {
     clearSearchedMovies,
     setQuery,
     query,
-    loadingMovies,
+    loadedMovies,
     searchedMovies,
   } = useStore();
   const [page, setPage] = useState<number>(1);
@@ -64,11 +64,11 @@ const List = ({ movies, total, limit }: Props) => {
 
   return (
     <div className="contents-container">
-      {loadingMovies ? (
+      {!loadedMovies ? (
         <Skeleton arrayRows={[0, 1, 2, 3]} />
       ) : (
         <>
-          <CardList title={`Movie List. ${query}`} color={"text-ozip-blue"}>
+          <CardList title={`영화 ${query} 검색 결과`} color={"text-ozip-blue"}>
             {searchedMovies &&
               searchedMovies.map((item: MovieProps) => {
                 return <MovieInfo key={item.id} movie={item} />;

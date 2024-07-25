@@ -9,6 +9,8 @@ type State = {
 
   likedMovies: LikedContent[];
   currentMovie: LikedMovie;
+  loaded: boolean;
+  loadedLikedMovies: boolean;
 };
 
 type Actions = {
@@ -56,6 +58,8 @@ const initialState: State = {
     adult: false,
     checked: false,
   },
+  loaded: false,
+  loadedLikedMovies: false,
 };
 
 const createMovieSlice: StateCreator<
@@ -156,7 +160,7 @@ const createMovieSlice: StateCreator<
     }
   },
   setLikedMovies: (movies) => {
-    set({ likedMovies: movies });
+    set({ likedMovies: movies, loadedLikedMovies: true });
   },
   setSearchedMoviesAndCurrentMovie: (id, checked) => {
     set((state) => {
@@ -175,12 +179,16 @@ const createMovieSlice: StateCreator<
       dashboardMovies: movies,
     }),
   setCurrentMovie: async (currentMovie) => {
+    set({ loaded: false });
     const checked = await get().fetchBookmarkedContent(
       "movie",
       currentMovie.id
     );
     set((state) => {
-      return { currentMovie: { ...state.currentMovie, checked } };
+      return {
+        currentMovie: { ...state.currentMovie, checked },
+        loaded: true,
+      };
     });
   },
   resetMovieData: () => {

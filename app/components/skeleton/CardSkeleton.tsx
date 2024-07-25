@@ -19,7 +19,7 @@ const Skeleton = ({ arrayRows, arrayCols = [0, 1, 2, 3, 4] }: Props) => {
           {arrayRows.map((index) => (
             <li className="justify-between py-4" key={index}>
               <div className="m-0 p-0">
-                <div className="grid grid-cols-5 gap-18-px">
+                <div className={`grid grid-cols-${arrayCols.length} gap-18-px`}>
                   {arrayCols.map((index) => {
                     return (
                       <Card key={index} height="h-52" color="bg-slate-200">

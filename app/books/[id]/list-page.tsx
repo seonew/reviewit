@@ -1,15 +1,13 @@
 "use client";
 
 import { useBoundStore as useStore } from "@/store";
-import { ReactNode, useEffect, useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import CommentSection from "@/app/components/view/CommentSection";
-import { PhotoIcon } from "@heroicons/react/24/outline";
-import DefaultImage from "@/app/components/DefaultImage";
 import Pagination from "@/app/components/Pagination";
 import { LIMIT } from "@/utils/constants";
 import { LikedBook } from "@/types";
-import BookmarkButton from "@/app/components/BookmarkButton";
+import Contents from "@/app/components/view/Banner/Contents";
+import BannerContainer from "@/app/components/view/Banner/BannerContainer";
 
 type Props = {
   id: string;
@@ -94,6 +92,18 @@ export default function List({ id, book }: Props) {
     }
   };
 
+  const BannerContents = () => {
+    const { isbn, title, author, publisher, pubdate, discount } = book;
+    const titleData = { title };
+    const subRowData = [
+      { name: "저자", content: author },
+      { name: "출판", content: publisher },
+      { name: "발행일", content: pubdate },
+      { name: "가격", content: `${discount}원` },
+    ];
+    return <Contents id={isbn} titleData={titleData} subRowData={subRowData} />;
+  };
+
   useEffect(() => {
     if (id === book.isbn) {
       setCurrentBook(book);
@@ -112,49 +122,14 @@ export default function List({ id, book }: Props) {
 
   return (
     <div className="contents-container">
-      <div className="banner-container">
-        <div className="relative pt-24 ml-12 z-10 text-white flex-row">
-          <div
-            className={`flex items-center rounded-lg w-64 shadow h-80 bg-gray-200 relative float-left`}
-          >
-            <div className="mx-10 flex justify-center">
-              {book.image ? (
-                <Image
-                  className="rounded"
-                  src={book.image}
-                  alt={book.title}
-                  width={200}
-                  height={300}
-                />
-              ) : (
-                <DefaultImage size="w-52 h-80">
-                  <PhotoIcon className="w-40 h-40" />
-                </DefaultImage>
-              )}
-              <BookmarkButton
-                onClick={handleClickBookmark}
-                checked={currentBook.checked}
-              />
-            </div>
-          </div>
-          {book.isbn !== "" && (
-            <div className="relative ml-14 float-left w-2/3">
-              <div className="break-words">
-                <h3 className="text-3xl leading-10 font-bold text-ellipsis">
-                  {book.title}
-                </h3>
-              </div>
-              <div className="pt-8 pb-10">
-                <GridRow name="저자" content={book.author} />
-                <GridRow name="출판" content={book.publisher} />
-                <GridRow name="발행일" content={book.pubdate} />
-                <GridRow name="가격" content={`${book.discount}원`} />
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="banner-background opacity-50"></div>
-      </div>
+      <BannerContainer
+        title={book.title}
+        posterImage={book.image}
+        checked={currentBook.checked}
+        onClickBookmark={handleClickBookmark}
+      >
+        {book.isbn !== "" && <BannerContents />}
+      </BannerContainer>
 
       <div className="pb-10 min-w-1024">
         <div className="movie-description">
@@ -181,20 +156,3 @@ export default function List({ id, book }: Props) {
     </div>
   );
 }
-
-const GridRow = ({
-  name,
-  content,
-  children,
-}: {
-  name: string;
-  content?: string | number;
-  children?: ReactNode;
-}) => {
-  return (
-    <div className="flex">
-      <div className="grow-0 w-20 movie-info-description">{name}</div>
-      <div className="grow">{children ?? <div>{content}</div>}</div>
-    </div>
-  );
-};

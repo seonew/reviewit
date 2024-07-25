@@ -7,14 +7,22 @@ import CardList from "@/app/components/CardList";
 import UserInfo from "./components/UserInfo";
 import CardInfo from "./components/CardInfo";
 import UnauthorizedErrorPage from "./components/UnauthorizedErrorPage";
+import Skeleton from "../components/skeleton/CardSkeleton";
 
 type Props = {
   isAuthorized: boolean;
 };
 
 const List = ({ isAuthorized }: Props) => {
-  const { user, signOut, likedBooks, likedMovies, fetchLikedContents } =
-    useStore();
+  const {
+    user,
+    signOut,
+    likedBooks,
+    likedMovies,
+    loadedLikedBooks,
+    loadedLikedMovies,
+    fetchLikedContents,
+  } = useStore();
   const handleClickSignOut = async () => {
     window.location.href = "/";
     await signOut();
@@ -30,18 +38,24 @@ const List = ({ isAuthorized }: Props) => {
   const LikeList = () => {
     return (
       <>
-        <CardList title={"My Movie List"} gridColsCSS={"grid-cols-4"}>
-          {likedMovies &&
-            likedMovies.map((item: LikedContent) => {
+        {!loadedLikedMovies ? (
+          <Skeleton arrayRows={[0, 1]} arrayCols={[0, 1, 2, 3]} />
+        ) : (
+          <CardList title={"My Movie List"} gridColsCSS={"grid-cols-4"}>
+            {likedMovies.map((item: LikedContent) => {
               return <CardInfo key={item.id} content={item} />;
             })}
-        </CardList>
-        <CardList title={"My Book List"} gridColsCSS={"grid-cols-4"}>
-          {likedBooks &&
-            likedBooks.map((item: LikedContent) => {
+          </CardList>
+        )}
+        {!loadedLikedBooks ? (
+          <Skeleton arrayRows={[0, 1]} arrayCols={[0, 1, 2, 3]} />
+        ) : (
+          <CardList title={"My Book List"} gridColsCSS={"grid-cols-4"}>
+            {likedBooks.map((item: LikedContent) => {
               return <CardInfo key={item.id} content={item} />;
             })}
-        </CardList>
+          </CardList>
+        )}
       </>
     );
   };
