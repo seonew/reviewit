@@ -25,6 +25,7 @@ module.exports = {
       },
       height: {
         180: "180px",
+        350: "350px",
       },
       zIndex: {
         101: "101",

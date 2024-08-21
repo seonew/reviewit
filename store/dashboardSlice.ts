@@ -18,7 +18,6 @@ type bookmarkParams = {
 
 type State = {
   likedBooks: LikedContent[];
-  loadedLikedBooks: boolean;
 
   searchedBooks: LikedBook[];
   searchedMovies: LikedMovie[];
@@ -76,7 +75,6 @@ type Actions = {
 
 const initialState: State = {
   likedBooks: [],
-  loadedLikedBooks: false,
   bookReviews: {
     reviews: [],
     count: 0,
@@ -147,6 +145,7 @@ const createDashboardSlice: StateCreator<
     );
     const data = await res.json();
 
+    // TODO 검색 결과 페이지에 새로 진입하는 경우, api 중복 호출
     set({
       searchedBooks: data.booksResult.books,
       searchedMovies: data.moviesResult.movies,
@@ -193,13 +192,11 @@ const createDashboardSlice: StateCreator<
   },
 
   fetchLikedContents: async (type: string) => {
-    set({ loadedLikedBooks: false, loadedLikedMovies: false });
-
     const res = await fetch(`/api/mypage/bookmarks/${type}`);
     const data: LikedContent[] = await res.json();
 
     if (type === "book") {
-      set({ likedBooks: data, loadedLikedBooks: true });
+      set({ likedBooks: data });
     } else if (type === "movie") {
       get().setLikedMovies(data);
     }

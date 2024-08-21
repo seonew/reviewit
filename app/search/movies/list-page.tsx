@@ -7,7 +7,7 @@ import MovieInfo from "@/app/components/MovieInfo";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/Pagination";
 import { useSearchParams } from "next/navigation";
-import Skeleton from "@/app/components/skeleton/CardSkeleton";
+import CardListSkeleton from "@/app/components/skeleton/CardListSkeleton";
 
 type Props = {
   movies: MovieProps[];
@@ -65,7 +65,7 @@ const List = ({ movies, total, limit }: Props) => {
   return (
     <div className="contents-container">
       {!loadedMovies ? (
-        <Skeleton arrayRows={[0, 1, 2, 3]} />
+        <CardListSkeleton arrayRows={[0, 1, 2, 3]} />
       ) : (
         <>
           <CardList title={`영화 ${query} 검색 결과`} color={"text-ozip-blue"}>

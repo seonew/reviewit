@@ -1,14 +1,17 @@
 import Card from "@/app/components/Card";
-import DefaultImage from "@/app/components/DefaultImage";
 
 type Props = {
   arrayRows: Array<number>;
   arrayCols?: Array<number>;
 };
 
-const Skeleton = ({ arrayRows, arrayCols = [0, 1, 2, 3, 4] }: Props) => {
+const CardListSkeleton = ({
+  arrayRows,
+  arrayCols = [0, 1, 2, 3, 4],
+}: Props) => {
   return (
-    <div className="card-list">
+    // <div className="card-list">
+    <div className="pb-10 min-w-800">
       <div className="pb-10 animate-pulse">
         <div className="py-5 flex w-56">
           <div className="flex-1 space-y-6 py-1">
@@ -37,4 +40,4 @@ const Skeleton = ({ arrayRows, arrayCols = [0, 1, 2, 3, 4] }: Props) => {
   );
 };
 
-export default Skeleton;
+export default CardListSkeleton;

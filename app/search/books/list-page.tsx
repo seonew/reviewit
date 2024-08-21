@@ -7,7 +7,7 @@ import CardList from "@/app/components/CardList";
 import BookInfo from "@/app/components/BookInfo";
 import Pagination from "@/app/components/Pagination";
 import { useSearchParams } from "next/navigation";
-import Skeleton from "@/app/components/skeleton/CardSkeleton";
+import CardListSkeleton from "@/app/components/skeleton/CardListSkeleton";
 
 type Props = {
   books: LikedBook[];
@@ -59,7 +59,7 @@ const List = ({ books, total, limit }: Props) => {
   return (
     <div className="contents-container">
       {!loadedBooks ? (
-        <Skeleton arrayRows={[0, 1, 2, 3]} />
+        <CardListSkeleton arrayRows={[0, 1, 2, 3]} />
       ) : (
         <>
           <CardList title={`도서 ${query} 검색 결과`} color={"text-ozip-blue"}>
