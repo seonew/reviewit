@@ -27,15 +27,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { id } = params;
-  const currentMovie = await getData(id);
-  if (!currentMovie) {
+  const movieContents = await getData(id);
+  if (!movieContents) {
     notFound();
   }
 
   const DynamicListPage = dynamic(() => import("./list-page"), {
     ssr: false,
   });
-  return <DynamicListPage id={id} currentMovie={currentMovie} />;
+  return <DynamicListPage id={id} movieContents={movieContents} />;
 }
 
 async function getData(id: string) {

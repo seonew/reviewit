@@ -6,9 +6,9 @@ import { useBoundStore as useStore } from "@/store";
 import CardList from "@/app/components/CardList";
 import BookInfo from "@/app/components/BookInfo";
 import MovieInfo from "../components/MovieInfo";
-import Skeleton from "./components/Skeleton";
 import Empty from "../components/Empty";
 import NoSearchResults from "./components/NoSearchResults";
+import Skeleton from "../components/skeleton/CardSkeleton";
 
 type Props = {
   keyword: string;
@@ -19,13 +19,13 @@ const List = ({ keyword }: Props) => {
     searchedBooks,
     updateSearchedBooks,
     clearSearchedBooks,
-    loadingBooks,
     searchedMovies,
     updateSearchedMovies,
     clearSearchedMovies,
-    loadingMovies,
     query,
     setQuery,
+    loadedBooks,
+    loadedMovies,
   } = useStore();
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const List = ({ keyword }: Props) => {
     updateSearchedBooks(1, 10);
   }, [keyword, setQuery, updateSearchedBooks, updateSearchedMovies]);
 
-  if (loadingMovies && loadingBooks) {
+  if (!loadedMovies && !loadedBooks) {
     return (
       <div className="contents-container">
         <Skeleton arrayRows={[0, 1]} />
@@ -52,8 +52,8 @@ const List = ({ keyword }: Props) => {
   }
 
   if (
-    !loadingMovies &&
-    !loadingBooks &&
+    loadedMovies &&
+    loadedBooks &&
     searchedMovies?.length === 0 &&
     searchedBooks?.length === 0
   ) {
@@ -66,7 +66,7 @@ const List = ({ keyword }: Props) => {
 
   return (
     <div className="contents-container">
-      {loadingMovies ? (
+      {!loadedMovies ? (
         <Skeleton arrayRows={[0, 1]} />
       ) : searchedMovies?.length > 0 ? (
         <CardList
@@ -80,7 +80,7 @@ const List = ({ keyword }: Props) => {
       ) : (
         <Empty title={"Movie List"} message={"검색된 결과가 없어요 ㅜ.ㅜ"} />
       )}
-      {loadingBooks ? (
+      {!loadedBooks ? (
         <Skeleton arrayRows={[0, 1]} />
       ) : searchedBooks?.length > 0 ? (
         <CardList

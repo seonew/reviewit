@@ -68,7 +68,7 @@ export type MovieProps = {
   adult: boolean;
 };
 
-export type DetailMovieProps = MovieProps & {
+export type DetailMovieProps = LikedMovie & {
   genres: Array<{ id: string; name: string }>;
   originalTitle: string;
   tagline: string;
@@ -87,7 +87,7 @@ export type VideoImageBannerProps = {
   description?: string;
 };
 
-export type CurrentMovieProps = {
+export type MovieContentsProps = {
   movie: DetailMovieProps;
   keywords: Array<{ id: string; name: string }>;
   recommendations: MovieProps[];

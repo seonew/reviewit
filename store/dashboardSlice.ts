@@ -18,14 +18,15 @@ type bookmarkParams = {
 
 type State = {
   likedBooks: LikedContent[];
+  loadedLikedBooks: boolean;
 
   searchedBooks: LikedBook[];
   searchedMovies: LikedMovie[];
 
   bookReviews: ReviewDataProps;
   currentBook: LikedBook;
-  loadingMovies: boolean;
-  loadingBooks: boolean;
+  loadedMovies: boolean;
+  loadedBooks: boolean;
   query: string;
 };
 
@@ -75,6 +76,7 @@ type Actions = {
 
 const initialState: State = {
   likedBooks: [],
+  loadedLikedBooks: false,
   bookReviews: {
     reviews: [],
     count: 0,
@@ -91,8 +93,8 @@ const initialState: State = {
     catalogLink: "",
     checked: false,
   },
-  loadingMovies: true,
-  loadingBooks: true,
+  loadedMovies: false,
+  loadedBooks: false,
 
   query: "",
   searchedBooks: [],
@@ -159,16 +161,16 @@ const createDashboardSlice: StateCreator<
         `/api/search/books/${query}?page=${page}&displayCount=${displayCount}`
       );
       const data = await res.json();
-      set({ searchedBooks: data.books, loadingBooks: false });
+      set({ searchedBooks: data.books, loadedBooks: true });
     } catch (e) {
       console.error(e);
     }
   },
   initializeSearchedBooks: (books) => {
-    set({ searchedBooks: books, loadingBooks: false });
+    set({ searchedBooks: books, loadedBooks: false });
   },
   clearSearchedBooks: () => {
-    set({ searchedBooks: [], loadingBooks: true });
+    set({ searchedBooks: [], loadedBooks: false });
   },
 
   updateSearchedMovies: async (page, displayCount = 20) => {
@@ -178,24 +180,26 @@ const createDashboardSlice: StateCreator<
         `/api/search/movies/${query}?page=${page}&displayCount=${displayCount}`
       );
       const data = await res.json();
-      set({ searchedMovies: data.movies, loadingMovies: false });
+      set({ searchedMovies: data.movies, loadedMovies: true });
     } catch (e) {
       console.error(e);
     }
   },
   initializeSearchedMovies: (movies) => {
-    set({ searchedMovies: movies, loadingMovies: false });
+    set({ searchedMovies: movies, loadedMovies: false });
   },
   clearSearchedMovies: () => {
-    set({ searchedMovies: [], loadingMovies: true });
+    set({ searchedMovies: [], loadedMovies: false });
   },
 
   fetchLikedContents: async (type: string) => {
+    set({ loadedLikedBooks: false, loadedLikedMovies: false });
+
     const res = await fetch(`/api/mypage/bookmarks/${type}`);
     const data: LikedContent[] = await res.json();
 
     if (type === "book") {
-      set({ likedBooks: data });
+      set({ likedBooks: data, loadedLikedBooks: true });
     } else if (type === "movie") {
       get().setLikedMovies(data);
     }
@@ -309,7 +313,8 @@ const createDashboardSlice: StateCreator<
       return { currentBook: nextCurrentBook };
     });
   },
-  setQuery: (item) => set({ query: item }),
+  setQuery: (item) =>
+    set({ query: item, loadedBooks: true, loadedMovies: true }),
   setLikedBooks: (books) =>
     set({
       likedBooks: books,

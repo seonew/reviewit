@@ -6,8 +6,8 @@ import { useBoundStore as useStore } from "@/store";
 import CardList from "@/app/components/CardList";
 import BookInfo from "@/app/components/BookInfo";
 import Pagination from "@/app/components/Pagination";
-import Skeleton from "../components/Skeleton";
 import { useSearchParams } from "next/navigation";
+import Skeleton from "@/app/components/skeleton/CardSkeleton";
 
 type Props = {
   books: LikedBook[];
@@ -22,7 +22,7 @@ const List = ({ books, total, limit }: Props) => {
     updateSearchedBooks,
     clearSearchedBooks,
     setQuery,
-    loadingBooks,
+    loadedBooks,
     query,
   } = useStore();
   const [page, setPage] = useState<number>(1);
@@ -58,11 +58,11 @@ const List = ({ books, total, limit }: Props) => {
 
   return (
     <div className="contents-container">
-      {loadingBooks ? (
+      {!loadedBooks ? (
         <Skeleton arrayRows={[0, 1, 2, 3]} />
       ) : (
         <>
-          <CardList title={`Book List. ${query}`} color={"text-ozip-blue"}>
+          <CardList title={`도서 ${query} 검색 결과`} color={"text-ozip-blue"}>
             {searchedBooks &&
               searchedBooks.map((item: BookProps) => {
                 return <BookInfo key={item.isbn} book={item} />;
